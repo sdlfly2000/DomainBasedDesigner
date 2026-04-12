@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/1-Presentation/">
+    <Project Path="1-Presentation/activator.domaindrivendesigner.client/activator.domaindrivendesigner.client.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+    <Project Path="1-Presentation/Activator.DomainDrivenDesigner.Server/Activator.DomainDrivenDesigner.Server.csproj" />
+  </Folder>
+</Solution>
