@@ -8,9 +8,11 @@
   </Folder>
   <Folder Name="/2-Application/" />
   <Folder Name="/3-Domain/" />
-  <Folder Name="/4-Infrastructure/" />
+  <Folder Name="/4-Infrastructure/">
+    <Project Path="4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.csproj" Id="36cc75b1-98ad-4719-b3d0-8611e71e4420" />
+  </Folder>
   <Folder Name="/5-Support/">
-    <Project Path="5-Support/Activator.Support.Shared.Core/Activator.Support.Shared.Core.csproj" Id="117f2e62-11c2-495d-82b5-1466f5602e7c" />
+    <Project Path="5-Support/Activator.Support.Shared.Core/Activator.DomainDrivenDesigner.Support.Shared.Core.csproj" Id="117f2e62-11c2-495d-82b5-1466f5602e7c" />
   </Folder>
   <Folder Name="/Test/" />
 </Solution>
