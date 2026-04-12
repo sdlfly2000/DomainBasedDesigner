@@ -6,4 +6,11 @@
     </Project>
     <Project Path="1-Presentation/Activator.DomainDrivenDesigner.Server/Activator.DomainDrivenDesigner.Server.csproj" />
   </Folder>
+  <Folder Name="/2-Application/" />
+  <Folder Name="/3-Domain/" />
+  <Folder Name="/4-Infrastructure/" />
+  <Folder Name="/5-Support/">
+    <Project Path="5-Support/Activator.Support.Shared.Core/Activator.Support.Shared.Core.csproj" Id="117f2e62-11c2-495d-82b5-1466f5602e7c" />
+  </Folder>
+  <Folder Name="/Test/" />
 </Solution>
