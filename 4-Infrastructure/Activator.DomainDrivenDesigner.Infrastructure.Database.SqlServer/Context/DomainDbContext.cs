@@ -16,28 +16,21 @@ public partial class DomainDbContext : DbContext
     {
     }
 
-    public virtual DbSet<T_Project> TProjects { get; set; }
+    public virtual DbSet<T_PROJECT> T_PROJECTs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<T_Project>(entity =>
+        modelBuilder.Entity<T_PROJECT>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__T_PROJEC__3214EC272ACC0B89");
+            entity.HasKey(e => e.ID).HasName("PK_T_PROJECT_ID");
 
             entity.ToTable("T_PROJECT");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.CreatedUtc).HasColumnName("CREATED_UTC");
-            entity.Property(e => e.Description)
-                .HasMaxLength(255)
-                .HasColumnName("DESCRIPTION");
-            entity.Property(e => e.Name)
-                .HasMaxLength(100)
-                .HasColumnName("NAME");
+            entity.Property(e => e.ID).ValueGeneratedNever();
+            entity.Property(e => e.DESCRIPTION).HasMaxLength(255);
+            entity.Property(e => e.NAME).HasMaxLength(100);
         });
 
         OnModelCreatingPartial(modelBuilder);

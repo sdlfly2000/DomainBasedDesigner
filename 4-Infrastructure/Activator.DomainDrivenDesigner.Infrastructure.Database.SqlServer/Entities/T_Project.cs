@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Entities;
 
-public partial class T_Project
+public partial class T_PROJECT
 {
-    public Guid Id { get; set; }
+    public Guid ID { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string NAME { get; set; } = null!;
 
-    public string? Description { get; set; }
+    public string? DESCRIPTION { get; set; }
 
-    public DateTime CreatedUtc { get; set; }
+    public DateTime CREATED_UTC { get; set; }
 }

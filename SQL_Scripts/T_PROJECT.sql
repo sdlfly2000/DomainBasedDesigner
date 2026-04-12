@@ -1,9 +1,10 @@
-Create table T_PROJECT
+Create table dbo.T_PROJECT
 (
     ID              UNIQUEIDENTIFIER not null,
     NAME            NVARCHAR(100) not null,
     DESCRIPTION     NVARCHAR(255),
-    CREATED_UTC     DATETIME2 not null,
-    PRIMARY KEY (ID)
+    CREATED_UTC     DATETIME2 not null
 );
+
+ALTER TABLE dbo.T_PROJECT ADD CONSTRAINT PK_T_PROJECT_ID PRIMARY KEY (ID);
 
