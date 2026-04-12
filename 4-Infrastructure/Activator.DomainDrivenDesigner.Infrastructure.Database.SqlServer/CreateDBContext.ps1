@@ -7,4 +7,6 @@ dotnet ef dbcontext scaffold `
 --output-dir ./Entities `
 --force `
 `
---table dbo.T_PROJECT 
+--table dbo.T_PROJECT `
+--table dbo.T_REQUIREMENT `
+--table dbo.T_BUSINESS_MODEL
