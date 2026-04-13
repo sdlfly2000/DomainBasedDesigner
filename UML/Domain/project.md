@@ -25,6 +25,8 @@ class BusinessAction {
     + Id: Guid
     + Name: String
     + CreatedOnUtc: Datetime
+    + ParentBusinessAction: BusinessAction
+    + ChildBusinessActions: List~BusinessAction~
 }
 
 class BusinessModel {
@@ -39,11 +41,15 @@ class BusinessModelProperty {
     <<Entity>>
     + Id: Guid
     + Name: String
+    + Type: ModelPropertyType
     + CreatedOnUtc: Datetime
-    + Properties: List~Property~
 }
 
-
+class ModelPropertyType {
+    None = 0
+    String = 1  
+    Int = 2
+}
 
 %%Entity Relationship
 
@@ -56,5 +62,9 @@ Requirement "1" --> "0..*" BusinessAction
 
 BusinessAction "0..*" --> "0..*" BusinessModel
 BusinessAction --> "0..*" BusinessAction
+
+BusinessModel --> "0..*" BusinessModelProperty
+
+BusinessModelProperty .. ModelPropertyType : use
 
 ```
