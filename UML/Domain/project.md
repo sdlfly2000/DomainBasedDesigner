@@ -9,8 +9,6 @@ class Project {
     + Name: String
     + CreatedOnUtc: Datetime
     + Requirements: List~Requirement~
-    + BusinessModels: List~BusinessModel~
-    + BusinessActions: List~BusinessAction~
 }
 
 class Requirement {
@@ -22,21 +20,27 @@ class Requirement {
     + BusinessModels: List~BusinessModel~
 }
 
-class BusinessAction{
+class BusinessAction {
     <<Entity>>
     + Id: Guid
     + Name: String
     + CreatedOnUtc: Datetime
-    + IncludedBusinessModels: List~BusinessModel~
-    + IncludedBusinessActions: List~BusinessAction~
 }
 
-class BusinessModel{
+class BusinessModel {
     <<Entity>>
     + Id: Guid
     + Name: String
     + CreatedOnUtc: Datetime
-    + BusinessActionsInvolved: List~BusinessActions~
+    + Properties: List~Property~
+}
+
+class BusinessModelProperty {
+    <<Entity>>
+    + Id: Guid
+    + Name: String
+    + CreatedOnUtc: Datetime
+    + Properties: List~Property~
 }
 
 
