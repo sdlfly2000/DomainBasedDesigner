@@ -54,8 +54,6 @@ class ModelPropertyType {
 %%Entity Relationship
 
 Project "1" --> "0..*" Requirement
-Project "1" --> "0..*" BusinessModel
-Project "1" --> "0..*" BusinessAction
 
 Requirement "1" --> "0..*" BusinessModel
 Requirement "1" --> "0..*" BusinessAction

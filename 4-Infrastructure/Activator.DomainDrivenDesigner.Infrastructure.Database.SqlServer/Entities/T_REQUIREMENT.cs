@@ -11,5 +11,9 @@ public partial class T_REQUIREMENT
 
     public DateTime CREATE_UTC { get; set; }
 
+    public Guid? PROJECT_ID { get; set; }
+
+    public virtual T_PROJECT? PROJECT { get; set; }
+
     public virtual ICollection<T_BUSINESS_MODEL> T_BUSINESS_MODELs { get; set; } = new List<T_BUSINESS_MODEL>();
 }

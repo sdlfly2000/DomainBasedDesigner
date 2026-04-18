@@ -12,4 +12,6 @@ public partial class T_PROJECT
     public string? DESCRIPTION { get; set; }
 
     public DateTime CREATED_UTC { get; set; }
+
+    public virtual ICollection<T_REQUIREMENT> T_REQUIREMENTs { get; set; } = new List<T_REQUIREMENT>();
 }
