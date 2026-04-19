@@ -18,6 +18,8 @@ public partial class DomainDbContext : DbContext
 
     public virtual DbSet<T_BUSINESS_MODEL> T_BUSINESS_MODELs { get; set; }
 
+    public virtual DbSet<T_BUSINESS_MODEL_PROPERTY> T_BUSINESS_MODEL_PROPERTies { get; set; }
+
     public virtual DbSet<T_PROJECT> T_PROJECTs { get; set; }
 
     public virtual DbSet<T_REQUIREMENT> T_REQUIREMENTs { get; set; }
@@ -40,6 +42,20 @@ public partial class DomainDbContext : DbContext
             entity.HasOne(d => d.REQUIREMENT).WithMany(p => p.T_BUSINESS_MODELs)
                 .HasForeignKey(d => d.REQUIREMENT_ID)
                 .HasConstraintName("FK_T_BUSINESS_MODEL_T_REQUIREMENT");
+        });
+
+        modelBuilder.Entity<T_BUSINESS_MODEL_PROPERTY>(entity =>
+        {
+            entity.HasKey(e => e.ID).HasName("PK_T_BUSINESS_MODEL_PROPERTY_ID");
+
+            entity.ToTable("T_BUSINESS_MODEL_PROPERTY");
+
+            entity.Property(e => e.ID).ValueGeneratedNever();
+            entity.Property(e => e.NAME).HasMaxLength(255);
+
+            entity.HasOne(d => d.BUSINESS_MODEL).WithMany(p => p.T_BUSINESS_MODEL_PROPERTies)
+                .HasForeignKey(d => d.BUSINESS_MODEL_ID)
+                .HasConstraintName("FK_T_BUSINESS_MODEL_PROPERTY_T_BUSINESS_MODEL");
         });
 
         modelBuilder.Entity<T_PROJECT>(entity =>

@@ -3,6 +3,7 @@ Create Table T_BUSINESS_MODEL_PROPERTY
     ID                  UNIQUEIDENTIFIER NOT NULL,
     NAME                NVARCHAR(255),
     CREATED_UTC         DATETIME2 NOT NULL,
+    TYPE                TINYINT NULL, 
     BUSINESS_MODEL_ID   UNIQUEIDENTIFIER,
 );
 
