@@ -6,12 +6,17 @@
     </Project>
     <Project Path="1-Presentation/Activator.DomainDrivenDesigner.Server/Activator.DomainDrivenDesigner.Server.csproj" />
   </Folder>
-  <Folder Name="/2-Application/" />
-  <Folder Name="/3-Domain/" />
+  <Folder Name="/2-Application/">
+    <Project Path="2-Application/Activator.DomainDrivenDesigner.Application/Activator.DomainDrivenDesigner.Application.csproj" Id="5c7431c3-50e8-44c4-b468-6cd5a1072ca7" />
+  </Folder>
+  <Folder Name="/3-Domain/">
+    <Project Path="3-Domain/Activator.DomainDrivenDesigner.Domain/Activator.DomainDrivenDesigner.Domain.csproj" Id="b47f4ca0-bad7-456d-9aa7-4b3f19d9d103" />
+  </Folder>
   <Folder Name="/4-Infrastructure/">
     <Project Path="4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.csproj" Id="36cc75b1-98ad-4719-b3d0-8611e71e4420" />
   </Folder>
   <Folder Name="/5-Support/">
+    <Project Path="5-Support/Activator.DomainDrivenDesigner.Support.Core/Activator.DomainDrivenDesigner.Support.Core.csproj" Id="088065bd-a3ca-40b4-a58b-8fb5884712a3" />
     <Project Path="5-Support/Activator.Support.Shared.Core/Activator.DomainDrivenDesigner.Support.Shared.Core.csproj" Id="117f2e62-11c2-495d-82b5-1466f5602e7c" />
   </Folder>
   <Folder Name="/Test/" />
