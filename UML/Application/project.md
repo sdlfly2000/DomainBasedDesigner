@@ -29,7 +29,7 @@ class AppRequest {
 
 class AppResponse {
     <<abstract>>
-    + Id: Guid
+    + RequestId: Guid
     + Success: Boolean
     + ErrorMessage: String
 }
