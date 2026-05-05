@@ -2,6 +2,7 @@
 using Activator.DomainDrivenDesigner.Application.AppResponses;
 using Activator.DomainDrivenDesigner.Domain.Entities;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
+using Common.Core.AOP.LogTrace;
 using Common.Core.DependencyInjection;
 
 namespace Activator.DomainDrivenDesigner.Application.Services;
@@ -16,6 +17,7 @@ public class ProjectAppService
         _repository = repository;
     }
 
+    [LogTrace(returnType: typeof(CreateProjectAppResponse))]
     public async Task<CreateProjectAppResponse> Create(CreateProjectAppRequest request)
     {
         var project = Project.Create(request.ProjectName);
@@ -25,5 +27,15 @@ public class ProjectAppService
         return projectId != null
             ? new CreateProjectAppResponse(request.Id, true, null)
             : new CreateProjectAppResponse(request.Id, false, "Failed to create project");
+    }
+
+    [LogTrace(returnType: typeof(RetrieveFullProjectAppResponse))]
+    public async Task<RetrieveFullProjectAppResponse> RetrieveFullProjects(RetrieveFullProjectAppRequest request)
+    {
+        var projects = await _repository.RetrieveFullProjects().ConfigureAwait(false);
+
+        return projects != null
+            ? new RetrieveFullProjectAppResponse(request.Id, projects, true, null)
+            : new RetrieveFullProjectAppResponse(request.Id, null, false, "Failed to retrieve projects");
     }
 }
