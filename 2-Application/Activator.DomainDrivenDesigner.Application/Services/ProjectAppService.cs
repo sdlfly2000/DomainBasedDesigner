@@ -2,9 +2,11 @@
 using Activator.DomainDrivenDesigner.Application.AppResponses;
 using Activator.DomainDrivenDesigner.Domain.Entities;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
+using Common.Core.DependencyInjection;
 
 namespace Activator.DomainDrivenDesigner.Application.Services;
 
+[ServiceLocate(default)]
 public class ProjectAppService
 {
     private readonly IDDDRepository _repository;
