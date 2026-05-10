@@ -1,0 +1,18 @@
+/*------------------------*/
+
+.dialog-assign-role-input {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.dialog-assign-role-sec-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.dialog-assign-role-button {
+    margin-left: 10px;
+}

@@ -1,31 +1,16 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { StatusBarComponent } from './pages/status-bar/status-bar.component';
 
 @Component({
   selector: 'app-root',
+  imports: [
+      RouterOutlet,
+      StatusBarComponent
+  ],
   templateUrl: './app.html',
-  standalone: false,
   styleUrl: './app.css'
 })
-export class App implements OnInit {
-  public forecasts: WeatherForecast[] = [];
-
-  constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    this.getForecasts();
-  }
-
-  getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
-        this.forecasts = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-  protected readonly title = signal('activator.domaindrivendesigner.client');
+export class App {
+  protected readonly title = signal('WebUI');
 }

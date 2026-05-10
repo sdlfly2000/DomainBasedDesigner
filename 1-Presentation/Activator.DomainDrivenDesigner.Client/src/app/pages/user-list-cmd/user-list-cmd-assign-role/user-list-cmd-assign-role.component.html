@@ -1,0 +1,27 @@
+<p-button severity="secondary"
+          [raised]="true"
+          label="Role"
+          icon="pi pi-plus"
+          class="mr-2"
+          (click)="ShowAssignRoleDialog(true)"
+          [disabled]="disabledCommand" />
+
+<p-dialog header="Assign Role" [modal]="true" [(visible)]="isPopupAssignRoleDialog" [contentStyle]="{'overflow-y': 'visible'}" [style]="{ width: '30rem' }">
+    <form>
+        <div>
+            <p-select id="app-names" name="appnames" class="dialog-assign-role-input" placeholder="Select App Name" [filter]="true" [options]="appNames()" [(ngModel)]="assignAppName" />
+        </div>
+        <div>
+            <input type="text"
+                   id="role-value-new"
+                   class="dialog-assign-role-input"
+                   placeholder="Input Role Name"
+                   name="assignroleinput"
+                   pInputText [(ngModel)]="assignRoleName" />
+        </div>
+        <div class="dialog-assign-role-sec-button">
+            <p-button class="dialog-assign-role-button" (click)="AssignRole()" label="Assign" />
+            <p-button class="dialog-assign-role-button" label="Close" (click)="ShowAssignRoleDialog(false)" />
+        </div>
+    </form>
+</p-dialog>

@@ -1,0 +1,26 @@
+<p-button
+          severity="secondary"
+          [raised]="true"
+          label="App"
+          icon="pi pi-plus"
+          class="mr-2"
+          (click)="ShowAssignAppDialog(true)"
+          [disabled]="disabledCommand"
+          />
+
+<p-dialog header="Assign App" [modal]="true" [(visible)]="isPopupAssignAppDialog" [contentStyle]="{'overflow-y': 'visible'}" [style]="{ width: '30rem' }">
+    <form>
+        <div>
+            <input type="text"
+                   id="app-value-new"
+                   class="dialog-assign-app-input"
+                   placeholder="Input App Name"
+                   name="assignappinput"
+                   pInputText [(ngModel)]="assignAppName" />
+        </div>
+        <div class="dialog-assign-app-sec-button">
+            <p-button class="dialog-assign-app-button" (click)="AssignApp()" label="Assign" />
+            <p-button class="dialog-assign-app-button" label="Close" (click)="ShowAssignAppDialog(false)" />
+        </div>
+    </form>
+</p-dialog>

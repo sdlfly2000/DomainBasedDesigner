@@ -1,0 +1,18 @@
+/*------------------------*/
+
+.dialog-assign-app-input {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.dialog-assign-app-sec-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.dialog-assign-app-button {
+    margin-left: 10px;
+}

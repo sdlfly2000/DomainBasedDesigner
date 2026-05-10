@@ -1,0 +1,18 @@
+.InputBoxContainer {
+  margin-top: 30px;
+}
+
+.Button {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}

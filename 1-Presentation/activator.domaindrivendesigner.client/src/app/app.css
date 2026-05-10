@@ -1,14 +1,9 @@
-﻿:host {
-    max-width: 1280px;
-    padding: 2rem;
-    text-align: center;
-}
-
-th, td {
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-table {
-    margin: 0 auto;
+.layout-container {
+  background-color: var(--p-surface-50);
+  color: var(--p-surface-950);
+  min-height: 100vh;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }

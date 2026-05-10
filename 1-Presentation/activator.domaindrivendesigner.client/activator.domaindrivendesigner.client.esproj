@@ -1,6 +1,5 @@
-﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.4338480">
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.94-alpha">
   <PropertyGroup>
-    <TargetFrameworks>net10.0</TargetFrameworks>
     <StartupCommand>npm start</StartupCommand>
     <JavaScriptTestFramework>Jasmine</JavaScriptTestFramework>
     <!-- Allows the build (or compile) script located on package.json to run on Build -->
@@ -8,7 +7,7 @@
     <!-- Command to create an optimized build of the project that's ready for publishing -->
     <ProductionBuildCommand>npm run build</ProductionBuildCommand>
     <!-- Folder where production build objects will be placed -->
-    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\activator.domaindrivendesigner.client\browser\</BuildOutputFolder>
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\Activator.DomainDrivenDesigner.Client</BuildOutputFolder>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
     <FrameworkPathOverride>/usr/lib/dotnet/shared/Microsoft.NETCore.App/10.0.0/mscorlib.dll</FrameworkPathOverride>

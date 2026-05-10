@@ -1,19 +1,21 @@
 {
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "edge",
-      "request": "launch",
       "name": "localhost (Edge)",
-      "url": "https://localhost:50130",
-      "webRoot": "${workspaceFolder}"
+      "type": "msedge",
+      "request": "launch",
+      "preLaunchTask": "npm: start",
+      "url": "http://localhost:4200/",
+	  "webRoot": "${workspaceFolder}"
     },
     {
-      "type": "chrome",
+      "name": "ng test",
+      "type": "msedge",
       "request": "launch",
-      "name": "localhost (Chrome)",
-      "url": "https://localhost:50130",
-      "webRoot": "${workspaceFolder}"
+      "preLaunchTask": "npm: test",
+      "url": "http://localhost:9876/debug.html"
     }
   ]
 }

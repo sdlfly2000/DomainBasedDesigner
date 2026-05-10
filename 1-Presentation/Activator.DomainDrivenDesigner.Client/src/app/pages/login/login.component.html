@@ -1,0 +1,26 @@
+<div class="login-container">
+    <H1>{{ title }}</H1>
+    <p-divider />
+    <form #Login="ngForm" (ngSubmit)="OnSubmit()">
+      <div class="InputBoxContainer">
+        <p-floatlabel>
+          <input id="UserName" name="userName" pInputText [(ngModel)]="loginRequest.username" />
+          <label htmlFor="UserName">User Name</label>
+        </p-floatlabel>
+      </div>
+      <div class="InputBoxContainer">
+        <p-floatlabel>
+          <input type="password" id="Password" name="password" pInputText [(ngModel)]="password" />
+          <label for="Password">Password</label>
+        </p-floatlabel>
+      </div>
+      <div class="Button">
+        <p-button type="submit" class="btn btn-primary" [disabled]="isLoading">Login</p-button>
+        <a routerLink="register" pButton>
+          <span pButtonLabel>Register</span>
+        </a>
+      </div>
+    </form>
+</div>
+
+<p-confirmDialog />

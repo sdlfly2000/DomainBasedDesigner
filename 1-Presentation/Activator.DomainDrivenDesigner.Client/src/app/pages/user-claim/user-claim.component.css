@@ -1,0 +1,61 @@
+.form-element{
+    margin: 10px 5px 0px 5px;
+}
+
+/*------------------------*/
+.dialog-add-claim-input {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.dialog-add-claim-sec-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.dialog-add-claim-button {
+    margin-left: 10px;
+}
+
+/*------------------------*/
+.user-claim-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.user-claim-container-item-label {
+    display: flex;
+    width: 10%;
+}
+
+.user-claim-container-item-input {
+    width: 40%;
+    margin-right: 20px;
+}
+
+.user-claim-container-item-button {
+    margin-right: 20px;
+}
+
+/*========================*/
+.dialog-update-claim-input {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.dialog-update-claim-sec-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.dialog-update-claim-button {
+    margin-left: 10px;
+}

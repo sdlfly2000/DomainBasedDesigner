@@ -1,0 +1,60 @@
+<div class="user-profile-container">
+  <H1>{{ title }}</H1>
+  <p-divider />
+  @if (UserClaims()){
+  <form #UserForm="ngForm">
+    @for (claim of UserClaims(); track claim.claimId) {
+    <div class="user-claim-container">
+      <div class="user-claim-container-item-label">
+        <label [for]="claim.claimType.typeName" class="form-label form-element">{{claim.claimType.typeShortName}}</label>
+      </div>
+      <div [style]="{width: '50%'}">
+        <input type="text" pInputText [id]="claim.claimType.typeName" class="user-claim-container-item-input" [value]="claim.value" disabled />
+        @if(!claim.isFixed) {
+        <p-button type="button" class="user-claim-container-item-button" (click)="UpdateSelected(claim)">Update</p-button>
+        <p-button type="button" class="user-claim-container-item-button" (click)="DeleteClaim(claim)">Delete</p-button>
+        }
+      </div>
+    </div>
+    }
+    <p-divider />
+    <div class="row form-element">
+      <p-button (click)="ShowAddClaimDialog(true)" label="New" />
+    </div>
+   </form>
+  }
+</div>
+
+@if (UserClaims()){
+<p-dialog header="Update Claim" [modal]="true" [(visible)]="isPopupUpdateClaimDialog" [contentStyle]="{'overflow-y': 'visible'}" [style]="{ width: '30rem' }">
+    <form>
+        <div>
+            <label for="claim-value">{{UserClaimSelected.claimType.typeShortName}}</label>
+        </div>
+        <div>
+            <input type="text" id="claim-value" class="dialog-update-claim-input" name="claimValue" pInputText [(ngModel)]="UserClaimSelected.value" />
+        </div>
+        <div class="dialog-update-claim-sec-button">
+            <p-button class="dialog-update-claim-button" (click)="UpdateClaim()" label="Update" />
+            <p-button class="dialog-update-claim-button" label="Close" (click)="ShowUpdateClaimDialog(false)" />
+        </div>
+    </form>
+</p-dialog>
+}
+
+@if(ClaimTypes()){
+<p-dialog header="Add Claim" [modal]="true" [(visible)]="isPopupAddClaimDialog" [contentStyle]="{'overflow-y': 'visible'}" [style]="{ width: '30rem' }">
+    <form>
+        <div>
+            <p-select id="claim-type" name="claimtype" class="dialog-add-claim-input" placeholder="Select Claim Type" [filter]="true" [options]="ClaimTypes()" optionLabel="typeShortName" [(ngModel)]="NewUserClaim.claimType" />
+        </div>
+        <div>
+            <input type="text" id="claim-value-new" class="dialog-add-claim-input" placeholder="Input Claim Type" name="claimvaluenew" pInputText [(ngModel)]="NewUserClaim.value" />
+        </div>
+        <div class="dialog-add-claim-sec-button">
+            <p-button class="dialog-add-claim-button" (click)="AddClaim()" label="Add" />
+            <p-button class="dialog-add-claim-button" label="Close" (click)="ShowAddClaimDialog(false)" />
+        </div>
+    </form>
+</p-dialog>
+}
