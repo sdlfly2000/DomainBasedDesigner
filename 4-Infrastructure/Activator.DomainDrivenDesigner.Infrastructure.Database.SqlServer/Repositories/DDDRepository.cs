@@ -56,6 +56,29 @@ public class DDDRepository : IDDDRepository
         return requirement.Id;
     }
 
+    public async Task<Guid?> CreateBusinessModel(BusinessModel model, Guid requirementId)
+    {
+        var rowBusinessModel = new Entities.T_BUSINESS_MODEL
+        {
+            ID = model.Id,
+            NAME = model.Name,
+            CREATED_UTC = DateTime.UtcNow
+        };
+
+        var rowRequirement = await _context.T_REQUIREMENTs
+            .SingleOrDefaultAsync(r => r.ID == requirementId)
+            .ConfigureAwait(false);
+
+        DomainEntityNotFoundException.ThrowIfNull(requirementId, rowRequirement);
+
+        rowRequirement!.T_BUSINESS_MODELs.Add(rowBusinessModel);
+
+        _context.T_REQUIREMENTs.Update(rowRequirement);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+
+        return model.Id;
+    }
+
     public async Task<List<Project>> RetrieveFullProjects()
     {
         var efProjects = await _context.T_PROJECTs
