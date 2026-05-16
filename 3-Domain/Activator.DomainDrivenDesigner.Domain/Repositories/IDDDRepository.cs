@@ -10,6 +10,12 @@ public interface IDDDRepository
 
     Task<List<Project>> RetrieveFullProjects();
 
+    Task<Project> RetrieveProjectById(Guid projectId);
+
+    Task<List<Requirement>> RetrieveRequirementByProjectId(Guid projectId);
+
+    Task<Requirement> RetrieveRequirementById(Guid requirementId);
+
     Task<List<BusinessModel>> RetrieveBusinessModelsByProjectId(Guid ProjectId);
 
     Task<List<BusinessModel>> RetrieveBusinessModelsByRequirementId(Guid RequirementId);

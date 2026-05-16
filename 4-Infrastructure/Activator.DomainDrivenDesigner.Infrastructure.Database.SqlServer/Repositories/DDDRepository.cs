@@ -71,6 +71,31 @@ public class DDDRepository : IDDDRepository
         })];
     }
 
+    public async Task<Project> RetrieveProjectById(Guid projectId)
+    {
+        var rowProject = await _context.T_PROJECTs
+            .SingleOrDefaultAsync(p => p.ID == projectId)
+            .ConfigureAwait(false);
+
+        DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
+
+        return Map(rowProject!);
+    }
+
+    public async Task<List<Requirement>> RetrieveRequirementByProjectId(Guid projectId)
+    {
+        var rowProject = await _context.T_PROJECTs
+            .Include(p => p.T_REQUIREMENTs)
+            .SingleOrDefaultAsync(p => p.ID == projectId)
+            .ConfigureAwait(false);
+
+        DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
+
+        return [.. rowProject!
+            .T_REQUIREMENTs
+            .Select(r => Map(r))];
+    }
+
     public async Task<List<BusinessModel>> RetrieveBusinessModelsByProjectId(Guid projectId)
     {
         var rowProject = await _context.T_PROJECTs
@@ -103,6 +128,22 @@ public class DDDRepository : IDDDRepository
             .T_BUSINESS_MODELs
             .Select(bm => Map(bm))
             .ToList();
+    }
+
+    public async Task<Requirement> RetrieveRequirementById(Guid requirementId)
+    {
+        var rowRequirement = await _context.T_REQUIREMENTs
+            .Include(r => r.T_BUSINESS_MODELs)
+            .SingleOrDefaultAsync(r => r.ID == requirementId)
+            .ConfigureAwait(false);
+
+        DomainEntityNotFoundException.ThrowIfNull(requirementId, rowRequirement);
+
+        var requirement = Map(rowRequirement!);
+        var businessModels = rowRequirement!.T_BUSINESS_MODELs.Select(bm => Map(bm)).ToList();
+        requirement.BusinessModels.AddRange(businessModels);
+
+        return requirement;
     }
 
     public async Task<BusinessModel> RetrieveBusinessModelsById(Guid businessModelId)
