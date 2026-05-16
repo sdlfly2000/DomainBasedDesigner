@@ -33,6 +33,29 @@ public class DDDRepository : IDDDRepository
         return project.Id;
     }
 
+    public async Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)
+    {
+        var rowRequirement = new Entities.T_REQUIREMENT
+        {
+            ID = requirement.Id,
+            DESCRIPTION = requirement.Description,
+            CREATE_UTC = requirement.CreatedOnUTC
+        };
+
+        var rowProject = await _context.T_PROJECTs
+            .SingleOrDefaultAsync(p => p.ID == projectId)
+            .ConfigureAwait(false);
+
+        DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
+
+        rowProject!.T_REQUIREMENTs.Add(rowRequirement);
+
+        _context.T_PROJECTs.Update(rowProject);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+
+        return requirement.Id;
+    }
+
     public async Task<List<Project>> RetrieveFullProjects()
     {
         var efProjects = await _context.T_PROJECTs
