@@ -38,4 +38,14 @@ public class ProjectAppService
             ? new RetrieveFullProjectAppResponse(request.Id, projects, true, null)
             : new RetrieveFullProjectAppResponse(request.Id, null, false, "Failed to retrieve projects");
     }
+
+    [LogTrace(returnType: typeof(RetrieveBusinessModelsAppResponse))]
+    public async Task<RetrieveBusinessModelsAppResponse> RetrieveProjectBusinessModels(RetrieveBusinessModelsAppRequest request)
+    {
+        var businessModels = await _repository.RetrieveBusinessModelsByProjectId(request.ProjectId).ConfigureAwait(false);
+
+        return businessModels != null && businessModels.Count > 0
+            ? new RetrieveBusinessModelsAppResponse(request.Id, businessModels, true, null)
+            : new RetrieveBusinessModelsAppResponse(request.Id, businessModels, false, "No business models found for the specified project");
+    }
 }

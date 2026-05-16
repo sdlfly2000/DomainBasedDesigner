@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\3-Domain\Activator.DomainDrivenDesigner.Domain\Activator.DomainDrivenDesigner.Domain.csproj" />
     <ProjectReference Include="..\..\5-Support\Activator.Support.Shared.Core\Activator.DomainDrivenDesigner.Support.Shared.Core.csproj" />
   </ItemGroup>
 
