@@ -7,4 +7,10 @@ public interface IDDDRepository
     Task<Guid?> CreateProject(Project project);
 
     Task<List<Project>> RetrieveFullProjects();
+
+    Task<List<BusinessModel>> RetrieveBusinessModelsByProjectId(Guid ProjectId);
+
+    Task<List<BusinessModel>> RetrieveBusinessModelsByRequirementId(Guid RequirementId);
+
+    Task<BusinessModel> RetrieveBusinessModelsById(Guid BusinessModelId);
 }
