@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Activator.DomainDrivenDesigner.Application.Tests.Infrastructure;
 
-public class DDDRepositoryTest
+public class DddRepositoryTest
 {
     private DomainDbContext CreateSqlServerContext()
     {
@@ -28,8 +28,10 @@ public class DDDRepositoryTest
         var repository = new DDDRepository(context);
 
         var projectId = Guid.NewGuid();
-        var project = new Project(projectId, "Test Project");
-        project.CreatedOnUTC = DateTime.UtcNow;
+        var project = new Project(projectId, "Test Project")
+        {
+            CreatedOnUTC = DateTime.UtcNow
+        };
 
         await repository.CreateProject(project);
 
@@ -51,8 +53,8 @@ public class DDDRepositoryTest
             .FirstOrDefaultAsync(r => r.ID == requirementId);
 
         storedRequirement.Should().NotBeNull();
-        storedRequirement!.DESCRIPTION.Should().Be("Test Requirement");
-        storedRequirement!.PROJECT_ID.Should().Be(projectId);
+        storedRequirement.DESCRIPTION.Should().Be("Test Requirement");
+        storedRequirement.PROJECT_ID.Should().Be(projectId);
 
         // Verify requirement is linked to project
         var storedProject = await context.T_PROJECTs
@@ -60,7 +62,7 @@ public class DDDRepositoryTest
             .FirstOrDefaultAsync(p => p.ID == projectId);
 
         storedProject.Should().NotBeNull();
-        storedProject!.T_REQUIREMENTs.Should().Contain(r => r.ID == requirementId);
+        storedProject.T_REQUIREMENTs.Should().Contain(r => r.ID == requirementId);
     }
 
     [Test]
