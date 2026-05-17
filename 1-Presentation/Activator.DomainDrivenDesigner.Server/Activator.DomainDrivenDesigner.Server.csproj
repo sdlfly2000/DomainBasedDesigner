@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\2-Application\Activator.DomainDrivenDesigner.Application\Activator.DomainDrivenDesigner.Application.csproj" />
     <ProjectReference Include="..\activator.domaindrivendesigner.client\activator.domaindrivendesigner.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
