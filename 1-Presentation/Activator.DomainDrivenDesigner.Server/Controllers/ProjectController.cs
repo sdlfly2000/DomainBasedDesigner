@@ -28,6 +28,16 @@ public class ProjectController(ProjectAppService projectAppService) : Controller
             new CreateProjectAppRequest(Guid.NewGuid(), projectName))
             .ConfigureAwait(false);
 
+        return response.Success ? Ok() : BadRequest(response);
+    }
+
+    [HttpGet("load/all")]
+    public async Task<ActionResult<RetrieveFullProjectAppResponse>> LoadFullProjects()
+    {
+        var response = await _projectAppService.RetrieveFullProjects(
+            new RetrieveFullProjectAppRequest(Guid.NewGuid()))
+            .ConfigureAwait(false);
+
         return response.Success ? Ok(response) : BadRequest(response);
     }
 }
