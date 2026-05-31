@@ -185,7 +185,10 @@ public class DDDRepository : IDDDRepository
 
     private Project Map(T_PROJECT rowProject)
     {
-        var project = new Project(rowProject.ID, rowProject.NAME);
+        var project = new Project(rowProject.ID, rowProject.NAME)
+        {
+            Description = rowProject.DESCRIPTION
+        };
         return project;
     }
 

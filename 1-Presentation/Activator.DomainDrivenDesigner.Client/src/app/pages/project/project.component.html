@@ -1,0 +1,54 @@
+<div class="project-list-container">
+    <H1>{{ title }}</H1>
+    <p-divider />
+    @if (Projects()){
+    <div class="card">
+        <p-toolbar>
+            <ng-template #start>
+
+            </ng-template>
+        </p-toolbar>
+        <p-table #UserTable
+                 [value]="Projects()"
+                 dataKey="Id"
+                 [rows]="10"
+                 [rowsPerPageOptions]="[10, 25, 50]"
+                 [loading]="IsLoading"
+                 [paginator]="true"
+                 [globalFilterFields]="['Name', 'Description']"
+                 [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #caption>
+                <div class="flex">
+                    <p-iconfield iconPosition="left" class="ml-auto">
+                        <p-inputicon>
+                            <i class="pi pi-search"></i>
+                        </p-inputicon>
+                        <input pInputText type="text" (input)="UserTable.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" />
+                    </p-iconfield>
+                </div>
+            </ng-template>
+
+            <ng-template #header>
+                <tr>
+                    <th style="width:1%"><p-tableHeaderCheckbox /></th>
+                    <th style="width:22%">Name</th>
+                    <th style="width:22%">Description</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-project>
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="project" />
+                    </td>
+                    <td>
+                        {{ project.Name }}
+                    </td>
+                    <td>
+                        {{ project.Description }}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    }
+</div>

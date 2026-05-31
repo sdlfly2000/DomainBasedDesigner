@@ -11,11 +11,11 @@ import { StatusMessageService } from '../services/statusmessage.service';
 import { routes } from './app.routes';
 import { AuthFailureInterceptor } from './auth-failure.interceptor';
 import { AuthInterceptor } from './auth.interceptor';
-import { LoginService } from './pages/login/login.service';
 import { UserClaimService } from './pages/user-claim/user-claim.service';
 import { UserListGuard } from './pages/user-list/user-list.guard';
 import { UserListService } from './pages/user-list/user-list.service';
 import { UserListCommandService } from './pages/user-list-cmd/user-list-cmd.service';
+import { ProjectService } from './pages/project/project.service';
 
 export const BASE_URL = new InjectionToken<string>('BASE_URL');
 
@@ -26,11 +26,11 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),
     { provide: BASE_URL, useValue: document.getElementsByTagName('base')[0].href },
+    { provide: ProjectService },
     { provide: UserListGuard },
     { provide: UserClaimService },
     { provide: UserListService },
     { provide: UserListCommandService },
-    { provide: LoginService },
     { provide: AuthService },
     { provide: StatusMessageService },
     { provide: QueryStringService },

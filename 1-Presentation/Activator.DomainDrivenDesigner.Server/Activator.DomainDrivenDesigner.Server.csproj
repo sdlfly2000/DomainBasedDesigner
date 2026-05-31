@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -6,7 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <SpaRoot>..\activator.domaindrivendesigner.client</SpaRoot>
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
-    <SpaProxyServerUrl>https://localhost:50130</SpaProxyServerUrl>
+    <SpaProxyServerUrl>https://localhost:4200</SpaProxyServerUrl>
+    <UserSecretsId>977a69d5-f3c6-46c4-b9e0-ddf2813e1151</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,9 +19,23 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\2-Application\Activator.DomainDrivenDesigner.Application\Activator.DomainDrivenDesigner.Application.csproj" />
+    <ProjectReference Include="..\..\4-Infrastructure\Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer\Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.csproj" />
     <ProjectReference Include="..\activator.domaindrivendesigner.client\activator.domaindrivendesigner.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>   
+    <Content Update="appsettings.Production.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <DependentUpon>appsettings.json</DependentUpon>
+    </Content>
   </ItemGroup>
 
 </Project>

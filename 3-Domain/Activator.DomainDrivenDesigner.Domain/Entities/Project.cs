@@ -8,6 +8,8 @@ public class Project(Guid ID, string ProjectName) : EntityBase(ID)
 
     public string Name { get; } = ProjectName;
 
+    public string? Description { get; set; }
+
     public static Project Create(string ProjectName)
     {
         return new Project(Guid.NewGuid(), ProjectName);

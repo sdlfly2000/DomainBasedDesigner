@@ -1,12 +1,14 @@
 using Activator.DomainDrivenDesigner.Application.AppRequests;
 using Activator.DomainDrivenDesigner.Application.AppResponses;
 using Activator.DomainDrivenDesigner.Application.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Activator.DomainDrivenDesigner.Server.Controllers;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
+[EnableCors("AllowDDDClientPolicy")]
 public class ProjectController(ProjectAppService projectAppService) : ControllerBase
 {
     private readonly ProjectAppService _projectAppService = projectAppService;
@@ -31,9 +33,14 @@ public class ProjectController(ProjectAppService projectAppService) : Controller
         return response.Success ? Ok() : BadRequest(response);
     }
 
-    [HttpGet("load/all")]
+    [HttpGet("loadall")]
     public async Task<ActionResult<RetrieveFullProjectAppResponse>> LoadFullProjects()
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var response = await _projectAppService.RetrieveFullProjects(
             new RetrieveFullProjectAppRequest(Guid.NewGuid()))
             .ConfigureAwait(false);
