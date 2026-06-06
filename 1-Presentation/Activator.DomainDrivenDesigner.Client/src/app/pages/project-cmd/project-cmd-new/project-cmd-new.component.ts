@@ -51,6 +51,7 @@ export class ProjectCommandNewComponent {
                 this.newProjectName = "";
                 this.newProjectDescription = "";
                 this.ShowNewProjectDialog(false);
+                window.location.reload();
             }
         });
     }

@@ -10,12 +10,14 @@
         </p-toolbar>
         <p-table #UserTable
                  [value]="Projects()"
-                 dataKey="Id"
+                 dataKey="id"
                  [rows]="10"
+                 sortField="createdOnUTC" 
+                 [sortOrder]="-1"
                  [rowsPerPageOptions]="[10, 25, 50]"
                  [loading]="IsLoading"
                  [paginator]="true"
-                 [globalFilterFields]="['Name', 'Description']"
+                 [globalFilterFields]="['name', 'description']"
                  [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template #caption>
                 <div class="flex">
@@ -31,9 +33,9 @@
             <ng-template #header>
                 <tr>
                     <th style="width:1%"><p-tableHeaderCheckbox /></th>
-                    <th style="width:22%">Name</th>
-                    <th style="width:22%">Description</th>
-                    <th style="width:22%">Created On (UTC)</th>
+                    <th pSortableColumn="name" style="width:22%">Name <p-sortIcon field="name"></p-sortIcon></th>
+                    <th pSortableColumn="description" style="width:22%">Description <p-sortIcon field="description"></p-sortIcon></th>
+                    <th pSortableColumn="createdOnUTC" style="width:22%">Created On (UTC) <p-sortIcon field="createdOnUTC"></p-sortIcon></th>
                 </tr>
             </ng-template>
             <ng-template #body let-project>
