@@ -1,26 +1,34 @@
-<p-button
-          severity="secondary"
+<p-button severity="secondary"
           [raised]="true"
-          label="App"
+          label="Add"
           icon="pi pi-plus"
           class="mr-2"
-          (click)="ShowAssignAppDialog(true)"
-          [disabled]="disabledCommand"
-          />
+          (click)="ShowNewProjectDialog(true)" />
 
-<p-dialog header="Assign App" [modal]="true" [(visible)]="isPopupAssignAppDialog" [contentStyle]="{'overflow-y': 'visible'}" [style]="{ width: '30rem' }">
+<p-dialog header="New Project" [modal]="true" [(visible)]="isPopupNewProjectDialog" [contentStyle]="{'overflow-y': 'visible'}" [style]="{ width: '30rem' }">
     <form>
         <div>
             <input type="text"
-                   id="app-value-new"
-                   class="dialog-assign-app-input"
-                   placeholder="Input App Name"
-                   name="assignappinput"
-                   pInputText [(ngModel)]="assignAppName" />
+                   id="project-new-name"
+                   class="dialog-new-project-input"
+                   placeholder="Input Project Name"
+                   name="projectnewname"
+                   pInputText
+                   [(ngModel)]="newProjectName" />
+
+            <textarea
+                      rows="5"
+                      cols="30"
+                      pTextarea
+                      name="projectnewdescription"
+                      [(ngModel)]="newProjectDescription"
+                      placeholder="Project Description"
+                      fluid ></textarea>
+
         </div>
-        <div class="dialog-assign-app-sec-button">
-            <p-button class="dialog-assign-app-button" (click)="AssignApp()" label="Assign" />
-            <p-button class="dialog-assign-app-button" label="Close" (click)="ShowAssignAppDialog(false)" />
+        <div class="dialog-assign-role-sec-button">
+            <p-button class="dialog-new-project-button" (click)="NewProject()" label="Add" />
+            <p-button class="dialog-new-project-button" label="Close" (click)="ShowNewProjectDialog(false)" />
         </div>
     </form>
 </p-dialog>

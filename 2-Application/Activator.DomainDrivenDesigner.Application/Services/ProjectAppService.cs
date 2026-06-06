@@ -20,7 +20,7 @@ public class ProjectAppService
     [LogTrace(returnType: typeof(CreateProjectAppResponse))]
     public async Task<CreateProjectAppResponse> Create(CreateProjectAppRequest request)
     {
-        var project = Project.Create(request.ProjectName);
+        var project = Project.Create(request.ProjectName, request.ProjectDescription);
 
         var projectId = await _repository.CreateProject(project).ConfigureAwait(false);
 

@@ -1,18 +1,25 @@
 /*------------------------*/
 
-.dialog-assign-app-input {
+.dialog-new-project-input {
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.dialog-assign-app-sec-button {
+.dialog-new-project-description {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: dashed;
+}
+
+.dialog-new-project-sec-button {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     width: 100%;
 }
 
-.dialog-assign-app-button {
+.dialog-new-project-button {
     margin-left: 10px;
 }

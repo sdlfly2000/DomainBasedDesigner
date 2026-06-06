@@ -1,13 +1,14 @@
 export interface ProjectModel {
-    Id: string;
-    Name: string;
-    Description: string;
+    id: string;
+    name: string;
+    description: string;
+    createdOnUTC: Date;
 }
 
 export interface RetrieveFullProjectAppResponseModel {
-    RequestId: string;
-    Projects: ProjectModel[];
-    Success: boolean;
-    ErrorMessage: string;
+    requestId: string;
+    projects: ProjectModel[];
+    success: boolean;
+    errorMessage: string;
 }
 

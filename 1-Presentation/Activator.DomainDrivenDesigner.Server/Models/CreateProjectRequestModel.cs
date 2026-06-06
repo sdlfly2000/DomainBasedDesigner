@@ -1,0 +1,1 @@
+﻿public record CreateProjectAppRequestModel(string name, string description);

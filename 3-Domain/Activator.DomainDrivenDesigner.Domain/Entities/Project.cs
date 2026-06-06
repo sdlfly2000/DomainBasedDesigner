@@ -10,8 +10,12 @@ public class Project(Guid ID, string ProjectName) : EntityBase(ID)
 
     public string? Description { get; set; }
 
-    public static Project Create(string ProjectName)
+    public static Project Create(string ProjectName, string ProjectDescription)
     {
-        return new Project(Guid.NewGuid(), ProjectName);
+        return new Project(Guid.NewGuid(), ProjectName)
+        {
+            Description = ProjectDescription,
+            CreatedOnUTC = DateTime.UtcNow,
+        };
     }
 }

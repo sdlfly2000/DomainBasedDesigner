@@ -24,6 +24,7 @@ public class DDDRepository : IDDDRepository
         {
             ID = project.Id,
             NAME = project.Name,
+            DESCRIPTION = project.Description,
             CREATED_UTC = project.CreatedOnUTC
         };
 
@@ -187,7 +188,8 @@ public class DDDRepository : IDDDRepository
     {
         var project = new Project(rowProject.ID, rowProject.NAME)
         {
-            Description = rowProject.DESCRIPTION
+            Description = rowProject.DESCRIPTION,
+            CreatedOnUTC = rowProject.CREATED_UTC
         };
         return project;
     }

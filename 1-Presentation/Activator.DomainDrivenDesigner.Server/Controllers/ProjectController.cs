@@ -13,24 +13,24 @@ public class ProjectController(ProjectAppService projectAppService) : Controller
 {
     private readonly ProjectAppService _projectAppService = projectAppService;
 
-    [HttpGet("create")]
-    public async Task<ActionResult<CreateProjectAppResponse>> CreateProject([FromQuery] string projectName)
+    [HttpPost("create")]
+    public async Task<ActionResult<CreateProjectAppResponse>> CreateProject([FromBody] CreateProjectAppRequestModel request)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        if (string.IsNullOrWhiteSpace(projectName))
+        if (string.IsNullOrWhiteSpace(request.name))
         {
             return BadRequest("Project Name is required.");
         }
 
         var response = await _projectAppService.Create(
-            new CreateProjectAppRequest(Guid.NewGuid(), projectName))
+            new CreateProjectAppRequest(Guid.NewGuid(), request.name, request.description))
             .ConfigureAwait(false);
 
-        return response.Success ? Ok() : BadRequest(response);
+        return response.Success ? Ok() : BadRequest(response.ErrorMessage);
     }
 
     [HttpGet("loadall")]

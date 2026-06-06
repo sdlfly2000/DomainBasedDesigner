@@ -5,7 +5,7 @@
     <div class="card">
         <p-toolbar>
             <ng-template #start>
-
+                <project-cmd-new></project-cmd-new>
             </ng-template>
         </p-toolbar>
         <p-table #UserTable
@@ -33,6 +33,7 @@
                     <th style="width:1%"><p-tableHeaderCheckbox /></th>
                     <th style="width:22%">Name</th>
                     <th style="width:22%">Description</th>
+                    <th style="width:22%">Created On (UTC)</th>
                 </tr>
             </ng-template>
             <ng-template #body let-project>
@@ -41,10 +42,13 @@
                         <p-tableCheckbox [value]="project" />
                     </td>
                     <td>
-                        {{ project.Name }}
+                        {{ project.name }}
                     </td>
                     <td>
-                        {{ project.Description }}
+                        {{ project.description }}
+                    </td>
+                    <td>
+                        {{ project.createdOnUTC | date:'medium' }}
                     </td>
                 </tr>
             </ng-template>
