@@ -6,12 +6,14 @@
         <p-toolbar>
             <ng-template #start>
                 <project-cmd-new></project-cmd-new>
+                <project-cmd-open [selectedProjects]="SelectedProjects"></project-cmd-open>
             </ng-template>
         </p-toolbar>
-        <p-table #UserTable
+        <p-table #ProjectTable
                  [value]="Projects()"
                  dataKey="id"
                  [rows]="10"
+                 [(selection)]="SelectedProjects"
                  sortField="createdOnUTC" 
                  [sortOrder]="-1"
                  [rowsPerPageOptions]="[10, 25, 50]"
@@ -25,7 +27,7 @@
                         <p-inputicon>
                             <i class="pi pi-search"></i>
                         </p-inputicon>
-                        <input pInputText type="text" (input)="UserTable.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" />
+                        <input pInputText type="text" (input)="ProjectTable.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" />
                     </p-iconfield>
                 </div>
             </ng-template>

@@ -25,7 +25,8 @@ public class ProjectAppServiceTests
         // Arrange
         var requestId = Guid.NewGuid();
         var projectName = "Test Project";
-        var request = new CreateProjectAppRequest(requestId, projectName);
+        var projectDescription = "Test Description";
+        var request = new CreateProjectAppRequest(requestId, projectName, projectDescription);
         var projectId = Guid.NewGuid();
 
         A.CallTo(() => _repository.CreateProject(A<Project>.Ignored)).Returns(projectId);
@@ -45,7 +46,7 @@ public class ProjectAppServiceTests
     {
         // Arrange
         var requestId = Guid.NewGuid();
-        var request = new CreateProjectAppRequest(requestId, "Test Project");
+        var request = new CreateProjectAppRequest(requestId, "Test Project", "Test Description");
 
         A.CallTo(() => _repository.CreateProject(A<Project>.Ignored)).Returns((Guid?)null);
 
@@ -63,7 +64,7 @@ public class ProjectAppServiceTests
         // Arrange
         var requestId = Guid.NewGuid();
         var request = new RetrieveFullProjectAppRequest(requestId);
-        var projects = new List<Project> { Project.Create("Project 1"), Project.Create("Project 2") };
+        var projects = new List<Project> { Project.Create("Project 1", "Description 1"), Project.Create("Project 2", "Description 2") };
 
         A.CallTo(() => _repository.RetrieveFullProjects()).Returns(projects);
 

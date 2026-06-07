@@ -3,7 +3,6 @@ import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DividerModule } from 'primeng/divider';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -11,34 +10,34 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
 import { EnumInfoSeverity, StatusMessageModel, StatusMessageService } from '../../../services/statusmessage.service';
-import { ProjectService } from './project.service';
-import { ProjectModel } from './model/project';
-import { ProjectCommandNewComponent } from '../project-cmd/project-cmd-new/project-cmd-new.component';
-import { ProjectCommandOpenComponent } from '../project-cmd/project-cmd-open/project-cmd-open.component';
+import { RequirementService } from './requirement.service';
+import { RequirementModel } from './model/requirement';
+import { QueryStringService } from '../../../services/shared.QueryString.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './project.component.html',
-    styleUrls: ['./project.component.css'],
-    imports: [CommonModule, FormsModule, TableModule, InputIconModule, IconFieldModule, ConfirmDialogModule, InputTextModule, ButtonModule, DividerModule, ToolbarModule, ProjectCommandNewComponent, ProjectCommandOpenComponent]
+  selector: 'app-requirement',
+  templateUrl: './requirement.component.html',
+  styleUrls: ['./requirement.component.css'],
+    imports: [CommonModule, FormsModule, TableModule, InputIconModule, IconFieldModule, InputTextModule, ButtonModule, DividerModule, ToolbarModule]
 })
-export class ProjectComponent implements OnInit{
-    title = 'Projects';
+export class RequirementComponent implements OnInit{
+    title = 'Requirements';
     IsLoading: boolean = true;
 
-    SelectedProjects: ProjectModel[] = [];
-
-    Projects: WritableSignal<ProjectModel[]> = signal<ProjectModel[]>([]);
+    Requirements: WritableSignal<RequirementModel[]> = signal<RequirementModel[]>([]);
 
     constructor(
-        private projectService: ProjectService,
+        private queryStringService: QueryStringService,
+        private requirementService: RequirementService,
         private statusMessageService: StatusMessageService) {
     }
 
     ngOnInit(): void {
-        this.projectService.GetAllProjects().subscribe({
+        let projectId = this.queryStringService.Get("project") ?? "";
+
+        this.requirementService.GetAllRequirements(projectId).subscribe({
             next: (response) => {
-                this.Projects.set(response.projects);
+                this.Requirements.set(response.requirements);
                 this.IsLoading = false;
             },
             error: (error) => {
