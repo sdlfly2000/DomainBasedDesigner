@@ -5,8 +5,8 @@
     <div class="card">
         <p-toolbar>
             <ng-template #start>
-
-            </ng-template>
+                <requirement-cmd-new [ProjectId]="ProjectId" [ProjectName]="ProjectName"></requirement-cmd-new>
+        </ng-template>
         </p-toolbar>
         <p-table #RequirementTable
                  [value]="Requirements()"

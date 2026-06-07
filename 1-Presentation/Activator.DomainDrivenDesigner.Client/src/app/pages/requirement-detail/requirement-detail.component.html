@@ -1,0 +1,25 @@
+<div class="requirement-detail-container">
+    <H1>{{ ProjectName }} -> {{ title }}</H1>
+    <p-divider />
+    <div class="card">
+        <div class="requirement-detail-description">
+            <textarea rows="5"
+                      cols="30"
+                      pTextarea
+                      name="requirementnewdescription"
+                      [(ngModel)]="RequirementDescription"
+                      placeholder="Requirement Description"
+                      fluid></textarea>
+        </div>
+        <div class="requirement-detail-analyzed">
+            <textarea rows="10"
+                      cols="30"
+                      pTextarea
+                      name="requirementanalyzed"
+                      [disabled] = "true"
+                      fluid></textarea>
+        </div>
+
+        <div #mermaidContainer class="mermaid-target"></div>
+    </div>
+</div>

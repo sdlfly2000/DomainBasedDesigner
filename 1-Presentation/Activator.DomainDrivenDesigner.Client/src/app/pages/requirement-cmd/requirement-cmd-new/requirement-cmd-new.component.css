@@ -1,0 +1,25 @@
+/*------------------------*/
+
+.dialog-new-requirement-input {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.dialog-new-requirement-description {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: dashed;
+}
+
+.dialog-new-requirement-sec-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.dialog-new-requirement-button {
+    margin-left: 10px;
+}

@@ -31,7 +31,10 @@ export class ProjectCommandOpenComponent implements OnChanges{
 
     NavigateRequirement() {
         this.router.navigate(["app/requirement"], {
-            queryParams: { project: this.selectedProjects()?.[0].id }
+            queryParams: {
+                project: this.selectedProjects()?.[0].id,
+                projectName: this.selectedProjects()?.[0].name
+            }
         });
     }    
 }

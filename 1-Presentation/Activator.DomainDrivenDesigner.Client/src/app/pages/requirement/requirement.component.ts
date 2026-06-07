@@ -13,16 +13,19 @@ import { EnumInfoSeverity, StatusMessageModel, StatusMessageService } from '../.
 import { RequirementService } from './requirement.service';
 import { RequirementModel } from './model/requirement';
 import { QueryStringService } from '../../../services/shared.QueryString.service';
+import { RequirementCommandNewComponent } from '../requirement-cmd/requirement-cmd-new/requirement-cmd-new.component';
 
 @Component({
   selector: 'app-requirement',
   templateUrl: './requirement.component.html',
   styleUrls: ['./requirement.component.css'],
-    imports: [CommonModule, FormsModule, TableModule, InputIconModule, IconFieldModule, InputTextModule, ButtonModule, DividerModule, ToolbarModule]
+    imports: [CommonModule, FormsModule, TableModule, InputIconModule, IconFieldModule, InputTextModule, ButtonModule, DividerModule, ToolbarModule, RequirementCommandNewComponent]
 })
 export class RequirementComponent implements OnInit{
     title = 'Requirements';
     IsLoading: boolean = true;
+    ProjectId: string = "";
+    ProjectName: string = "";
 
     Requirements: WritableSignal<RequirementModel[]> = signal<RequirementModel[]>([]);
 
@@ -33,9 +36,10 @@ export class RequirementComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        let projectId = this.queryStringService.Get("project") ?? "";
+        this.ProjectId = this.queryStringService.Get("project") ?? "";
+        this.ProjectName = this.queryStringService.Get("projectName") ?? "";
 
-        this.requirementService.GetAllRequirements(projectId).subscribe({
+        this.requirementService.GetAllRequirements(this.ProjectId).subscribe({
             next: (response) => {
                 this.Requirements.set(response.requirements);
                 this.IsLoading = false;
