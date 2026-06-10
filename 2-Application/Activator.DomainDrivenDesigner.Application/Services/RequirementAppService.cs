@@ -10,10 +10,12 @@ namespace Activator.DomainDrivenDesigner.Application.Services;
 public class RequirementAppService
 {
     private readonly IDDDRepository _repository;
+    private readonly IServiceProvider _serviceProvider;
 
-    public RequirementAppService(IDDDRepository repository)
+    public RequirementAppService(IDDDRepository repository, IServiceProvider serviceProvider)
     {
         _repository = repository;
+        _serviceProvider = serviceProvider;
     }
 
     [LogTrace(returnType: typeof(RetrieveRequirementByProjectAppResponse))]

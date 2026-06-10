@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MrAdvice" Version="2.20.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\5-Support\Activator.DomainDrivenDesigner.Support.Core\Activator.DomainDrivenDesigner.Support.Core.csproj" />
   </ItemGroup>
 

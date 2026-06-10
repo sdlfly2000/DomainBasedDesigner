@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageReference Include="MrAdvice" Version="2.20.5" />
   </ItemGroup>
 
   <ItemGroup>

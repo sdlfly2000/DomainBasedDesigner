@@ -1,0 +1,17 @@
+﻿using Common.Core.DependencyInjection;
+using Microsoft.Agents.AI;
+
+namespace Acticator.DomainDrivenDesigner.Infrastructure.AI;
+
+[ServiceLocate(default)]
+public class AIService
+{
+    private readonly AIAgent _agent;
+
+    public AIService(AIAgent agent)
+    {
+        _agent = agent;    
+    }
+
+
+}
