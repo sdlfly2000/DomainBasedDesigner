@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\2-Application\Activator.DomainDrivenDesigner.Application\Activator.DomainDrivenDesigner.Application.csproj" />
+    <ProjectReference Include="..\..\4-Infrastructure\Acticator.DomainDrivenDesigner.Infrastructure.AI\Activator.DomainDrivenDesigner.Infrastructure.AI.csproj" />
     <ProjectReference Include="..\..\4-Infrastructure\Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer\Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.csproj" />
     <ProjectReference Include="..\..\5-Support\Activator.Support.Shared.Core\Activator.DomainDrivenDesigner.Support.Shared.Core.csproj" />
     <ProjectReference Include="..\activator.domaindrivendesigner.client\activator.domaindrivendesigner.client.esproj">

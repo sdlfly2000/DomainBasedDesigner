@@ -1,4 +1,5 @@
-﻿using Common.Core.DependencyInjection;
+﻿using Acticator.DomainDrivenDesigner.Infrastructure.AI.Client;
+using Common.Core.DependencyInjection;
 using Microsoft.Agents.AI;
 
 namespace Acticator.DomainDrivenDesigner.Infrastructure.AI;
@@ -8,9 +9,9 @@ public class AIService
 {
     private readonly AIAgent _agent;
 
-    public AIService(AIAgent agent)
+    public AIService(AIAgentClientFactory agentFactory)
     {
-        _agent = agent;    
+        _agent = agentFactory.Get();    
     }
 
 

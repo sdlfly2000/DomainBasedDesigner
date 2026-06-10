@@ -1,3 +1,4 @@
+using Acticator.DomainDrivenDesigner.Infrastructure.AI.Client;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer;
 using Activator.DomainDrivenDesigner.Support.Core.Middleware;
 using Common.Core.Authentication;
@@ -35,6 +36,9 @@ builder.Services.AddStackExchangeRedisCache(options =>
 // Add JWT Options
 builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("JWT"));
 
+// Add AI Options
+builder.Services.Configure<AIOptions>(builder.Configuration.GetSection("AI"));
+
 // Add Database
 var connectionString = builder.Configuration.GetConnectionString("DomainDrivenDesignerDatabase");
 builder.Services.AddDatabase(connectionString);
@@ -45,7 +49,8 @@ builder.Services
     "Activator.DomainDrivenDesigner.Server",
     "Activator.DomainDrivenDesigner.Application", 
     "Activator.DomainDrivenDesigner.Domain", 
-    "Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer", 
+    "Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer",
+    "Activator.DomainDrivenDesigner.Infrastructure.AI",
     "Activator.DomainDrivenDesigner.Support.Core");
 
 // Add CORS to allow cross domain query

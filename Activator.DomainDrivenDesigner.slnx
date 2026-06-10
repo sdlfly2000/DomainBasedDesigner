@@ -13,8 +13,8 @@
     <Project Path="3-Domain/Activator.DomainDrivenDesigner.Domain/Activator.DomainDrivenDesigner.Domain.csproj" Id="b47f4ca0-bad7-456d-9aa7-4b3f19d9d103" />
   </Folder>
   <Folder Name="/4-Infrastructure/">
+    <Project Path="4-Infrastructure/Acticator.DomainDrivenDesigner.Infrastructure.AI/Activator.DomainDrivenDesigner.Infrastructure.AI.csproj" Id="ab14a139-15b2-4a80-bbdf-cd5a2bcbfcea" />
     <Project Path="4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.csproj" Id="36cc75b1-98ad-4719-b3d0-8611e71e4420" />
-    <Project Path="4-Infrastructure/Acticator.DomainDrivenDesigner.Infrastructure.AI/Acticator.DomainDrivenDesigner.Infrastructure.AI.csproj" Id="ab14a139-15b2-4a80-bbdf-cd5a2bcbfcea" />
   </Folder>
   <Folder Name="/5-Support/">
     <Project Path="5-Support/Activator.DomainDrivenDesigner.Support.Core/Activator.DomainDrivenDesigner.Support.Core.csproj" Id="088065bd-a3ca-40b4-a58b-8fb5884712a3" />

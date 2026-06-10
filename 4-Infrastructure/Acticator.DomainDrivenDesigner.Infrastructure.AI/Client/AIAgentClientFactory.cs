@@ -1,20 +1,33 @@
 ﻿using Common.Core.DependencyInjection;
 using Microsoft.Agents.AI;
+using Microsoft.Extensions.Options;
+using OllamaSharp;
 
 namespace Acticator.DomainDrivenDesigner.Infrastructure.AI.Client;
 
 [ServiceLocate(default, ServiceType.Singleton)]
-internal class AIAgentClientFactory
+public class AIAgentClientFactory
 {
-    private readonly IServiceProvider _serviceProvider;
+    private Lazy<AIAgent> _aiAgent;
 
-    public AIAgentClientFactory(IServiceProvider serviceProvider)
+    public AIAgentClientFactory(IOptions<AIOptions> aiOptions)
     {
-        _serviceProvider = serviceProvider;
+        _aiAgent = new Lazy<AIAgent>(() => Create(aiOptions.Value), isThreadSafe: true);
     }
 
-    public AIAgent Create(IServiceProvider serviceProvider)
+    public AIAgent Get()
     {
-        throw new NotImplementedException();
+        return _aiAgent.Value;
+    }
+
+    private AIAgent Create(AIOptions opt)
+    {
+        // --- Agent Setup ---
+        var ollamaApiClient = new OllamaApiClient(
+            new Uri(opt.Endpoint),
+            defaultModel: opt.Model
+        );
+
+        return new ChatClientAgent(ollamaApiClient);
     }
 }
