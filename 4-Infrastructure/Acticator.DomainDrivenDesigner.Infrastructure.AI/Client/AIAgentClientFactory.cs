@@ -8,19 +8,18 @@ namespace Acticator.DomainDrivenDesigner.Infrastructure.AI.Client;
 [ServiceLocate(default, ServiceType.Singleton)]
 public class AIAgentClientFactory
 {
-    private Lazy<AIAgent> _aiAgent;
-
+    private readonly AIOptions _aiOption;
     public AIAgentClientFactory(IOptions<AIOptions> aiOptions)
     {
-        _aiAgent = new Lazy<AIAgent>(() => Create(aiOptions.Value), isThreadSafe: true);
+        _aiOption = aiOptions.Value;
     }
 
-    public AIAgent Get()
+    public AIAgent Get(string instructions)
     {
-        return _aiAgent.Value;
+        return Create(_aiOption, instructions);
     }
 
-    private AIAgent Create(AIOptions opt)
+    private AIAgent Create(AIOptions opt, string instructions)
     {
         // --- Agent Setup ---
         var ollamaApiClient = new OllamaApiClient(
@@ -28,6 +27,9 @@ public class AIAgentClientFactory
             defaultModel: opt.Model
         );
 
-        return new ChatClientAgent(ollamaApiClient);
+        return new ChatClientAgent(
+            ollamaApiClient,
+            instructions: instructions
+            );
     }
 }

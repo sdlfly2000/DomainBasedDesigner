@@ -11,7 +11,7 @@ public class AIService
 
     public AIService(AIAgentClientFactory agentFactory)
     {
-        _agent = agentFactory.Get();    
+
     }
 
 
