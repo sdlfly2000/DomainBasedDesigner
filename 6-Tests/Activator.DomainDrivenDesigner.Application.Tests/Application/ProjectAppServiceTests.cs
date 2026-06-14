@@ -4,19 +4,22 @@ using Activator.DomainDrivenDesigner.Domain.Entities;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
 using FakeItEasy;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Activator.DomainDrivenDesigner.Application.Tests.Application;
 
 public class ProjectAppServiceTests
 {
     private IDDDRepository _repository = null!;
+    private IServiceProvider _serviceProvider = null!;
     private ProjectAppService _service = null!;
 
     [SetUp]
     public void Setup()
     {
         _repository = A.Fake<IDDDRepository>();
-        _service = new ProjectAppService(_repository);
+        _serviceProvider = A.Fake<IServiceProvider>();
+        _service = new ProjectAppService(_repository, _serviceProvider);
     }
 
     [Test]

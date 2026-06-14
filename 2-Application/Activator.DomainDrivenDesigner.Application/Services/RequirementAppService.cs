@@ -1,22 +1,24 @@
 ﻿using Activator.DomainDrivenDesigner.Application.AppRequests;
 using Activator.DomainDrivenDesigner.Application.AppResponses;
 using Activator.DomainDrivenDesigner.Domain.Entities;
-using Activator.DomainDrivenDesigner.Domain.Enum;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
 using Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 using Common.Core.AOP.LogTrace;
 using Common.Core.DependencyInjection;
+using System.Text.Json;
 
 namespace Activator.DomainDrivenDesigner.Application.Services;
 
 [ServiceLocate(default)]
 public class RequirementAppService(
     IDDDRepository repository,
-    SemanticAnalysisAgent agent,
+    SemanticAnalysisAgent semanticAnalysisAgent,
+    MermaidConverterAgent mermaidConverterAgent,
     IServiceProvider serviceProvider)
 {
     private readonly IDDDRepository _repository = repository;
-    private readonly SemanticAnalysisAgent _agent = agent;
+    private readonly SemanticAnalysisAgent _semanticAnalysisAgent = semanticAnalysisAgent;
+    private readonly MermaidConverterAgent _mermaidConverterAgent = mermaidConverterAgent;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     [LogTrace(returnType: typeof(RetrieveRequirementByProjectAppResponse))]
@@ -33,29 +35,32 @@ public class RequirementAppService(
     [LogTrace(returnType: typeof(AnalyzeRequirementsResponse))]
     public async Task<AnalyzeRequirementsResponse> AnalyzeRequirement(AnalyzeRequirementsRequest request)
     {
-        var response = await _agent.Analyze(request.RequirementDescription).ConfigureAwait(false);
+        var semanticAnalysisResponse = await _semanticAnalysisAgent.Analyze(request.RequirementDescription).ConfigureAwait(false);
         
-        var models = response.Result.nouns.Select(n => new BusinessModel(Guid.NewGuid()) { Name = n }).ToArray();
-        var actions = response.Result.verbs.Select(v => new BusinessAction(Guid.NewGuid()) { Name = v }).ToArray();
+        var models = semanticAnalysisResponse.Result.nouns.Select(n => new BusinessModel(Guid.NewGuid()) { Name = n }).ToArray();
+        var actions = semanticAnalysisResponse.Result.verbs.Select(v => new BusinessAction(Guid.NewGuid()) { Name = v }).ToArray();
 
-        foreach (var relationship in response.Result.relationships)
+        foreach (var relationship in semanticAnalysisResponse.Result.relationships)
         {
-            if (response.Result.nouns.Contains(relationship.noun))
+            if (semanticAnalysisResponse.Result.nouns.Contains(relationship.noun))
             {
                 relationship.modifiers.ToList().ForEach(modifier =>
                 {
                     var model = models.SingleOrDefault(m => m.Name == relationship.noun);
-                    model?.Type.Add(new BusinessModelProperty(Guid.NewGuid()) { Name = modifier });
+                    model?.Properties.Add(new BusinessModelProperty(Guid.NewGuid()) { Name = modifier });
                 });
             }
         }
 
-        return response != null
+        var serializedModel = JsonSerializer.Serialize(models);
+        var mermaidResponse = await _mermaidConverterAgent.Convert(serializedModel).ConfigureAwait(false);
+
+        return semanticAnalysisResponse != null
             ? new AnalyzeRequirementsResponse(
                 request.RequestId,
                 models,
                 actions,
-                response.Text,
+                mermaidResponse.Text,
                 true, 
                 null)
             : new AnalyzeRequirementsResponse(request.RequestId, null, null, "", false, "Failed to analyze requirement");

@@ -55,13 +55,8 @@ export class RequirementDetailComponent implements OnInit{
 
     async OnAnalyzedResult(analyzedResult: string) {
         this.AnalyzedResult = analyzedResult;
-        this.graphDefinition = `
-        graph TD
-          A[Start Project] --> B{Is it Angular?}
-          B -- Yes --> C[Use afterNextRender]
-          B -- No --> D[Check other frameworks / standard]
-      `
-       await this.renderDiagram();
+        this.graphDefinition = analyzedResult;
+        await this.renderDiagram();
     }
 
     private async renderDiagram() {
