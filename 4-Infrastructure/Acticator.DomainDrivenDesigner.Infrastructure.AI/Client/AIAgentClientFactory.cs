@@ -3,7 +3,7 @@ using Microsoft.Agents.AI;
 using Microsoft.Extensions.Options;
 using OllamaSharp;
 
-namespace Acticator.DomainDrivenDesigner.Infrastructure.AI.Client;
+namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
 
 [ServiceLocate(default, ServiceType.Singleton)]
 public class AIAgentClientFactory

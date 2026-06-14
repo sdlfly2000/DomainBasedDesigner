@@ -1,6 +1,11 @@
 <div class="requirement-detail-container">
     <H1>{{ ProjectName }} -> {{ title }}</H1>
     <p-divider />
+    <p-toolbar>
+        <ng-template #start>
+            <requirement-detail-cmd-analyze [Description]="RequirementDescription" ></requirement-detail-cmd-analyze>
+        </ng-template>
+    </p-toolbar>
     <div class="card">
         <div class="requirement-detail-description">
             <textarea rows="5"
@@ -16,7 +21,7 @@
                       cols="30"
                       pTextarea
                       name="requirementanalyzed"
-                      [disabled] = "true"
+                      [disabled]="true"
                       fluid></textarea>
         </div>
 

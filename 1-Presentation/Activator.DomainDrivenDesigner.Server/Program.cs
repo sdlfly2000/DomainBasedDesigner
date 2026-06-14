@@ -1,4 +1,4 @@
-using Acticator.DomainDrivenDesigner.Infrastructure.AI.Client;
+using Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer;
 using Activator.DomainDrivenDesigner.Support.Core.Middleware;
 using Common.Core.Authentication;

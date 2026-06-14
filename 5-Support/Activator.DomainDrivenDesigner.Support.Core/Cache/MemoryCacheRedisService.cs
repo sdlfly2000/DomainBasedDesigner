@@ -8,6 +8,8 @@ namespace Activator.DomainDrivenDesigner.Support.Core.Cache;
 [ServiceLocate(typeof(IMemoryCacheService))]
 public class MemoryCacheRedisService : IMemoryCacheService
 {
+    private const string KeyPrefix = "DomainDrivenDesigner";
+
     private readonly IDistributedCache _redisCache;
 
     public MemoryCacheRedisService(IDistributedCache redisCache)
@@ -17,7 +19,7 @@ public class MemoryCacheRedisService : IMemoryCacheService
 
     public async Task<(bool Success, T? CachedValue)> GetValue<T>(string cacheKeyUnique, CancellationToken? token)
     {
-        var value = await _redisCache.GetStringAsync(cacheKeyUnique, token ?? CancellationToken.None).ConfigureAwait(false);
+        var value = await _redisCache.GetStringAsync($"{KeyPrefix}-{cacheKeyUnique}", token ?? CancellationToken.None).ConfigureAwait(false);
 
         if (value == null) return (false, default);
 
@@ -30,7 +32,7 @@ public class MemoryCacheRedisService : IMemoryCacheService
 
     public async Task<bool> InsertIfNotExist<T>(string cacheKeyUnique, T jsonValue, TimeSpan expire, CancellationToken? token)
     {
-        var value = await _redisCache.GetAsync(cacheKeyUnique, token ?? CancellationToken.None).ConfigureAwait(false);
+        var value = await _redisCache.GetAsync($"{KeyPrefix}-{cacheKeyUnique}", token ?? CancellationToken.None).ConfigureAwait(false);
         if(value is null)
         {
             return await Upsert(cacheKeyUnique, jsonValue, expire, token).ConfigureAwait(false);
@@ -40,7 +42,7 @@ public class MemoryCacheRedisService : IMemoryCacheService
 
     public async Task<bool> Upsert<T>(string cacheKeyUnique, T jsonValue, TimeSpan expire, CancellationToken? token)
     {
-        await _redisCache.SetStringAsync(cacheKeyUnique, JsonSerializer.Serialize(jsonValue), new DistributedCacheEntryOptions
+        await _redisCache.SetStringAsync($"{KeyPrefix}-{cacheKeyUnique}", JsonSerializer.Serialize(jsonValue), new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = expire
         }, token ?? CancellationToken.None).ConfigureAwait(false);

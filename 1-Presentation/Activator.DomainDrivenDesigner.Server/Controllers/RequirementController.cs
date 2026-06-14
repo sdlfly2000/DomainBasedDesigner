@@ -32,4 +32,21 @@ public class RequirementController(RequirementAppService requirementAppService, 
 
         return response.Success ? Ok(response) : BadRequest(response);
     }
+
+    [HttpPost("analyze")]
+    public async Task<ActionResult<AnalyzeRequirementsResponse>> AnalyzeRequirements([FromBody] AnalyzeRequirementsRequestsModel request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var requestId = Guid.Parse(_requestContext.TraceId);
+
+        var response = await _requirementAppService.AnalyzeRequirement(
+            new AnalyzeRequirementsRequest(requestId, request.Description))
+            .ConfigureAwait(false);
+
+        return response.Success ? Ok(response) : BadRequest(response);
+    }
 }
