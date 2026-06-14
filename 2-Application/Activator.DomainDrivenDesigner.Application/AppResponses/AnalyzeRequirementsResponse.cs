@@ -1,4 +1,12 @@
-﻿namespace Activator.DomainDrivenDesigner.Application.AppResponses;
+﻿using Activator.DomainDrivenDesigner.Domain.Entities;
 
-public record AnalyzeRequirementsResponse(Guid RequestId, bool Success, string? ErrorMessage) 
+namespace Activator.DomainDrivenDesigner.Application.AppResponses;
+
+public record AnalyzeRequirementsResponse(
+    Guid RequestId, 
+    BusinessModel[]? BusinessModels, 
+    BusinessAction[]? BusinessActions,
+    string raw,
+    bool Success, 
+    string? ErrorMessage)
     : AppResponse(RequestId, Success, ErrorMessage);

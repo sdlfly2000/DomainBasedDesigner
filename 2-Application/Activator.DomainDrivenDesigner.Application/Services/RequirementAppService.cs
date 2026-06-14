@@ -1,5 +1,7 @@
 ﻿using Activator.DomainDrivenDesigner.Application.AppRequests;
 using Activator.DomainDrivenDesigner.Application.AppResponses;
+using Activator.DomainDrivenDesigner.Domain.Entities;
+using Activator.DomainDrivenDesigner.Domain.Enum;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
 using Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 using Common.Core.AOP.LogTrace;
@@ -32,11 +34,30 @@ public class RequirementAppService(
     public async Task<AnalyzeRequirementsResponse> AnalyzeRequirement(AnalyzeRequirementsRequest request)
     {
         var response = await _agent.Analyze(request.RequirementDescription).ConfigureAwait(false);
+        
+        var models = response.Result.nouns.Select(n => new BusinessModel(Guid.NewGuid()) { Name = n }).ToArray();
+        var actions = response.Result.verbs.Select(v => new BusinessAction(Guid.NewGuid()) { Name = v }).ToArray();
 
+        foreach (var relationship in response.Result.relationships)
+        {
             if (response.Result.nouns.Contains(relationship.noun))
-            if (response.Result.nouns.Contains(relationship.Item1))
+            {
+                relationship.modifiers.ToList().ForEach(modifier =>
+                {
+                    var model = models.SingleOrDefault(m => m.Name == relationship.noun);
+                    model?.Type.Add(new BusinessModelProperty(Guid.NewGuid()) { Name = modifier });
+                });
+            }
+        }
+
         return response != null
-            ? new AnalyzeRequirementsResponse(request.RequestId, true, null)
-            : new AnalyzeRequirementsResponse(request.RequestId, false, "Failed to analyze requirement");
+            ? new AnalyzeRequirementsResponse(
+                request.RequestId,
+                models,
+                actions,
+                response.Text,
+                true, 
+                null)
+            : new AnalyzeRequirementsResponse(request.RequestId, null, null, "", false, "Failed to analyze requirement");
     }
 }

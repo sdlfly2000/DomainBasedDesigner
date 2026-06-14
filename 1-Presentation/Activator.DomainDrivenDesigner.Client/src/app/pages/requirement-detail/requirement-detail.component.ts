@@ -20,6 +20,7 @@ export class RequirementDetailComponent implements OnInit{
     ProjectId : string = '';
     ProjectName : string = '';
     RequirementDescription: string = '';
+    AnalyzedResult: string = "";
 
     private graphDefinition = `
     graph TD
@@ -50,6 +51,10 @@ export class RequirementDetailComponent implements OnInit{
         this.ProjectId = this.queryStringService.Get('projectId') ?? "";
         this.ProjectName = this.queryStringService.Get("projectName") ?? "";
 
+    }
+
+    OnAnalyzedResult(analyzedResult: string) {
+        this.AnalyzedResult = analyzedResult;
     }
 
     private async renderDiagram() {

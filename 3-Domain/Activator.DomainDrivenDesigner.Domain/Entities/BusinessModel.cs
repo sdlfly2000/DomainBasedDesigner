@@ -7,5 +7,5 @@ public class BusinessModel(Guid ID) : EntityBase(ID)
 {
     public string? Name { get; set; }
     
-    public List<ModelPropertyType> Type { get; set; } = [];
+    public List<BusinessModelProperty> Type { get; set; } = [];
 }

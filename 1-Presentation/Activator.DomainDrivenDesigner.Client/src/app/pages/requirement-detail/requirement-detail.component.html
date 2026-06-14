@@ -3,7 +3,7 @@
     <p-divider />
     <p-toolbar>
         <ng-template #start>
-            <requirement-detail-cmd-analyze [Description]="RequirementDescription" ></requirement-detail-cmd-analyze>
+            <requirement-detail-cmd-analyze [Description]="RequirementDescription" (AnalyzedResult) ="OnAnalyzedResult($event)"></requirement-detail-cmd-analyze>
         </ng-template>
     </p-toolbar>
     <div class="card">
@@ -21,6 +21,7 @@
                       cols="30"
                       pTextarea
                       name="requirementanalyzed"
+                      [(ngModel)]="AnalyzedResult"
                       [disabled]="true"
                       fluid></textarea>
         </div>
