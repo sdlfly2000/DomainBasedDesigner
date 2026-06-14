@@ -16,16 +16,18 @@
                       placeholder="Requirement Description"
                       fluid></textarea>
         </div>
+
+        <div #mermaidContainer class="mermaid-target"></div>
+
         <div class="requirement-detail-analyzed">
             <textarea rows="10"
                       cols="30"
                       pTextarea
                       name="requirementanalyzed"
                       [(ngModel)]="AnalyzedResult"
+                      placeholder="AI Raw Output"
                       [disabled]="true"
                       fluid></textarea>
         </div>
-
-        <div #mermaidContainer class="mermaid-target"></div>
     </div>
 </div>
