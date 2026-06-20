@@ -6,11 +6,27 @@ import { AppTopbar } from './app.topbar';
 import { AppSidebar } from './app.sidebar';
 import { AppFooter } from './app.footer';
 import { LayoutService } from '../service/layout.service';
+import { StatusMessageService } from '../../../services/statusmessage.service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter],
+    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter, ProgressSpinnerModule],
+    styles: `
+    .full-page-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999; // Ensures it overlays everything else
+        background-color: rgba(128, 128, 128, 0.5); // 50% transparent grey
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    `,
     template: `<div class="layout-wrapper" [ngClass]="containerClass">
         <app-topbar></app-topbar>
         <app-sidebar></app-sidebar>
@@ -21,12 +37,17 @@ import { LayoutService } from '../service/layout.service';
             <app-footer></app-footer>
         </div>
         <div class="layout-mask animate-fadein"></div>
+        <div *ngIf="isLoading" class="full-page-loader">
+            <p-progressSpinner></p-progressSpinner>
+        </div>
     </div> `
 })
 export class AppLayout {
     overlayMenuOpenSubscription: Subscription;
 
     menuOutsideClickListener: any;
+
+    isLoading = false;
 
     @ViewChild(AppSidebar) appSidebar!: AppSidebar;
 
@@ -35,7 +56,8 @@ export class AppLayout {
     constructor(
         public layoutService: LayoutService,
         public renderer: Renderer2,
-        public router: Router
+        public router: Router,
+        private statusMessageService: StatusMessageService
     ) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
@@ -53,6 +75,10 @@ export class AppLayout {
 
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
             this.hideMenu();
+        });
+
+        this.statusMessageService.IsLoading.subscribe(isLoading => {
+            this.isLoading = isLoading;
         });
     }
 

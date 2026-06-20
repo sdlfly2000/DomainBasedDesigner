@@ -26,6 +26,7 @@ export class RequirementDetailCommandAnalyzeComponent {
 
     Analyze(): void {
         let request: AnalyzeRequirementsRequestModel = { description: this.Description() ?? "" };
+        this.statusMessageService.IsLoading = true;
         this.service.AnalyzeRequirement(request).subscribe({
             next: (response) => {
                 this.AnalyzedResult.emit(response.raw);
@@ -34,6 +35,9 @@ export class RequirementDetailCommandAnalyzeComponent {
                 if (error instanceof HttpErrorResponse) {
                     this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
                 }
+            },
+            complete: () => {
+                this.statusMessageService.IsLoading = false;
             }
         });
     }

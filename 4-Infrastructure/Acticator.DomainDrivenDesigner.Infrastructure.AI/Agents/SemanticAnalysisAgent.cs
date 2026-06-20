@@ -16,16 +16,19 @@ public class SemanticAnalysisAgent
     
     Your task is to analyze the given sentences and extract this information in a structured format.
 
+    Please note
+    - all verbs, nouns, and modifiers should be capitalized in the output.
+
     Example:
 
     Input: "The quick brown fox jumps over the lazy dog."
 
     Output:
     {
-        "verbs": ["jumps"],
-        "nouns": ["fox", "dog"],
-        "modifiers": ["quick", "brown", "lazy"],
-        "relationships": [["fox",["quick", "brown"]],["dog",["lazy"]]]
+        "verbs": ["Jumps"],
+        "nouns": ["Fox", "Dog"],
+        "modifiers": ["Quick", "Brown", "Lazy"],
+        "relationships": [["Fox",["Quick", "Brown"]],["Dog",["Lazy"]]]
     }
 
     """;

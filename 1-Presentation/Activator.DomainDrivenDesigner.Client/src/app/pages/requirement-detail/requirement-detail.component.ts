@@ -59,6 +59,11 @@ export class RequirementDetailComponent implements OnInit{
         await this.renderDiagram();
     }
 
+    async OnAnalyzedResultChange(changedValue: string) {
+        this.graphDefinition = changedValue;
+        await this.renderDiagram();
+    }
+
     private async renderDiagram() {
         try {
             const element = this.mermaidContainer.nativeElement;

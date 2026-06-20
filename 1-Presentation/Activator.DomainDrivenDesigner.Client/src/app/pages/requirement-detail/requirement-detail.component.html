@@ -26,7 +26,7 @@
                       name="requirementanalyzed"
                       [(ngModel)]="AnalyzedResult"
                       placeholder="AI Raw Output"
-                      [disabled]="true"
+                      (ngModelChange)="OnAnalyzedResultChange($event)"
                       fluid></textarea>
         </div>
     </div>

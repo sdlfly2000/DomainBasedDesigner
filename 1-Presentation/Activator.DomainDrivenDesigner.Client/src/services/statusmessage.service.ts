@@ -8,8 +8,11 @@ export class StatusMessageService {
 
   private statusMessage: Subject<StatusMessageModel>;
 
+  private isLoading: Subject<boolean> = new Subject<boolean>();
+
   constructor() {
     this.statusMessage = new Subject<StatusMessageModel>();
+    this.isLoading = new Subject<boolean>();
   }
 
   set StatusMessage(StatusMessageModel: StatusMessageModel) {
@@ -18,6 +21,14 @@ export class StatusMessageService {
 
   get StatusMessage(): Observable<StatusMessageModel> {
     return this.statusMessage;
+  }
+
+  set IsLoading(isLoading: boolean) {
+      this.isLoading.next(isLoading);
+  }
+
+  get IsLoading(): Observable<boolean> {
+      return this.isLoading;
   }
 }
 
