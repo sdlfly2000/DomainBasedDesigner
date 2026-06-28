@@ -1,7 +1,7 @@
 import { Component, input, output, signal, WritableSignal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RequirementDetailCommandService } from '../requirement-detail-cmd.service';
-import { AnalyzeRequirementsRequestModel } from '../model/requirement-detail-cmd';
+import { AnalyzeRequirementsRequestModel, AnalyzeRequirementsResponseModel } from '../model/requirement-detail-cmd';
 import { HttpErrorResponse } from '@angular/common/http';
 import { StatusMessageModel, EnumInfoSeverity, StatusMessageService } from '../../../../services/statusmessage.service';
 
@@ -15,7 +15,7 @@ import { StatusMessageModel, EnumInfoSeverity, StatusMessageService } from '../.
 export class RequirementDetailCommandAnalyzeComponent {
     Description = input<string>();
 
-    AnalyzedResult = output<string>();
+    AnalyzedResult = output<AnalyzeRequirementsResponseModel>();
 
     disabledCommand = false;
 
@@ -29,7 +29,7 @@ export class RequirementDetailCommandAnalyzeComponent {
         this.statusMessageService.IsLoading = true;
         this.service.AnalyzeRequirement(request).subscribe({
             next: (response) => {
-                this.AnalyzedResult.emit(response.raw);
+                this.AnalyzedResult.emit(response);
             },
             error: (error) => {
                 if (error instanceof HttpErrorResponse) {

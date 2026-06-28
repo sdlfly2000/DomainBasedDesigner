@@ -65,4 +65,24 @@ public class RequirementAppService(
                 null)
             : new AnalyzeRequirementsResponse(request.RequestId, null, null, "", false, "Failed to analyze requirement");
     }
+
+    [LogTrace(returnType: typeof(UpsertBusinessModelsAppResponse))]
+    public async Task<UpsertBusinessModelsAppResponse> UpsertProjectBusinessModels(UpsertBusinessModelsAppRequest request)
+    {
+        if (request.Model.Id != Guid.Empty)
+        {
+            var businessModels = await _repository.RetrieveBusinessModelsById(request.Model.Id).ConfigureAwait(false);
+
+            if (businessModels != null)
+            {
+                return await _repository.UpdateBusinessModels(request.Model).ConfigureAwait(false) != Guid.Empty
+                        ? new UpsertBusinessModelsAppResponse(request.Id, true, null)
+                        : new UpsertBusinessModelsAppResponse(request.Id, false, "Failed to update business model");
+            }
+        }
+
+        return await _repository.CreateBusinessModel(request.Model, request.RequirementId).ConfigureAwait(false) != Guid.Empty
+                ? new UpsertBusinessModelsAppResponse(request.Id, true, null)
+                : new UpsertBusinessModelsAppResponse(request.Id, false, "Failed to update business model");
+    }
 }

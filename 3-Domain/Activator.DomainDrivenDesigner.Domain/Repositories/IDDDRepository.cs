@@ -23,4 +23,6 @@ public interface IDDDRepository
     Task<List<BusinessModel>> RetrieveBusinessModelsByRequirementId(Guid RequirementId);
 
     Task<BusinessModel> RetrieveBusinessModelsById(Guid BusinessModelId);
+
+    Task<Guid> UpdateBusinessModels(BusinessModel model);
 }

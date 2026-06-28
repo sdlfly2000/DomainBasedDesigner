@@ -1,34 +1,31 @@
 import { afterNextRender, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { StatusMessageService } from '../../../services/statusmessage.service';
-import { QueryStringService } from '../../../services/shared.QueryString.service';
-import { TextareaModule } from 'primeng/textarea';
 import { FormsModule } from '@angular/forms';
-import { DividerModule } from 'primeng/divider';
 import mermaid from 'mermaid';
-import { RequirementDetailService } from './requirement-detail.service';
-import { RequirementDetailCommandAnalyzeComponent } from '../requirement-detail-cmd/requirement-detail-cmd-analyze/requirement-detail-cmd-analyze.component';
+import { DividerModule } from 'primeng/divider';
+import { TabsModule } from 'primeng/tabs';
+import { TextareaModule } from 'primeng/textarea';
 import { ToolbarModule } from 'primeng/toolbar';
+import { QueryStringService } from '../../../services/shared.QueryString.service';
+import { StatusMessageService } from '../../../services/statusmessage.service';
+import { AnalyzeRequirementsResponseModel } from '../requirement-detail-cmd/model/requirement-detail-cmd';
+import { RequirementDetailCommandAnalyzeComponent } from '../requirement-detail-cmd/requirement-detail-cmd-analyze/requirement-detail-cmd-analyze.component';
+import { RequirementDetailService } from './requirement-detail.service';
 
 @Component({
   selector: 'app-requirement-detail',
   templateUrl: './requirement-detail.component.html',
   styleUrls: ['./requirement-detail.component.css'],
-    imports: [FormsModule, DividerModule, TextareaModule, ToolbarModule, RequirementDetailCommandAnalyzeComponent]
+  imports: [FormsModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, RequirementDetailCommandAnalyzeComponent]
 })
 export class RequirementDetailComponent implements OnInit{
     title = 'Requirement Detail';
     ProjectId : string = '';
     ProjectName : string = '';
     RequirementDescription: string = '';
-    AnalyzedResult: string = "";
+    AnalyzedResult: AnalyzeRequirementsResponseModel = {businessModels: [], raw: ''};
 
-    private graphDefinition = `
-    graph TD
-      A[Start Project] --> B{Is it Angular?}
-      B -- Yes --> C[Use afterNextRender]
-      B -- No --> D[Check other frameworks]
-  `;
-
+    private graphDefinition: string = '';
+    
     @ViewChild('mermaidContainer', { static: false }) mermaidContainer!: ElementRef<HTMLDivElement>;
 
     constructor(
@@ -36,15 +33,6 @@ export class RequirementDetailComponent implements OnInit{
         private queryStringService: QueryStringService,
         private statusMessageService: StatusMessageService) {
 
-        afterNextRender(async () => {
-            mermaid.initialize({
-                startOnLoad: false,
-                theme: 'default',
-                securityLevel: 'loose'
-            });
-
-            await this.renderDiagram();
-        });
     }
 
     ngOnInit(): void {
@@ -53,9 +41,9 @@ export class RequirementDetailComponent implements OnInit{
 
     }
 
-    async OnAnalyzedResult(analyzedResult: string) {
+    async OnAnalyzedResult(analyzedResult: AnalyzeRequirementsResponseModel) {
         this.AnalyzedResult = analyzedResult;
-        this.graphDefinition = analyzedResult;
+        this.graphDefinition = analyzedResult.raw;
         await this.renderDiagram();
     }
 

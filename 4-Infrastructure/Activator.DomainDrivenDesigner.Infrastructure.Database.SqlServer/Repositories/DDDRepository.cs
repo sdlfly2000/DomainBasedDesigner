@@ -66,6 +66,11 @@ public class DDDRepository : IDDDRepository
             CREATED_UTC = DateTime.UtcNow
         };
 
+        if (model.Properties.Any())
+        {
+            Persist(model, rowBusinessModel);
+        }
+
         var rowRequirement = await _context.T_REQUIREMENTs
             .SingleOrDefaultAsync(r => r.ID == requirementId)
             .ConfigureAwait(false);
@@ -182,7 +187,42 @@ public class DDDRepository : IDDDRepository
         return Map(rowBusinessModel!);
     }
 
+    public async Task<Guid> UpdateBusinessModels(BusinessModel model)
+    {
+        var rowBusinessModel = await _context
+            .T_BUSINESS_MODELs
+            .Include(m => m.T_BUSINESS_MODEL_PROPERTies)
+            .SingleOrDefaultAsync(bm => bm.ID == model.Id)
+            .ConfigureAwait(false);
+
+        DomainEntityNotFoundException.ThrowIfNull(model.Id, rowBusinessModel);
+
+        Persist(model, rowBusinessModel!);
+        
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+
+        return model.Id;
+    }
+
     #region Private Mapper
+
+    private void Persist(BusinessModel model, T_BUSINESS_MODEL row)
+    {
+        row.NAME = model.Name;
+        row.T_BUSINESS_MODEL_PROPERTies.Clear();
+        var rowModelProperties = model.Properties.Select(p => new T_BUSINESS_MODEL_PROPERTY
+        {
+            ID = p.Id,
+            NAME = p.Name,
+            CREATED_UTC = p.CreatedOnUTC,
+            TYPE = (byte?)p.Type
+        }).ToList();
+
+        foreach (var rowModelProperty in rowModelProperties)
+        {
+            row.T_BUSINESS_MODEL_PROPERTies.Add(rowModelProperty);
+        }
+    }
 
     private Project Map(T_PROJECT rowProject)
     {
