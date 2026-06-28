@@ -32,4 +32,21 @@ public class BusinessModelController(RequirementAppService requirementAppService
 
         return response.Success ? Ok(response) : BadRequest(response);
     }
+
+    [HttpGet("retrieve/{requirementId}/{modelName}")]
+    public async Task<ActionResult<bool>> RetrieveBusinessModelByName([FromQuery] Guid requirementId, [FromQuery] string modelName)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var requestId = Guid.Parse(_requestContext.TraceId);
+
+        var response = await _requirementAppService.RetrieveBusinessModelByName(
+            new RetrieveBusinessModelsByNameAppRequest(requestId, requirementId, modelName))
+            .ConfigureAwait(false);
+
+        return response.Success ? Ok(response) : BadRequest(response);
+    }
 }

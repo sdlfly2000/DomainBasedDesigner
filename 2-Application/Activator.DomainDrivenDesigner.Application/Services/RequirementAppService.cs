@@ -85,4 +85,14 @@ public class RequirementAppService(
                 ? new UpsertBusinessModelsAppResponse(request.Id, true, null)
                 : new UpsertBusinessModelsAppResponse(request.Id, false, "Failed to update business model");
     }
+
+    [LogTrace(returnType: typeof(RetrieveBusinessModelByNameAppResponse))]
+    public async Task<RetrieveBusinessModelByNameAppResponse> RetrieveBusinessModelByName(RetrieveBusinessModelsByNameAppRequest request)
+    {
+        var models = await _repository.RetrieveBusinessModelsByRequirementId(request.RequirementId).ConfigureAwait(false);
+
+        var model = models.SingleOrDefault(m => m.Name == request.ModelName);
+
+        return new RetrieveBusinessModelByNameAppResponse(request.Id, model, true, string.Empty);
+    }
 }

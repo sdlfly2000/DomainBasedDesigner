@@ -13,6 +13,8 @@ public partial class T_BUSINESS_MODEL
 
     public DateTime CREATED_UTC { get; set; }
 
+    public string? RAW_DESCRIPTION { get; set; }
+
     public virtual T_REQUIREMENT? REQUIREMENT { get; set; }
 
     public virtual ICollection<T_BUSINESS_MODEL_PROPERTY> T_BUSINESS_MODEL_PROPERTies { get; set; } = new List<T_BUSINESS_MODEL_PROPERTY>();

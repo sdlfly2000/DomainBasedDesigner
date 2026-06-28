@@ -152,7 +152,6 @@ public class DDDRepository : IDDDRepository
 
         DomainEntityNotFoundException.ThrowIfNull(requirementId, rowRequirement);
         
-
         return rowRequirement!
             .T_BUSINESS_MODELs
             .Select(bm => Map(bm))
