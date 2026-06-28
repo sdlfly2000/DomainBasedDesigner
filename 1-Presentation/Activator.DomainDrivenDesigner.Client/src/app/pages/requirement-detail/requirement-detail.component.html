@@ -17,25 +17,36 @@
                       fluid></textarea>
         </div>
 
+        <div #mermaidContainer class="mermaid-target"></div>
+
         <div class="card">
-            <p-tabs value="0">
+            <p-tabs value="0" (valueChange)="OnModelTabClick($event)">
                 <p-tablist>
                     @for (model of AnalyzedResult.businessModels; track model.name) {
                     <p-tab [value]="model.name">{{ model.name }}</p-tab>
                     }
                 </p-tablist>
                 <p-tabpanels>
-                    @for (model of AnalyzedResult.businessModels; track model.name) {
+                    @for (model of AnalyzedResult.businessModels; track model.name; let i = $index) {
                     <p-tabpanel [value]="model.name">
                         <p class="m-0">{{ model.name }}</p>
+                        <div class="requirement-detail-analyzed">
+                            <textarea rows="10"
+                                      cols="10"
+                                      pTextarea
+                                      name="modelrawmermaid"
+                                      [(ngModel)]="ModelMermaidRaws[i]"
+                                      placeholder="AI Raw Output"
+                                      (ngModelChange)="OnAnalyzedResultChange($event)"
+                                      fluid></textarea>
+                        </div>
                     </p-tabpanel>
                     }
                 </p-tabpanels>
             </p-tabs>
         </div>
 
-        <div #mermaidContainer class="mermaid-target"></div>
-
+        <p-divider />
         <div class="requirement-detail-analyzed">
             <textarea rows="10"
                       cols="30"

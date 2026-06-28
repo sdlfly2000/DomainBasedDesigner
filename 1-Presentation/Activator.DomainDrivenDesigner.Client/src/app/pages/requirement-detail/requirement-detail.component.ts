@@ -1,4 +1,4 @@
-import { afterNextRender, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import mermaid from 'mermaid';
 import { DividerModule } from 'primeng/divider';
@@ -22,7 +22,8 @@ export class RequirementDetailComponent implements OnInit{
     ProjectId : string = '';
     ProjectName : string = '';
     RequirementDescription: string = '';
-    AnalyzedResult: AnalyzeRequirementsResponseModel = {businessModels: [], raw: ''};
+    AnalyzedResult: AnalyzeRequirementsResponseModel = { businessModels: [], raw: '' };
+    ModelMermaidRaws: string[] = [];
 
     private graphDefinition: string = '';
     
@@ -39,6 +40,11 @@ export class RequirementDetailComponent implements OnInit{
         this.ProjectId = this.queryStringService.Get('projectId') ?? "";
         this.ProjectName = this.queryStringService.Get("projectName") ?? "";
 
+        mermaid.initialize({
+            startOnLoad: false,          // Stops automatic selector scanning
+            suppressErrorRendering: true // Stops DOM injection of "dmermaid-XXXX" elements
+        });
+
     }
 
     async OnAnalyzedResult(analyzedResult: AnalyzeRequirementsResponseModel) {
@@ -49,6 +55,15 @@ export class RequirementDetailComponent implements OnInit{
 
     async OnAnalyzedResultChange(changedValue: string) {
         this.graphDefinition = changedValue;
+        await this.renderDiagram();
+    }
+
+    async OnModelTabClick(model: string | number | undefined) {
+        let index: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === model);
+        this.graphDefinition = this.ModelMermaidRaws[index];
+        if (this.graphDefinition == undefined || this.graphDefinition == '') {
+            return;
+        }
         await this.renderDiagram();
     }
 
