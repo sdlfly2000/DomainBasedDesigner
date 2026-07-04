@@ -9,13 +9,14 @@ import { QueryStringService } from '../../../services/shared.QueryString.service
 import { StatusMessageService } from '../../../services/statusmessage.service';
 import { AnalyzeRequirementsResponseModel } from '../requirement-detail-cmd/model/requirement-detail-cmd';
 import { RequirementDetailCommandAnalyzeComponent } from '../requirement-detail-cmd/requirement-detail-cmd-analyze/requirement-detail-cmd-analyze.component';
+import { RequirementDetailCommandSaveComponent } from '../requirement-detail-cmd/requirement-detail-cmd-save/requirement-detail-cmd-save.component';
 import { RequirementDetailService } from './requirement-detail.service';
 
 @Component({
   selector: 'app-requirement-detail',
   templateUrl: './requirement-detail.component.html',
   styleUrls: ['./requirement-detail.component.css'],
-  imports: [FormsModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, RequirementDetailCommandAnalyzeComponent]
+  imports: [FormsModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, RequirementDetailCommandAnalyzeComponent, RequirementDetailCommandSaveComponent]
 })
 export class RequirementDetailComponent implements OnInit{
     title = 'Requirement Detail';
@@ -49,20 +50,20 @@ export class RequirementDetailComponent implements OnInit{
 
     async OnAnalyzedResult(analyzedResult: AnalyzeRequirementsResponseModel) {
         this.AnalyzedResult = analyzedResult;
-        this.graphDefinition = analyzedResult.raw;
+        this.graphDefinition = this.applyMermaidClassDefinition(analyzedResult.raw);
         await this.renderDiagram();
     }
 
     async OnAnalyzedResultChange(changedValue: string) {
-        this.graphDefinition = changedValue;
+        this.graphDefinition = this.applyMermaidClassDefinition(changedValue);
         await this.renderDiagram();
     }
 
     async OnModelTabClick(model: string | number | undefined) {
         let index: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === model);
-        this.graphDefinition = this.ModelMermaidRaws[index];
+        this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
         if (this.graphDefinition == undefined || this.graphDefinition == '') {
-            return;
+
         }
         await this.renderDiagram();
     }
@@ -84,5 +85,14 @@ export class RequirementDetailComponent implements OnInit{
         } catch (error) {
             console.error('Mermaid parsing failed:', error);
         }
+    }
+
+    private applyMermaidClassDefinition(content: string): string {
+
+        if (content.startsWith("classDiagram")) {
+            return content;
+        }
+
+        return "classDiagram".concat(content);
     }
 }

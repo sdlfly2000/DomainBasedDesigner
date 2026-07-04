@@ -4,6 +4,7 @@
     <p-toolbar>
         <ng-template #start>
             <requirement-detail-cmd-analyze [Description]="RequirementDescription" (AnalyzedResult) ="OnAnalyzedResult($event)"></requirement-detail-cmd-analyze>
+            <requirement-detail-cmd-save [Description]="RequirementDescription"></requirement-detail-cmd-save>
         </ng-template>
     </p-toolbar>
     <div class="card">
@@ -29,16 +30,16 @@
                 <p-tabpanels>
                     @for (model of AnalyzedResult.businessModels; track model.name; let i = $index) {
                     <p-tabpanel [value]="model.name">
-                        <p class="m-0">{{ model.name }}</p>
-                        <div class="requirement-detail-analyzed">
+                        <div class="flex flex-wrap items-stretch gap-4">
                             <textarea rows="10"
-                                      cols="10"
+                                      cols="60"
                                       pTextarea
                                       name="modelrawmermaid"
                                       [(ngModel)]="ModelMermaidRaws[i]"
                                       placeholder="AI Raw Output"
                                       (ngModelChange)="OnAnalyzedResultChange($event)"
-                                      fluid></textarea>
+                                      fluid>
+                            </textarea>
                         </div>
                     </p-tabpanel>
                     }

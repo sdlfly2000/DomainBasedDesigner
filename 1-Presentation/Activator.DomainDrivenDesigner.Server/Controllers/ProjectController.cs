@@ -2,6 +2,7 @@ using Activator.DomainDrivenDesigner.Application.AppRequests;
 using Activator.DomainDrivenDesigner.Application.AppResponses;
 using Activator.DomainDrivenDesigner.Application.Services;
 using Common.Core.AOP.LogTrace;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace Activator.DomainDrivenDesigner.Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [EnableCors("AllowDDDClientPolicy")]
+[Authorize]
 public class ProjectController(ProjectAppService projectAppService, IRequestContext requestContext) : ControllerBase
 {
     private readonly ProjectAppService _projectAppService = projectAppService;

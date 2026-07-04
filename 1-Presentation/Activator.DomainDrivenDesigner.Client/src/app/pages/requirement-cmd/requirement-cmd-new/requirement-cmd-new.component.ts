@@ -20,7 +20,10 @@ export class RequirementCommandNewComponent {
 
     NavigatenNewRequirement() {
         this.router.navigate(["app/requirement-detail"], {
-            queryParams: { project: this.ProjectId(), projectName: this.ProjectName() }
+            queryParams: {
+                project: this.ProjectId(),
+                projectName: this.ProjectName()
+            }
         });
     }
 }

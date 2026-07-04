@@ -49,4 +49,21 @@ public class RequirementController(RequirementAppService requirementAppService, 
 
         return response.Success ? Ok(response) : BadRequest(response);
     }
+
+    [HttpPost("save")]
+    public async Task<ActionResult<SaveRequirementResponse>> SaveRequirement([FromBody] SaveRequirementRequestsModel request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var requestId = Guid.Parse(_requestContext.TraceId);
+
+        var response = await _requirementAppService.SaveRequirement(
+            new SaveRequirementRequest(requestId, request.Description))
+            .ConfigureAwait(false);
+
+        return response.Success ? Ok(response) : BadRequest(response);
+    }
 }
