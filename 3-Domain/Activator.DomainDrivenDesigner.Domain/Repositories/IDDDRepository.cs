@@ -8,6 +8,8 @@ public interface IDDDRepository
 
     Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId);
 
+    Task<Guid?> UpdateRequirement(Requirement requirement);
+
     Task<Guid?> CreateBusinessModel(BusinessModel model, Guid requirementId);
 
     Task<List<Project>> RetrieveFullProjects();

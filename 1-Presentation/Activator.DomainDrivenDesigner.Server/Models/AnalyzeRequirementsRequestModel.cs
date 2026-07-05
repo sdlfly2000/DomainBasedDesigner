@@ -1,1 +1,3 @@
-﻿public record AnalyzeRequirementsRequestsModel(string Description);
+﻿namespace Activator.DomainDrivenDesigner.Server.Models;
+
+public record AnalyzeRequirementsRequestsModel(string Description);

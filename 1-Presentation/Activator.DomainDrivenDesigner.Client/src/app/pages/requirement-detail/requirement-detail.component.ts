@@ -21,7 +21,8 @@ import { RequirementDetailService } from './requirement-detail.service';
 export class RequirementDetailComponent implements OnInit{
     title = 'Requirement Detail';
     ProjectId : string = '';
-    ProjectName : string = '';
+    ProjectName: string = '';
+    RequirementId: string = '';
     RequirementDescription: string = '';
     AnalyzedResult: AnalyzeRequirementsResponseModel = { businessModels: [], raw: '' };
     ModelMermaidRaws: string[] = [];
@@ -38,7 +39,7 @@ export class RequirementDetailComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this.ProjectId = this.queryStringService.Get('projectId') ?? "";
+        this.ProjectId = this.queryStringService.Get('project') ?? "";
         this.ProjectName = this.queryStringService.Get("projectName") ?? "";
 
         mermaid.initialize({

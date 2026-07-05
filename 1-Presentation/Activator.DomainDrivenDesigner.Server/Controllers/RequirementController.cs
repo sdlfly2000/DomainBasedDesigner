@@ -1,6 +1,7 @@
 using Activator.DomainDrivenDesigner.Application.AppRequests;
 using Activator.DomainDrivenDesigner.Application.AppResponses;
 using Activator.DomainDrivenDesigner.Application.Services;
+using Activator.DomainDrivenDesigner.Server.Models;
 using Common.Core.AOP.LogTrace;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,7 @@ public class RequirementController(RequirementAppService requirementAppService, 
     }
 
     [HttpPost("save")]
-    public async Task<ActionResult<SaveRequirementResponse>> SaveRequirement([FromBody] SaveRequirementRequestsModel request)
+    public async Task<ActionResult<SaveRequirementResponse>> SaveRequirement([FromBody] SaveRequirementRequestModel request)
     {
         if (!ModelState.IsValid)
         {
@@ -61,7 +62,11 @@ public class RequirementController(RequirementAppService requirementAppService, 
         var requestId = Guid.Parse(_requestContext.TraceId);
 
         var response = await _requirementAppService.SaveRequirement(
-            new SaveRequirementRequest(requestId, request.Description))
+            new SaveRequirementRequest(
+            requestId, 
+            Guid.Parse(request.projectId),
+            request.requirementId == string.Empty ? null : Guid.Parse(request.requirementId),
+            request.description))
             .ConfigureAwait(false);
 
         return response.Success ? Ok(response) : BadRequest(response);

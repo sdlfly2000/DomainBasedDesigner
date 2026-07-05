@@ -66,6 +66,27 @@ public class RequirementAppService(
             : new AnalyzeRequirementsResponse(request.RequestId, null, null, "", false, "Failed to analyze requirement");
     }
 
+    [LogTrace(returnType: typeof(SaveRequirementResponse))]
+    public async Task<SaveRequirementResponse> SaveRequirement(SaveRequirementRequest request)
+    {
+        var requirement = request.RequirementId != null
+            ? await _repository.RetrieveRequirementById(request.RequirementId.Value).ConfigureAwait(false)
+            : new Requirement(Guid.NewGuid());
+
+        requirement.Description = request.RequirementDescription;
+
+        if(request.RequirementId != null)
+        {
+            _ = await _repository.UpdateRequirement(requirement).ConfigureAwait(false);
+        }
+        else
+        {
+            _ = await _repository.CreateRequirement(requirement, request.ProjectId).ConfigureAwait(false);
+        }
+
+        return new SaveRequirementResponse(request.Id, true, string.Empty);
+    }
+
     [LogTrace(returnType: typeof(UpsertBusinessModelsAppResponse))]
     public async Task<UpsertBusinessModelsAppResponse> UpsertProjectBusinessModels(UpsertBusinessModelsAppRequest request)
     {

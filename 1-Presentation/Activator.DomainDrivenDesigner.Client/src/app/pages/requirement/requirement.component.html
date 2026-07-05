@@ -34,7 +34,6 @@
             <ng-template #header>
                 <tr>
                     <th style="width:1%"><p-tableHeaderCheckbox /></th>
-                    <th style="width:22%">Title</th>
                     <th style="width:22%">Description</th>
                     <th style="width:22%">Created On (UTC)</th>
                 </tr>
@@ -43,9 +42,6 @@
                 <tr>
                     <td>
                         <p-tableCheckbox [value]="requirement" />
-                    </td>
-                    <td>
-                        {{ requirement.title }}
                     </td>
                     <td>
                         {{ requirement.description }}

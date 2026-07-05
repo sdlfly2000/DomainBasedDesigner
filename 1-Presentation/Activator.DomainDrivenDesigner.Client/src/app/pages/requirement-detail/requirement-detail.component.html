@@ -4,7 +4,7 @@
     <p-toolbar>
         <ng-template #start>
             <requirement-detail-cmd-analyze [Description]="RequirementDescription" (AnalyzedResult) ="OnAnalyzedResult($event)"></requirement-detail-cmd-analyze>
-            <requirement-detail-cmd-save [Description]="RequirementDescription"></requirement-detail-cmd-save>
+            <requirement-detail-cmd-save [Description]="RequirementDescription" [ProjectId]="ProjectId" [RequirementId]="RequirementId" ></requirement-detail-cmd-save>
         </ng-template>
     </p-toolbar>
     <div class="card">

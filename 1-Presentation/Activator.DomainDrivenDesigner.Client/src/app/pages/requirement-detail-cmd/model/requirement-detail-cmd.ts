@@ -23,3 +23,17 @@ export enum ModelPropertyType {
     String = 1,
     Int = 2,
 }
+
+// Save Requirement Request and Response Models
+export interface SaveRequirementRequestModel {
+    projectId: string | undefined
+    requirementId: string | undefined
+    description: string | undefined
+}
+
+export interface SaveRequirementResponseModel {
+    requestId: string
+    success: boolean
+    errorMessage: string
+}
+

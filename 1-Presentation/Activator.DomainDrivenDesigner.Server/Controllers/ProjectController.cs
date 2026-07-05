@@ -1,6 +1,7 @@
 using Activator.DomainDrivenDesigner.Application.AppRequests;
 using Activator.DomainDrivenDesigner.Application.AppResponses;
 using Activator.DomainDrivenDesigner.Application.Services;
+using Activator.DomainDrivenDesigner.Server.Models;
 using Common.Core.AOP.LogTrace;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;

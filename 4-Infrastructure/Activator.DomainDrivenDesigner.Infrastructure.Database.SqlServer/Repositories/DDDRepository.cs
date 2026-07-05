@@ -40,7 +40,7 @@ public class DDDRepository : IDDDRepository
         {
             ID = requirement.Id,
             DESCRIPTION = requirement.Description,
-            CREATE_UTC = requirement.CreatedOnUTC
+            CREATE_UTC = DateTime.UtcNow
         };
 
         var rowProject = await _context.T_PROJECTs
@@ -49,9 +49,26 @@ public class DDDRepository : IDDDRepository
 
         DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
 
-        rowProject!.T_REQUIREMENTs.Add(rowRequirement);
+        rowProject.T_REQUIREMENTs.Add(rowRequirement);
 
         _context.T_PROJECTs.Update(rowProject);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+
+        return requirement.Id;
+    }
+
+    public async Task<Guid?> UpdateRequirement(Requirement requirement)
+    {
+        var rowRequirement = await _context.T_REQUIREMENTs
+            .SingleOrDefaultAsync(r => r.ID == requirement.Id)
+            .ConfigureAwait(false);
+
+        DomainEntityNotFoundException.ThrowIfNull(requirement.Id, rowRequirement);
+
+        rowRequirement.DESCRIPTION = requirement.Description;
+
+        _context.T_REQUIREMENTs.Update(rowRequirement);
+
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
         return requirement.Id;
@@ -77,7 +94,7 @@ public class DDDRepository : IDDDRepository
 
         DomainEntityNotFoundException.ThrowIfNull(requirementId, rowRequirement);
 
-        rowRequirement!.T_BUSINESS_MODELs.Add(rowBusinessModel);
+        rowRequirement.T_BUSINESS_MODELs.Add(rowBusinessModel);
 
         _context.T_REQUIREMENTs.Update(rowRequirement);
         await _context.SaveChangesAsync().ConfigureAwait(false);
@@ -108,7 +125,7 @@ public class DDDRepository : IDDDRepository
 
         DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
 
-        return Map(rowProject!);
+        return Map(rowProject);
     }
 
     public async Task<List<Requirement>> RetrieveRequirementByProjectId(Guid projectId)
@@ -120,7 +137,7 @@ public class DDDRepository : IDDDRepository
 
         DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
 
-        return [.. rowProject!
+        return [.. rowProject
             .T_REQUIREMENTs
             .Select(r => Map(r))];
     }
@@ -137,7 +154,7 @@ public class DDDRepository : IDDDRepository
 
         var businessModels = new List<BusinessModel>();
 
-        var rowBusinessModels = rowProject!.T_REQUIREMENTs.SelectMany(r => r.T_BUSINESS_MODELs);
+        var rowBusinessModels = rowProject.T_REQUIREMENTs.SelectMany(r => r.T_BUSINESS_MODELs);
         businessModels.AddRange(rowBusinessModels.Select(bm => Map(bm)));
 
         return businessModels;
@@ -152,7 +169,7 @@ public class DDDRepository : IDDDRepository
 
         DomainEntityNotFoundException.ThrowIfNull(requirementId, rowRequirement);
         
-        return rowRequirement!
+        return rowRequirement
             .T_BUSINESS_MODELs
             .Select(bm => Map(bm))
             .ToList();
@@ -167,8 +184,8 @@ public class DDDRepository : IDDDRepository
 
         DomainEntityNotFoundException.ThrowIfNull(requirementId, rowRequirement);
 
-        var requirement = Map(rowRequirement!);
-        var businessModels = rowRequirement!.T_BUSINESS_MODELs.Select(bm => Map(bm)).ToList();
+        var requirement = Map(rowRequirement);
+        var businessModels = rowRequirement.T_BUSINESS_MODELs.Select(bm => Map(bm)).ToList();
         requirement.BusinessModels.AddRange(businessModels);
 
         return requirement;
@@ -183,7 +200,7 @@ public class DDDRepository : IDDDRepository
 
         DomainEntityNotFoundException.ThrowIfNull(businessModelId, rowBusinessModel);
 
-        return Map(rowBusinessModel!);
+        return Map(rowBusinessModel);
     }
 
     public async Task<Guid> UpdateBusinessModels(BusinessModel model)
@@ -196,7 +213,7 @@ public class DDDRepository : IDDDRepository
 
         DomainEntityNotFoundException.ThrowIfNull(model.Id, rowBusinessModel);
 
-        Persist(model, rowBusinessModel!);
+        Persist(model, rowBusinessModel);
         
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
@@ -237,7 +254,8 @@ public class DDDRepository : IDDDRepository
     {
         var requirement = new Requirement(rowRequirment.ID)
         {
-            Description = rowRequirment.DESCRIPTION
+            Description = rowRequirment.DESCRIPTION,
+            CreatedOnUTC = rowRequirment.CREATE_UTC
         };
 
         return requirement;
