@@ -1,5 +1,4 @@
 export interface RequirementDetailModel {
-    id: string;
+    requirementId: string;
     description: string;
-    createdOnUTC: Date;
 }

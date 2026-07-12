@@ -87,6 +87,14 @@ public class RequirementAppService(
         return new SaveRequirementResponse(request.Id, true, string.Empty);
     }
 
+    [LogTrace(returnType: typeof(RetrieveRequirementResponse))]
+    public async Task<RetrieveRequirementResponse> RetrieveRequirement(Guid requestId, Guid requirementId)
+    {   
+        var requirement = await _repository.RetrieveRequirementById(requirementId).ConfigureAwait(false);
+
+        return new RetrieveRequirementResponse(requestId, requirement, true, string.Empty);
+    }
+
     [LogTrace(returnType: typeof(UpsertBusinessModelsAppResponse))]
     public async Task<UpsertBusinessModelsAppResponse> UpsertProjectBusinessModels(UpsertBusinessModelsAppRequest request)
     {

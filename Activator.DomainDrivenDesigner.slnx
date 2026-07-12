@@ -22,5 +22,6 @@
   </Folder>
   <Folder Name="/Test/">
     <Project Path="6-Tests/Activator.DomainDrivenDesigner.Application.Tests/Activator.DomainDrivenDesigner.Application.Tests.csproj" />
+    <Project Path="Activator.DomainDrivenDesigner.Infrastructure.AI.Test/Activator.DomainDrivenDesigner.Infrastructure.AI.Test.csproj" Id="488bed3c-b7c9-4b43-9b91-cc18d2966d73" />
   </Folder>
 </Solution>

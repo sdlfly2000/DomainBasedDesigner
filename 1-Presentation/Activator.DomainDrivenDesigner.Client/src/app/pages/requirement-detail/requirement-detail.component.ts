@@ -6,11 +6,12 @@ import { TabsModule } from 'primeng/tabs';
 import { TextareaModule } from 'primeng/textarea';
 import { ToolbarModule } from 'primeng/toolbar';
 import { QueryStringService } from '../../../services/shared.QueryString.service';
-import { StatusMessageService } from '../../../services/statusmessage.service';
+import { EnumInfoSeverity, StatusMessageModel, StatusMessageService } from '../../../services/statusmessage.service';
 import { AnalyzeRequirementsResponseModel } from '../requirement-detail-cmd/model/requirement-detail-cmd';
 import { RequirementDetailCommandAnalyzeComponent } from '../requirement-detail-cmd/requirement-detail-cmd-analyze/requirement-detail-cmd-analyze.component';
 import { RequirementDetailCommandSaveComponent } from '../requirement-detail-cmd/requirement-detail-cmd-save/requirement-detail-cmd-save.component';
 import { RequirementDetailService } from './requirement-detail.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-requirement-detail',
@@ -41,6 +42,25 @@ export class RequirementDetailComponent implements OnInit{
     ngOnInit(): void {
         this.ProjectId = this.queryStringService.Get('project') ?? "";
         this.ProjectName = this.queryStringService.Get("projectName") ?? "";
+        this.RequirementId = this.queryStringService.Get("requirementId") ?? "";
+
+        this.statusMessageService.IsLoading = true;
+        if (this.RequirementId != "") {
+            this.requirementDetailService.RetrieveRequirement(this.RequirementId).subscribe({
+                next: (response) => {
+                    this.RequirementDescription = response.description;
+                },
+                error: (error) => {
+                    if (error instanceof HttpErrorResponse) {
+                        this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
+                    }
+                    this.statusMessageService.IsLoading = false;
+                },
+                complete: () => {
+                    this.statusMessageService.IsLoading = false;
+                }
+            });
+        }
 
         mermaid.initialize({
             startOnLoad: false,          // Stops automatic selector scanning

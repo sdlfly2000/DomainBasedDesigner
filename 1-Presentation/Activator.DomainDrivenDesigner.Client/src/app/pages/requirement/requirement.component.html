@@ -18,7 +18,7 @@
                  sortMode="single"
                  sortField="createdOnUTC"
                  [sortOrder]="-1"
-                 [globalFilterFields]="['title', 'description']"
+                 [globalFilterFields]="['description']"
                  [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template #caption>
                 <div class="flex">
@@ -44,7 +44,9 @@
                         <p-tableCheckbox [value]="requirement" />
                     </td>
                     <td>
-                        {{ requirement.description }}
+                        <span (click)="NavigateRequirementDetail(requirement)" class="cursor-pointer text-blue-500 hover:underline">
+                            {{ requirement.description }}
+                        </span>
                     </td>
                     <td>
                         {{ requirement.createdOnUTC | date:'medium' }}

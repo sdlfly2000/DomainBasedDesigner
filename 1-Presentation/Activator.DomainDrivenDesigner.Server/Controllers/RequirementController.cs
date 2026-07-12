@@ -34,6 +34,23 @@ public class RequirementController(RequirementAppService requirementAppService, 
         return response.Success ? Ok(response) : BadRequest(response);
     }
 
+    [HttpGet("retrieve/{requirementId}")]
+    public async Task<ActionResult> RetrieveRequirement(Guid requirementId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var requestId = Guid.Parse(_requestContext.TraceId);
+
+        var response = await _requirementAppService.RetrieveRequirement(requestId, requirementId).ConfigureAwait(false);
+
+        var model = new RetrieveRequirementResponseModel(response.Requirement.Id.ToString(), response?.Requirement?.Description);
+
+        return response.Success ? Ok(model) : BadRequest(response);
+    }
+
     [HttpPost("analyze")]
     public async Task<ActionResult<AnalyzeRequirementsResponse>> AnalyzeRequirements([FromBody] AnalyzeRequirementsRequestsModel request)
     {

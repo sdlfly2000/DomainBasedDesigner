@@ -3,6 +3,7 @@ import { Inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { BASE_URL } from "../../app.config";
 import { BusinessModel } from "../requirement-detail-cmd/model/requirement-detail-cmd";
+import { RequirementDetailModel } from "./model/requirement-detail";
 
 @Injectable({
   providedIn: "root"
@@ -22,5 +23,9 @@ export class RequirementDetailService {
 
     public RetrieveBusinessModel(modelName: string, requirementId: string): Observable<boolean> {
         return this.httpClient.get<boolean>(this.BaseUrl + `api/businessmodel/retrieve/${requirementId}/${modelName}`, { headers: this.httpHeaders });
+    }
+
+    public RetrieveRequirement(requirementId: string): Observable<RequirementDetailModel> {
+        return this.httpClient.get<RequirementDetailModel>(this.BaseUrl + `api/requirement/retrieve/${requirementId}`, { headers: this.httpHeaders });
     }
 }

@@ -14,6 +14,7 @@ import { RequirementService } from './requirement.service';
 import { RequirementModel } from './model/requirement';
 import { QueryStringService } from '../../../services/shared.QueryString.service';
 import { RequirementCommandNewComponent } from '../requirement-cmd/requirement-cmd-new/requirement-cmd-new.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-requirement',
@@ -30,6 +31,7 @@ export class RequirementComponent implements OnInit{
     Requirements: WritableSignal<RequirementModel[]> = signal<RequirementModel[]>([]);
 
     constructor(
+        private router: Router,
         private queryStringService: QueryStringService,
         private requirementService: RequirementService,
         private statusMessageService: StatusMessageService) {
@@ -48,6 +50,16 @@ export class RequirementComponent implements OnInit{
                 if (error instanceof HttpErrorResponse) {
                     this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
                 }
+            }
+        });
+    }
+
+    NavigateRequirementDetail(requirement: RequirementModel) {
+        this.router.navigate(["app/requirement-detail"], {
+            queryParams: {
+                project: this.ProjectId,
+                projectName: this.ProjectName,
+                requirementId: requirement.id
             }
         });
     }

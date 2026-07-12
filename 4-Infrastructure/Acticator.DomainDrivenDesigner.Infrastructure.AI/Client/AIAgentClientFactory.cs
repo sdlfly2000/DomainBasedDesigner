@@ -19,6 +19,17 @@ public class AIAgentClientFactory
         return Create(_aiOption, instructions);
     }
 
+    public AIAgent Get(string instructions, string model)
+    {
+        var options = new AIOptions
+        {
+            Endpoint = _aiOption.Endpoint,
+            Model = model
+        };
+
+        return Create(options, instructions);
+    }
+
     private AIAgent Create(AIOptions opt, string instructions)
     {
         // --- Agent Setup ---
