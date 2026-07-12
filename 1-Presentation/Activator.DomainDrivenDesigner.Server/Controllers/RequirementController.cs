@@ -46,7 +46,12 @@ public class RequirementController(RequirementAppService requirementAppService, 
 
         var response = await _requirementAppService.RetrieveRequirement(requestId, requirementId).ConfigureAwait(false);
 
-        var model = new RetrieveRequirementResponseModel(response.Requirement.Id.ToString(), response?.Requirement?.Description);
+        if (response.Requirement == null)
+        {
+            return NotFound();
+        }
+
+        var model = new RetrieveRequirementResponseModel(response.Requirement.Id.ToString(), response.Requirement.Description);
 
         return response.Success ? Ok(model) : BadRequest(response);
     }

@@ -16,8 +16,8 @@ public class BusinessModelController(RequirementAppService requirementAppService
 
     private readonly RequirementAppService  _requirementAppService = requirementAppService;
 
-    [HttpPost("model/upsert")]
-    public async Task<ActionResult<bool>> UpsertBusinessModel([FromQuery] Guid reqId, [FromBody] BusinessModel model)
+    [HttpPost("model/upsert/{requirementId}")]
+    public async Task<ActionResult<bool>> UpsertBusinessModel([FromQuery] Guid requirementId, [FromBody] BusinessModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -27,14 +27,14 @@ public class BusinessModelController(RequirementAppService requirementAppService
         var requestId = Guid.Parse(_requestContext.TraceId);
 
         var response = await _requirementAppService.UpsertProjectBusinessModels(
-            new UpsertBusinessModelsAppRequest(requestId, reqId, model))
+            new UpsertBusinessModelsAppRequest(requestId, requirementId, model))
             .ConfigureAwait(false);
 
         return response.Success ? Ok(response) : BadRequest(response);
     }
 
     [HttpGet("retrieve/{requirementId}/{modelName}")]
-    public async Task<ActionResult<bool>> RetrieveBusinessModelByName([FromQuery] Guid requirementId, [FromQuery] string modelName)
+    public async Task<ActionResult> RetrieveBusinessModelByName(Guid requirementId, string modelName)
     {
         if (!ModelState.IsValid)
         {
@@ -47,6 +47,6 @@ public class BusinessModelController(RequirementAppService requirementAppService
             new RetrieveBusinessModelsByNameAppRequest(requestId, requirementId, modelName))
             .ConfigureAwait(false);
 
-        return response.Success ? Ok(response) : BadRequest(response);
+        return response.Success ? Ok(response.BusinessModel) : BadRequest(response);
     }
 }

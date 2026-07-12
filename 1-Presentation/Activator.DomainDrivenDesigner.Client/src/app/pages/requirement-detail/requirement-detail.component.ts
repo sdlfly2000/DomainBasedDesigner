@@ -64,7 +64,6 @@ export class RequirementDetailComponent implements AfterViewInit {
             startOnLoad: false,          // Stops automatic selector scanning
             suppressErrorRendering: true // Stops DOM injection of "dmermaid-XXXX" elements
         });
-
     }
 
     async OnAnalyzedResult(analyzedResult: AnalyzeRequirementsResponseModel) {
@@ -80,11 +79,24 @@ export class RequirementDetailComponent implements AfterViewInit {
 
     async OnModelTabClick(model: string | number | undefined) {
         let index: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === model);
-        this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
-        if (this.graphDefinition == undefined || this.graphDefinition == '') {
-
+        // this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
+        if (this.ModelMermaidRaws[index] == undefined || this.ModelMermaidRaws[index] == '') {
+            this.requirementDetailService.RetrieveBusinessModel(model as string, this.RequirementId).subscribe({
+                next: async (model) => {
+                    if (model == undefined || model == null) {
+                        return;
+                    }
+                    this.ModelMermaidRaws[index] = model.rawDescription;
+                    this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
+                    await this.renderDiagram();
+                },
+                error: (error) => {
+                    if (error instanceof HttpErrorResponse) {
+                        this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
+                    }
+                }
+            });
         }
-        await this.renderDiagram();
     }
 
     private async renderDiagram() {
@@ -107,11 +119,13 @@ export class RequirementDetailComponent implements AfterViewInit {
     }
 
     private applyMermaidClassDefinition(content: string): string {
+        if (content == undefined || content == '') {
+            return '';
+        }
 
         if (content.startsWith("classDiagram")) {
             return content;
         }
-
         return "classDiagram".concat(content);
     }
 }

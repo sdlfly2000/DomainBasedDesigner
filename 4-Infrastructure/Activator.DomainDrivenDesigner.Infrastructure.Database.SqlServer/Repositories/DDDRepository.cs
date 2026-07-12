@@ -265,7 +265,8 @@ public class DDDRepository : IDDDRepository
     {
         var businessModel = new BusinessModel(rowBusinessModel.ID)
         {
-            Name = rowBusinessModel.NAME
+            Name = rowBusinessModel.NAME,
+            RawDescription = rowBusinessModel.RAW_DESCRIPTION
         };
 
         return businessModel;

@@ -10,6 +10,7 @@ export interface AnalyzeRequirementsResponseModel {
 export interface BusinessModel {
     id: string
     name: string
+    rawDescription: string
     properties: BusinessModelProperty[]
 }
 

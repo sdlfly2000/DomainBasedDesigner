@@ -21,8 +21,8 @@ export class RequirementDetailService {
       return this.httpClient.post<boolean>(this.BaseUrl + "api/model/upsert", model, { headers: this.httpHeaders });
     }
 
-    public RetrieveBusinessModel(modelName: string, requirementId: string): Observable<boolean> {
-        return this.httpClient.get<boolean>(this.BaseUrl + `api/businessmodel/retrieve/${requirementId}/${modelName}`, { headers: this.httpHeaders });
+    public RetrieveBusinessModel(modelName: string, requirementId: string): Observable<BusinessModel> {
+        return this.httpClient.get<BusinessModel>(this.BaseUrl + `api/businessmodel/retrieve/${requirementId}/${modelName}`, { headers: this.httpHeaders });
     }
 
     public RetrieveRequirement(requirementId: string): Observable<RequirementDetailModel> {
