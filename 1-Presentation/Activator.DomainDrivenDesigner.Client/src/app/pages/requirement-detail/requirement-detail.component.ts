@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import mermaid from 'mermaid';
 import { DividerModule } from 'primeng/divider';
@@ -11,7 +12,6 @@ import { AnalyzeRequirementsResponseModel } from '../requirement-detail-cmd/mode
 import { RequirementDetailCommandAnalyzeComponent } from '../requirement-detail-cmd/requirement-detail-cmd-analyze/requirement-detail-cmd-analyze.component';
 import { RequirementDetailCommandSaveComponent } from '../requirement-detail-cmd/requirement-detail-cmd-save/requirement-detail-cmd-save.component';
 import { RequirementDetailService } from './requirement-detail.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-requirement-detail',
@@ -19,7 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./requirement-detail.component.css'],
   imports: [FormsModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, RequirementDetailCommandAnalyzeComponent, RequirementDetailCommandSaveComponent]
 })
-export class RequirementDetailComponent implements OnInit{
+export class RequirementDetailComponent implements AfterViewInit {
     title = 'Requirement Detail';
     ProjectId : string = '';
     ProjectName: string = '';
@@ -35,16 +35,11 @@ export class RequirementDetailComponent implements OnInit{
     constructor(
         private requirementDetailService: RequirementDetailService,
         private queryStringService: QueryStringService,
-        private statusMessageService: StatusMessageService) {
+        private statusMessageService: StatusMessageService,
+        private cdr: ChangeDetectorRef) {
 
     }
-
-    ngOnInit(): void {
-        this.ProjectId = this.queryStringService.Get('project') ?? "";
-        this.ProjectName = this.queryStringService.Get("projectName") ?? "";
-        this.RequirementId = this.queryStringService.Get("requirementId") ?? "";
-
-        this.statusMessageService.IsLoading = true;
+    ngAfterViewInit(): void {
         if (this.RequirementId != "") {
             this.requirementDetailService.RetrieveRequirement(this.RequirementId).subscribe({
                 next: (response) => {
@@ -54,13 +49,16 @@ export class RequirementDetailComponent implements OnInit{
                     if (error instanceof HttpErrorResponse) {
                         this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
                     }
-                    this.statusMessageService.IsLoading = false;
                 },
-                complete: () => {
-                    this.statusMessageService.IsLoading = false;
-                }
+                complete: () => this.cdr.detectChanges()
             });
         }
+    }
+
+    ngOnInit(): void {
+        this.ProjectId = this.queryStringService.Get('project') ?? "";
+        this.ProjectName = this.queryStringService.Get("projectName") ?? "";
+        this.RequirementId = this.queryStringService.Get("requirementId") ?? "";
 
         mermaid.initialize({
             startOnLoad: false,          // Stops automatic selector scanning
