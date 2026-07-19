@@ -8,16 +8,17 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToolbarModule } from 'primeng/toolbar';
 import { QueryStringService } from '../../../services/shared.QueryString.service';
 import { EnumInfoSeverity, StatusMessageModel, StatusMessageService } from '../../../services/statusmessage.service';
-import { AnalyzeRequirementsResponseModel } from '../requirement-detail-cmd/model/requirement-detail-cmd';
+import { AnalyzeRequirementsResponseModel, BusinessModel } from '../requirement-detail-cmd/model/requirement-detail-cmd';
 import { RequirementDetailCommandAnalyzeComponent } from '../requirement-detail-cmd/requirement-detail-cmd-analyze/requirement-detail-cmd-analyze.component';
 import { RequirementDetailCommandSaveComponent } from '../requirement-detail-cmd/requirement-detail-cmd-save/requirement-detail-cmd-save.component';
 import { RequirementDetailService } from './requirement-detail.service';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-requirement-detail',
   templateUrl: './requirement-detail.component.html',
   styleUrls: ['./requirement-detail.component.css'],
-  imports: [FormsModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, RequirementDetailCommandAnalyzeComponent, RequirementDetailCommandSaveComponent]
+  imports: [FormsModule, ButtonModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, RequirementDetailCommandAnalyzeComponent, RequirementDetailCommandSaveComponent]
 })
 export class RequirementDetailComponent implements AfterViewInit {
     title = 'Requirement Detail';
@@ -27,6 +28,13 @@ export class RequirementDetailComponent implements AfterViewInit {
     RequirementDescription: string = '';
     AnalyzedResult: AnalyzeRequirementsResponseModel = { businessModels: [], raw: '' };
     ModelMermaidRaws: string[] = [];
+    CurrentModelName: string = '';
+    CurrentBusinessModel: BusinessModel = {
+        id: '',
+        name: '',
+        rawDescription: '',
+        properties: []
+    };
 
     private graphDefinition: string = '';
     
@@ -78,15 +86,22 @@ export class RequirementDetailComponent implements AfterViewInit {
     }
 
     async OnModelTabClick(model: string | number | undefined) {
+        this.CurrentModelName = model as string;
         let index: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === model);
-        // this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
         if (this.ModelMermaidRaws[index] == undefined || this.ModelMermaidRaws[index] == '') {
-            this.requirementDetailService.RetrieveBusinessModel(model as string, this.RequirementId).subscribe({
+            this.requirementDetailService.RetrieveBusinessModel(this.CurrentModelName, this.RequirementId).subscribe({
                 next: async (model) => {
                     if (model == undefined || model == null) {
+                        this.CurrentBusinessModel = {
+                            id: '',
+                            name: '',
+                            rawDescription: '',
+                            properties: []
+                        };
                         return;
                     }
-                    this.ModelMermaidRaws[index] = model.rawDescription;
+                    this.CurrentBusinessModel = model;
+                    this.ModelMermaidRaws[index] = model.rawDescription != undefined ? model.rawDescription : '';
                     this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
                     await this.renderDiagram();
                 },
@@ -94,9 +109,29 @@ export class RequirementDetailComponent implements AfterViewInit {
                     if (error instanceof HttpErrorResponse) {
                         this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
                     }
-                }
+                },
+                complete: () => this.cdr.detectChanges()
             });
         }
+    }
+
+    SaveModel(tabIndex: number) {
+        this.CurrentBusinessModel.rawDescription = this.ModelMermaidRaws[tabIndex]
+        this.CurrentBusinessModel.name = this.CurrentModelName;
+        this.requirementDetailService.UpsertBusinessModel(this.CurrentBusinessModel, this.RequirementId).subscribe({
+            next: (success) => {
+                if (success) {
+                    this.statusMessageService.StatusMessage = new StatusMessageModel("Success to Save Description", EnumInfoSeverity.Info);
+                } else {
+                    this.statusMessageService.StatusMessage = new StatusMessageModel("Fail to Save Description", EnumInfoSeverity.Warn);
+                }
+            },
+            error: (error) => {
+                if (error instanceof HttpErrorResponse) {
+                    this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
+                }
+            }
+        });
     }
 
     private async renderDiagram() {
@@ -126,6 +161,8 @@ export class RequirementDetailComponent implements AfterViewInit {
         if (content.startsWith("classDiagram")) {
             return content;
         }
-        return "classDiagram".concat(content);
+
+        let mermaidContent = "classDiagram\n".concat(content);
+        return mermaidContent;
     }
 }

@@ -1,9 +1,11 @@
 using Activator.DomainDrivenDesigner.Application.AppRequests;
 using Activator.DomainDrivenDesigner.Application.Services;
 using Activator.DomainDrivenDesigner.Domain.Entities;
+using Activator.DomainDrivenDesigner.Server.Models;
 using Common.Core.AOP.LogTrace;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Activator.DomainDrivenDesigner.Server.Controllers;
 
@@ -16,8 +18,8 @@ public class BusinessModelController(RequirementAppService requirementAppService
 
     private readonly RequirementAppService  _requirementAppService = requirementAppService;
 
-    [HttpPost("model/upsert/{requirementId}")]
-    public async Task<ActionResult<bool>> UpsertBusinessModel([FromQuery] Guid requirementId, [FromBody] BusinessModel model)
+    [HttpPost("upsert/{requirementId}")]
+    public async Task<ActionResult<bool>> UpsertBusinessModel(Guid requirementId, [FromBody] UpsertBusinessModelModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -26,8 +28,16 @@ public class BusinessModelController(RequirementAppService requirementAppService
 
         var requestId = Guid.Parse(_requestContext.TraceId);
 
+        var modelId = string.IsNullOrEmpty(model.id) ? Guid.Empty : Guid.Parse(model.id);
+        BusinessModel businessModel = new BusinessModel(modelId)
+        { 
+            Name = model.name,
+            RawDescription = model.rawDescription,
+            Properties = model.properties ?? new List<BusinessModelProperty>()
+        };
+
         var response = await _requirementAppService.UpsertProjectBusinessModels(
-            new UpsertBusinessModelsAppRequest(requestId, requirementId, model))
+            new UpsertBusinessModelsAppRequest(requestId, requirementId, businessModel))
             .ConfigureAwait(false);
 
         return response.Success ? Ok(response) : BadRequest(response);

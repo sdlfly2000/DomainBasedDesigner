@@ -8,9 +8,9 @@ export interface AnalyzeRequirementsResponseModel {
 }
 
 export interface BusinessModel {
-    id: string
-    name: string
-    rawDescription: string
+    id: string | undefined
+    name: string | undefined
+    rawDescription: string | undefined
     properties: BusinessModelProperty[]
 }
 

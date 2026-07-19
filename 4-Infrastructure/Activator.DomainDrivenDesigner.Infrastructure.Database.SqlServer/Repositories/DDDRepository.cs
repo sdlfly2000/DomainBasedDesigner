@@ -74,19 +74,15 @@ public class DDDRepository : IDDDRepository
         return requirement.Id;
     }
 
-    public async Task<Guid?> CreateBusinessModel(BusinessModel model, Guid requirementId)
+    public async Task<int> CreateBusinessModel(BusinessModel model, Guid requirementId)
     {
         var rowBusinessModel = new Entities.T_BUSINESS_MODEL
         {
-            ID = model.Id,
-            NAME = model.Name,
-            CREATED_UTC = DateTime.UtcNow
+            ID = Guid.NewGuid(),
+            CREATED_UTC = DateTime.UtcNow,
         };
-
-        if (model.Properties.Any())
-        {
-            Persist(model, rowBusinessModel);
-        }
+        
+        Persist(model, rowBusinessModel);     
 
         var rowRequirement = await _context.T_REQUIREMENTs
             .SingleOrDefaultAsync(r => r.ID == requirementId)
@@ -97,9 +93,7 @@ public class DDDRepository : IDDDRepository
         rowRequirement.T_BUSINESS_MODELs.Add(rowBusinessModel);
 
         _context.T_REQUIREMENTs.Update(rowRequirement);
-        await _context.SaveChangesAsync().ConfigureAwait(false);
-
-        return model.Id;
+        return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task<List<Project>> RetrieveFullProjects()
@@ -225,6 +219,7 @@ public class DDDRepository : IDDDRepository
     private void Persist(BusinessModel model, T_BUSINESS_MODEL row)
     {
         row.NAME = model.Name;
+        row.RAW_DESCRIPTION = model.RawDescription;
         row.T_BUSINESS_MODEL_PROPERTies.Clear();
         var rowModelProperties = model.Properties.Select(p => new T_BUSINESS_MODEL_PROPERTY
         {

@@ -41,22 +41,25 @@
                                       fluid>
                             </textarea>
                         </div>
+                        <div class="flex flex-wrap requirement-detail-btn-save">
+                            <button pButton (click)="SaveModel(i)">Save</button>
+                        </div>
                     </p-tabpanel>
                     }
                 </p-tabpanels>
             </p-tabs>
-        </div>
+            </div>
 
-        <p-divider />
-        <div class="requirement-detail-analyzed">
-            <textarea rows="10"
-                      cols="30"
-                      pTextarea
-                      name="requirementanalyzed"
-                      [(ngModel)]="AnalyzedResult.raw"
-                      placeholder="AI Raw Output"
-                      (ngModelChange)="OnAnalyzedResultChange($event)"
-                      fluid></textarea>
+            <p-divider />
+            <div class="requirement-detail-analyzed">
+                <textarea rows="10"
+                          cols="30"
+                          pTextarea
+                          name="requirementanalyzed"
+                          [(ngModel)]="AnalyzedResult.raw"
+                          placeholder="AI Raw Output"
+                          (ngModelChange)="OnAnalyzedResultChange($event)"
+                          fluid></textarea>
+            </div>
         </div>
-    </div>
 </div>

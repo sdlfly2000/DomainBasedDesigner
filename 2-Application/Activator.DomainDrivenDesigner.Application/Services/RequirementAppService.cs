@@ -110,7 +110,7 @@ public class RequirementAppService(
             }
         }
 
-        return await _repository.CreateBusinessModel(request.Model, request.RequirementId).ConfigureAwait(false) != Guid.Empty
+        return await _repository.CreateBusinessModel(request.Model, request.RequirementId).ConfigureAwait(false) > 0
                 ? new UpsertBusinessModelsAppResponse(request.Id, true, null)
                 : new UpsertBusinessModelsAppResponse(request.Id, false, "Failed to update business model");
     }

@@ -10,7 +10,7 @@ public interface IDDDRepository
 
     Task<Guid?> UpdateRequirement(Requirement requirement);
 
-    Task<Guid?> CreateBusinessModel(BusinessModel model, Guid requirementId);
+    Task<int> CreateBusinessModel(BusinessModel model, Guid requirementId);
 
     Task<List<Project>> RetrieveFullProjects();
 
