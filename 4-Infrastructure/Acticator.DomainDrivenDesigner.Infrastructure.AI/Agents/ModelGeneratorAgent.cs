@@ -20,12 +20,14 @@ public class ModelGeneratorAgent
 
     Mermaid Class Diagram:
     ClassDiagram
+        %% User.cs
         class User {
             +Guid Id
             +String Name
             +String Email
         }
 
+        %% Product.cs
         class Product {
             +Guid Id
             +String Name
