@@ -19,7 +19,7 @@ public class ModelGeneratorAgentTest
 
         var aIAgentClientFactory = new AIAgentClientFactory(aiOptions);
 
-        _modelGeneratorAgent = new ModelGeneratorAgent(aIAgentClientFactory);
+        _modelGeneratorAgent = new ModelGeneratorAgent(aIAgentClientFactory, "ornith:9b");
     }
 
     [Test]
@@ -42,7 +42,7 @@ public class ModelGeneratorAgentTest
             ";
 
         // Action
-        var result = await _modelGeneratorAgent.Create(mermaidDiagram).ConfigureAwait(false);
+        var result = await _modelGeneratorAgent.Create(mermaidDiagram, CancellationToken.None).ConfigureAwait(false);
 
         // Assert
         result.Should().NotBeNull();

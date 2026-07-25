@@ -61,13 +61,17 @@ public class ModelGeneratorAgent
 
     private readonly AIAgent _aiAgent;
 
-    public ModelGeneratorAgent(AIAgentClientFactory agentFactory)
+    public ModelGeneratorAgent(AIAgentClientFactory agentFactory, string model = "qwen2.5-coder:7b-instruct")
     {
-        _aiAgent = agentFactory.Get(Instructions, "qwen2.5-coder:7b-instruct");
+        _aiAgent = agentFactory.Get(Instructions, model);
     }
 
-    public async Task<AgentResponse<ModelGeneratorResult[]>> Create(string input)
+    public async Task<AgentResponse<ModelGeneratorResult[]>> Create(string input, CancellationToken token)
     {
-        return await _aiAgent.RunAsync<ModelGeneratorResult[]>($"Please create following Mermaid Class Diagram in C# and save it as cs files, {input}");
+        return await _aiAgent
+            .RunAsync<ModelGeneratorResult[]>(
+            $"Please create following Mermaid Class Diagram in C# and save it as cs files, {input}", 
+            cancellationToken: token)
+            .ConfigureAwait(false);
     }
 }
