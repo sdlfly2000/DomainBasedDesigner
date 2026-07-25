@@ -27,6 +27,7 @@ export class RequirementDetailComponent implements AfterViewInit {
     RequirementId: string = '';
     RequirementDescription: string = '';
     AnalyzedResult: AnalyzeRequirementsResponseModel = { businessModels: [], raw: '' };
+    ModelIdList: (string | undefined)[] = [];
     ModelMermaidRaws: string[] = [];
     CurrentModelName: string = '';
     CurrentBusinessModel: BusinessModel = {
@@ -100,6 +101,7 @@ export class RequirementDetailComponent implements AfterViewInit {
                         };
                         return;
                     }
+                    this.ModelIdList[index] = model.id;
                     this.CurrentBusinessModel = model;
                     this.ModelMermaidRaws[index] = model.rawDescription != undefined ? model.rawDescription : '';
                     this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
@@ -115,7 +117,9 @@ export class RequirementDetailComponent implements AfterViewInit {
         }
     }
 
-    SaveModel(tabIndex: number) {
+    SaveModel() {
+        let tabIndex: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === this.CurrentModelName);
+        this.CurrentBusinessModel.id = this.ModelIdList[tabIndex];
         this.CurrentBusinessModel.rawDescription = this.ModelMermaidRaws[tabIndex]
         this.CurrentBusinessModel.name = this.CurrentModelName;
         this.requirementDetailService.UpsertBusinessModel(this.CurrentBusinessModel, this.RequirementId).subscribe({
