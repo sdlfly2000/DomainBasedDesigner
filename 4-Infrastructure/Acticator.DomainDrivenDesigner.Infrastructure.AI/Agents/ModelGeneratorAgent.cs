@@ -20,14 +20,14 @@ public class ModelGeneratorAgent
 
     Mermaid Class Diagram:
     ClassDiagram
-        %% User.cs
+        %% Domain/User/User.cs
         class User {
             +Guid Id
             +String Name
             +String Email
         }
 
-        %% Product.cs
+        %% Application/Model/Product.cs
         class Product {
             +Guid Id
             +String Name
@@ -35,7 +35,7 @@ public class ModelGeneratorAgent
         }
 
     C# class files:
-    // User.cs
+    // Domain/User/User.cs
     public class User
     {
         public Guid Id { get; set; }
@@ -43,7 +43,7 @@ public class ModelGeneratorAgent
         public string Email { get; set; }
     }
 
-    // Product.cs
+    // Application/Model/Product.cs
     public class Product
     {
         public Guid Id { get; set; }
@@ -53,8 +53,8 @@ public class ModelGeneratorAgent
 
     Output format:
     [
-        {"file_path": "User.cs", "content": "public class User \n { public Guid Id { get; set; } \n public string Name { get; set; } \n public string Email { get; set; } \n }"},
-        {"file_path": "Product.cs", "content": "public class Product \n { public Guid Id { get; set; } \n public string Name { get; set; } \n public decimal Price { get; set; } \n }"}
+        {"file_path": "Domain//User//User.cs", "content": "public class User \n { public Guid Id { get; set; } \n public string Name { get; set; } \n public string Email { get; set; } \n }"},
+        {"file_path": "Application//Model//Product.cs", "content": "public class Product \n { public Guid Id { get; set; } \n public string Name { get; set; } \n public decimal Price { get; set; } \n }"}
     ]
               
     """;
@@ -70,7 +70,7 @@ public class ModelGeneratorAgent
     {
         return await _aiAgent
             .RunAsync<ModelGeneratorResult[]>(
-            $"Please create following Mermaid Class Diagram in C# and save it as cs files, {input}", 
+            $"Please create following Mermaid Class Diagram to C# classes in C# syntax, {input}", 
             cancellationToken: token)
             .ConfigureAwait(false);
     }

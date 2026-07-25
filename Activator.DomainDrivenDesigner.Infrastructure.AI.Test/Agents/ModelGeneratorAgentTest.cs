@@ -20,6 +20,7 @@ public class ModelGeneratorAgentTest
         var aIAgentClientFactory = new AIAgentClientFactory(aiOptions);
 
         _modelGeneratorAgent = new ModelGeneratorAgent(aIAgentClientFactory, "ornith:9b");
+        //_modelGeneratorAgent = new ModelGeneratorAgent(aIAgentClientFactory);
     }
 
     [Test]
@@ -28,12 +29,14 @@ public class ModelGeneratorAgentTest
         // Arrange
         var mermaidDiagram = @"
             ClassDiagram
+                %% Domain/User/User.cs
                 class User {
                     +Id: Guid
                     +Name: String
                     +Email: String
                 }
-
+                
+                %% Domain/Product/Product.cs
                 class Product {
                     +Id: Guid
                     +Name: String 
