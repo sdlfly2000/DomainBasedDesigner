@@ -27,7 +27,8 @@ public class ActionGeneratorAgentTest
     public async Task Convert_ShouldReturnConvertedClasses_WhenValidInstructionIsProvided()
     {
         // Arrange
-        var instruction = @"
+        var instruction =
+            """
             Generate complete C# code for file **Domain/User/UserService.cs**
 
             Rules:
@@ -35,8 +36,19 @@ public class ActionGeneratorAgentTest
             2. Inject **IUserRepository** through constructor
             3. Public async method signature: Task<User> GetUser(Guid id)
             4. Method logic: 
-                await repository.GetUserById(id) and return value
-
+            ```mermaid
+                flowchart TB
+                    subgraph main [Application.Service.GetUser]
+                        direction TB
+                        start(("Start -> [UserId: Guid]")) -->
+                        FindUser["Find User By UserId -> [IUserRepository.GetUserById(id)]"] -->
+                        check1{Found?} --"no""-->
+                        userNotFound["Throw Not found exception""]      
+                        check1 --""yes""--> 
+                        return[return User] -->
+                        terminal(End)
+                    end
+            ```
             Reference interface:
             public interface IUserRepository
             {
@@ -44,7 +56,7 @@ public class ActionGeneratorAgentTest
             }
 
             Only output full source code of UserService.cs, no other text. Use async/await correctly.
-            ";
+            """;
 
         // Action
         var result = await _actionGeneratorAgent.Create(instruction, CancellationToken.None).ConfigureAwait(false);
