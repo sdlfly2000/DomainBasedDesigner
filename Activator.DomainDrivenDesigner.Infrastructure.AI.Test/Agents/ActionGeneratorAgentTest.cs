@@ -42,8 +42,8 @@ public class ActionGeneratorAgentTest
                         direction TB
                         start(("Start -> [UserId: Guid]")) -->
                         FindUser["Find User By UserId -> [IUserRepository.GetUserById(id)]"] -->
-                        check1{Found?} --"no""-->
-                        userNotFound["Throw Not found exception""]      
+                        check1{Found?} --"no"-->
+                        userNotFound["Throw Not found exception"]      
                         check1 --""yes""--> 
                         return[return User] -->
                         terminal(End)
