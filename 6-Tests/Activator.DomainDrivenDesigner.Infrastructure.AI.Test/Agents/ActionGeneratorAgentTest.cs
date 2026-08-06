@@ -53,7 +53,7 @@ public class ActionGeneratorAgentTest
                             return["`Return **User**`"]
                         end
                 ```
-            4. Public async method signature: ```Task<bool> UpsertUser(User user)```
+            4. Public async method signature: ```Task<User> UpsertUser(User user)```
 
                 Method **UpsertUser** logic: 
                 ```mermaid
@@ -70,14 +70,6 @@ public class ActionGeneratorAgentTest
                             return("`Return **User**`")
                         end
                 ```
-
-            ## Reference Interfaces:
-            public interface IUserRepository
-            - Task<User> GetUserById(Guid Id);
-            - Task<User> UpdateUser(User user);
-            - Task<User> CreateUser(User user);
-            - Task<bool> Save(User user);
-            - void Map(User source, ref User destination);
 
             ## Output
             Only output full source code of **UserService.cs** in proper format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
