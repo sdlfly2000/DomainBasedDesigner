@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\4-Infrastructure\Acticator.DomainDrivenDesigner.Infrastructure.AI\Activator.DomainDrivenDesigner.Infrastructure.AI.csproj" />
+    <ProjectReference Include="..\..\4-Infrastructure\Acticator.DomainDrivenDesigner.Infrastructure.AI\Activator.DomainDrivenDesigner.Infrastructure.AI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
