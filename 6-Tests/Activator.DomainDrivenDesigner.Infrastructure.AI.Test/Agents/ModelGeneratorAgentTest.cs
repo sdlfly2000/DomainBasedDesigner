@@ -19,15 +19,16 @@ public class ModelGeneratorAgentTest
 
         var aIAgentClientFactory = new AIAgentClientFactory(aiOptions);
 
-        _modelGeneratorAgent = new ModelGeneratorAgent(aIAgentClientFactory, "ornith:9b");
-        //_modelGeneratorAgent = new ModelGeneratorAgent(aIAgentClientFactory);
+        //_modelGeneratorAgent = new ModelGeneratorAgent(aIAgentClientFactory, "ornith:9b");
+        _modelGeneratorAgent = new ModelGeneratorAgent(aIAgentClientFactory);
     }
 
     [Test]
     public async Task Convert_ShouldReturnConvertedClasses_WhenValidMermaidDiagramIsProvided()
     {
         // Arrange
-        var mermaidDiagram = @"
+        var mermaidDiagram = 
+            """
             ClassDiagram
                 %% Domain/User/User.cs
                 class User {
@@ -42,12 +43,17 @@ public class ModelGeneratorAgentTest
                     +Name: String 
                     +Price: Decimal
                 }
-            ";
+            """;
 
         // Action
         var result = await _modelGeneratorAgent.Create(mermaidDiagram, CancellationToken.None).ConfigureAwait(false);
 
         // Assert
         result.Should().NotBeNull();
+        result.Result.Count().Should().Be(2);
+        foreach (var item in result.Result) {
+            Console.WriteLine(string.Concat("File: ", item.file_path));
+            Console.WriteLine(string.Concat("Content: ", Environment.NewLine, item.content));
+        }
     }
 }

@@ -38,9 +38,17 @@ public class AIAgentClientFactory
             defaultModel: opt.Model
         );
 
+        var chatClientAgentOptions = new ChatClientAgentOptions
+        {
+            ChatOptions = new Microsoft.Extensions.AI.ChatOptions
+            {
+                Temperature = 0.0f,
+                Instructions = instructions
+            }
+        };
+
         return new ChatClientAgent(
             ollamaApiClient,
-            instructions: instructions
-            );
+            chatClientAgentOptions);
     }
 }

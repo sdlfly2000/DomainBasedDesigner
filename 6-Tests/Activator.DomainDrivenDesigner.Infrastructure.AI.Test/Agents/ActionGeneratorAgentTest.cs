@@ -63,16 +63,22 @@ public class ActionGeneratorAgentTest
                             start(("Start -> [User: User]")) -->
                             FindUser["`Find User By *User.Id* -> [IUserRepository.GetUserById(User.Id)]`"] -->
                             check1{Found?} --"no"-->
-                            userNotFound["`Create a **User** -> [IUserRepository.Create(User)]`"] --> return     
+                            userNotFound["`Create a **User** -> [IUserRepository.Create(User)]`"]     
                             check1 --"yes"--> 
                             map["`Map **User** -> [IUserRepository.Map(user, ref existingUser)]`"] -->
-                            save["`Save Mapped **User** -> [IUserRepository.Save(mappedUser)]]`"] -->
-                            return("`Return **User**`")
+                            save["`Save Mapped **User** -> [IUserRepository.Save(mappedUser)]]`"]
                         end
                 ```
+            Reference Interface Signature:
+            ```csharp
+            Task<User> IUserRepository.GetUserById(Guid Id);
+            Task<User> IUserRepository.Create(User user);
+            Task<User> IUserRepository.Save(User user);
+            void IUserRepository.Map(user, ref existingUser);
+            ```
 
             ## Output
-            Only output full source code of **UserService.cs** in proper format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
+            Only output full source code of **UserService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
             """;
 
         // Action
