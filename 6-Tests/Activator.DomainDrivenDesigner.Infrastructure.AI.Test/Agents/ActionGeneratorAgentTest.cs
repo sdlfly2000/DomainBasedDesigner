@@ -43,7 +43,7 @@ public class ActionGeneratorAgentTest
             ```csharp
 
             ## Rules:
-            1. Class: **UserService**
+            1. Class: **UserService**, Implements: **IUserService**
 
             2. Inject below through constructor
             - **IUserRepository**
