@@ -32,6 +32,16 @@ public class ActionGeneratorAgentTest
             ## Generate complete C# code 
             File: **Domain/User/UserService.cs**
 
+            ## Format:
+            Write a C# **UserService** class with GetUser and UpsertUser methods.
+
+            ```csharp
+            public class UserService
+            {
+                ### Your Code Fixed (Allman Style)
+            }
+            ```csharp
+
             ## Rules:
             1. Class: **UserService**
 
