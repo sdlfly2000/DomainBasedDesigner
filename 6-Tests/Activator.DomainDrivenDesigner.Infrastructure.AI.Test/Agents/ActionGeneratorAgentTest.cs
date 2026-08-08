@@ -65,7 +65,7 @@ public class ActionGeneratorAgentTest
                             check1{Found?} --"no"-->
                             userNotFound["`Create a **User** -> [IUserRepository.Create(User)]`"]     
                             check1 --"yes"--> 
-                            map["`Map **User** -> [IUserRepository.Map(user, ref existingUser)]`"] -->
+                            map["`Map **User** -> [Map(user, ref existingUser)]`"] -->
                             save["`Save Mapped **User** -> [IUserRepository.Save(mappedUser)]]`"]
                         end
                 ```
@@ -74,7 +74,11 @@ public class ActionGeneratorAgentTest
             Task<User> IUserRepository.GetUserById(Guid Id);
             Task<User> IUserRepository.Create(User user);
             Task<User> IUserRepository.Save(User user);
-            void IUserRepository.Map(user, ref existingUser);
+            private void Map(User user, ref User existingUser)
+            {
+                existingUser.Name = user.Name;
+                existingUser.Email = user.Email;
+            };
             ```
 
             ## Output
