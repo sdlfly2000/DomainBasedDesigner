@@ -188,7 +188,6 @@ public class DDDRepository : IDDDRepository
     public async Task<BusinessModel> RetrieveBusinessModelsById(Guid businessModelId)
     {
         var rowBusinessModel = await _context.T_BUSINESS_MODELs
-            .Include(bm => bm.T_BUSINESS_MODEL_PROPERTies)
             .SingleOrDefaultAsync(bm => bm.ID == businessModelId)
             .ConfigureAwait(false);
 
@@ -201,7 +200,6 @@ public class DDDRepository : IDDDRepository
     {
         var rowBusinessModel = await _context
             .T_BUSINESS_MODELs
-            .Include(m => m.T_BUSINESS_MODEL_PROPERTies)
             .SingleOrDefaultAsync(bm => bm.ID == model.Id)
             .ConfigureAwait(false);
 
@@ -220,19 +218,6 @@ public class DDDRepository : IDDDRepository
     {
         row.NAME = model.Name;
         row.RAW_DESCRIPTION = model.RawDescription;
-        row.T_BUSINESS_MODEL_PROPERTies.Clear();
-        var rowModelProperties = model.Properties.Select(p => new T_BUSINESS_MODEL_PROPERTY
-        {
-            ID = p.Id,
-            NAME = p.Name,
-            CREATED_UTC = p.CreatedOnUTC,
-            TYPE = (byte?)p.Type
-        }).ToList();
-
-        foreach (var rowModelProperty in rowModelProperties)
-        {
-            row.T_BUSINESS_MODEL_PROPERTies.Add(rowModelProperty);
-        }
     }
 
     private Project Map(T_PROJECT rowProject)

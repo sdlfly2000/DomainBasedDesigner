@@ -10,4 +10,5 @@ dotnet ef dbcontext scaffold `
 --table dbo.T_PROJECT `
 --table dbo.T_REQUIREMENT `
 --table dbo.T_BUSINESS_MODEL `
---table dbo.T_BUSINESS_MODEL_PROPERTY
+--table dbo.T_BUSINESS_ACTION `
+--table dbo.T_BUSINESS_CONTEXT 
