@@ -26,9 +26,7 @@ public partial class DomainDbContext : DbContext
 
     public virtual DbSet<T_REQUIREMENT> T_REQUIREMENTs { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("server=homeserver2;database=DomainDrivenDesigner;uid=sdlfly2000;password=sdl@1215;TrustServerCertificate=True");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,7 +43,7 @@ public partial class DomainDbContext : DbContext
                 .HasForeignKey(d => d.CONTEXT_ID)
                 .HasConstraintName("FK_T_BUSINESS_ACTION_T_BUSINESS_CONTEXT");
 
-            entity.HasOne(d => d.PARENT_BUSINESS_ACTION).WithMany(p => p.InversePARENT_BUSINESS_ACTION)
+            entity.HasOne(d => d.PARENT_BUSINESS_ACTION).WithMany(p => p.Child_BUSINESS_ACTIONs)
                 .HasForeignKey(d => d.PARENT_BUSINESS_ACTION_ID)
                 .HasConstraintName("FK_T_BUSINESS_ACTION_T_BUSINESS_ACTION");
 
