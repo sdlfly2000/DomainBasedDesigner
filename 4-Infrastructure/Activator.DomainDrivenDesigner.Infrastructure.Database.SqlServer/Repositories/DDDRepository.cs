@@ -20,7 +20,7 @@ public class DDDRepository : IDDDRepository
 
     public async Task<Guid?> CreateProject(Project project)
     {
-        var efProject = new Entities.T_PROJECT
+        var efProject = new T_PROJECT
         {
             ID = project.Id,
             NAME = project.Name,
@@ -36,22 +36,14 @@ public class DDDRepository : IDDDRepository
 
     public async Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)
     {
-        var rowRequirement = new Entities.T_REQUIREMENT
+        var rowRequirement = new T_REQUIREMENT
         {
             ID = requirement.Id,
             DESCRIPTION = requirement.Description,
+            PROJECT_ID = projectId,
             CREATE_UTC = DateTime.UtcNow
         };
-
-        var rowProject = await _context.T_PROJECTs
-            .SingleOrDefaultAsync(p => p.ID == projectId)
-            .ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
-
-        rowProject.T_REQUIREMENTs.Add(rowRequirement);
-
-        _context.T_PROJECTs.Update(rowProject);
+         _context.T_REQUIREMENTs.Add(rowRequirement);
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
         return requirement.Id;
@@ -72,28 +64,6 @@ public class DDDRepository : IDDDRepository
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
         return requirement.Id;
-    }
-
-    public async Task<int> CreateBusinessModel(BusinessModel model, Guid requirementId)
-    {
-        var rowBusinessModel = new Entities.T_BUSINESS_MODEL
-        {
-            ID = Guid.NewGuid(),
-            CREATED_UTC = DateTime.UtcNow,
-        };
-        
-        Persist(model, rowBusinessModel);     
-
-        var rowRequirement = await _context.T_REQUIREMENTs
-            .SingleOrDefaultAsync(r => r.ID == requirementId)
-            .ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(requirementId, rowRequirement);
-
-        rowRequirement.T_BUSINESS_MODELs.Add(rowBusinessModel);
-
-        _context.T_REQUIREMENTs.Update(rowRequirement);
-        return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task<List<Project>> RetrieveFullProjects()
@@ -136,11 +106,30 @@ public class DDDRepository : IDDDRepository
             .Select(r => Map(r))];
     }
 
+    public async Task<Guid?> CreateBusinessModel(BusinessModel model, Guid requirementId)
+    {
+        var rowBusinessModel = new T_BUSINESS_MODEL
+        {
+            ID = Guid.NewGuid(),
+            NAME = model.Name,
+            RAW_DESCRIPTION = model.RawDescription,
+            REQUIREMENT_ID = requirementId,
+            CONTEXT_ID = model.ContextId,
+            CREATED_UTC = DateTime.UtcNow,
+        };
+
+        _context.T_BUSINESS_MODELs.Add(rowBusinessModel);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+
+        return rowBusinessModel.ID;
+    }
+
     public async Task<List<BusinessModel>> RetrieveBusinessModelsByProjectId(Guid projectId)
     {
         var rowProject = await _context.T_PROJECTs
             .Include(p => p.T_REQUIREMENTs)
-                .ThenInclude(r => r.T_BUSINESS_MODELs)
+            .ThenInclude(r => r.T_BUSINESS_MODELs)
+            .ThenInclude(bm => bm.CONTEXT)
             .SingleOrDefaultAsync(p => p.ID == projectId)
             .ConfigureAwait(false);
 
@@ -158,6 +147,7 @@ public class DDDRepository : IDDDRepository
     {
         var rowRequirement = await _context.T_REQUIREMENTs
             .Include(r => r.T_BUSINESS_MODELs)
+            .ThenInclude (bm => bm.CONTEXT)
             .SingleOrDefaultAsync(r => r.ID == requirementId)
             .ConfigureAwait(false);
 
@@ -188,6 +178,7 @@ public class DDDRepository : IDDDRepository
     public async Task<BusinessModel> RetrieveBusinessModelsById(Guid businessModelId)
     {
         var rowBusinessModel = await _context.T_BUSINESS_MODELs
+            .Include(bm => bm.CONTEXT)
             .SingleOrDefaultAsync(bm => bm.ID == businessModelId)
             .ConfigureAwait(false);
 
@@ -246,7 +237,9 @@ public class DDDRepository : IDDDRepository
         var businessModel = new BusinessModel(rowBusinessModel.ID)
         {
             Name = rowBusinessModel.NAME,
-            RawDescription = rowBusinessModel.RAW_DESCRIPTION
+            RawDescription = rowBusinessModel.RAW_DESCRIPTION,
+            ContextId = rowBusinessModel.CONTEXT_ID,
+            Context = rowBusinessModel.CONTEXT?.NAME
         };
 
         return businessModel;
