@@ -33,7 +33,7 @@ public class ActionGeneratorAgentTest
             File: **Domain/User/UserService.cs**
 
             ## Format:
-            Write a C# **UserService** class with GetUser and UpsertUser methods.
+            Write a C# **UserService** class
 
             ```csharp
             public class UserService
