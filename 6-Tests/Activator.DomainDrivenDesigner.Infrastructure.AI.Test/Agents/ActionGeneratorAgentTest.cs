@@ -40,7 +40,7 @@ public class ActionGeneratorAgentTest
             {
                 ### Your Code Fixed (Allman Style)
             }
-            ```csharp
+            ```
 
             ## Rules:
             1. Class: **UserService**, Implements: **IUserService**
@@ -79,16 +79,22 @@ public class ActionGeneratorAgentTest
                             save["`Save Mapped **User** -> [IUserRepository.Save(mappedUser)]]`"]
                         end
                 ```
-            Reference Interface Signature:
+
+            ## Private Methods
             ```csharp
-            Task<User> IUserRepository.GetUserById(Guid Id);
-            Task<User> IUserRepository.Create(User user);
-            Task<User> IUserRepository.Save(User user);
             private void Map(User user, ref User existingUser)
             {
                 existingUser.Name = user.Name;
                 existingUser.Email = user.Email;
             };
+            ```
+
+            ## Reference Interface Signatures:
+            ```csharp
+            Task<User> IUserRepository.GetUserById(Guid Id);
+            Task<User> IUserRepository.Create(User user);
+            Task<User> IUserRepository.Save(User user);
+      
             ```
 
             ## Output
