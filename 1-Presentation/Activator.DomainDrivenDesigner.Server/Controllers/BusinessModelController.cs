@@ -31,7 +31,7 @@ public class BusinessModelController(RequirementAppService requirementAppService
         BusinessModel businessModel = new BusinessModel(modelId)
         { 
             Name = model.name,
-            RawDescription = model.rawDescription,
+            ContentMermaid = model.rawDescription,
             Properties = model.properties ?? new List<BusinessModelProperty>()
         };
 
