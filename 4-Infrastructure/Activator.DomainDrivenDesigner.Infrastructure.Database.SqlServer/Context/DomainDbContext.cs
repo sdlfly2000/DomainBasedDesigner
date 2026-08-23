@@ -43,10 +43,6 @@ public partial class DomainDbContext : DbContext
                 .HasForeignKey(d => d.CONTEXT_ID)
                 .HasConstraintName("FK_T_BUSINESS_ACTION_T_BUSINESS_CONTEXT");
 
-            entity.HasOne(d => d.PARENT_BUSINESS_ACTION).WithMany(p => p.Child_BUSINESS_ACTIONs)
-                .HasForeignKey(d => d.PARENT_BUSINESS_ACTION_ID)
-                .HasConstraintName("FK_T_BUSINESS_ACTION_T_BUSINESS_ACTION");
-
             entity.HasOne(d => d.REQUIREMENT).WithMany(p => p.T_BUSINESS_ACTIONs)
                 .HasForeignKey(d => d.REQUIREMENT_ID)
                 .HasConstraintName("FK_T_BUSINESS_ACTION_T_REQUIREMENT");

@@ -21,9 +21,5 @@ public partial class T_BUSINESS_ACTION
 
     public virtual T_BUSINESS_CONTEXT? CONTEXT { get; set; }
 
-    public virtual ICollection<T_BUSINESS_ACTION> Child_BUSINESS_ACTIONs { get; set; } = new List<T_BUSINESS_ACTION>();
-
-    public virtual T_BUSINESS_ACTION? PARENT_BUSINESS_ACTION { get; set; }
-
     public virtual T_REQUIREMENT? REQUIREMENT { get; set; }
 }

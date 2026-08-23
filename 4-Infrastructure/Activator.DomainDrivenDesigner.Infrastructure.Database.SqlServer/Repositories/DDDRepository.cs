@@ -25,7 +25,7 @@ public class DDDRepository : IDDDRepository
             ID = project.Id,
             NAME = project.Name,
             DESCRIPTION = project.Description,
-            CREATED_UTC = project.CreatedOnUTC
+            CREATED_UTC = project.CreatedOnUtc
         };
 
         _context.T_PROJECTs.Add(efProject);
@@ -112,7 +112,7 @@ public class DDDRepository : IDDDRepository
         {
             ID = Guid.NewGuid(),
             NAME = model.Name,
-            RAW_DESCRIPTION = model.RawDescription,
+            RAW_DESCRIPTION = model.ContentMermaid,
             REQUIREMENT_ID = requirementId,
             CONTEXT_ID = model.ContextId,
             CREATED_UTC = DateTime.UtcNow,
@@ -208,7 +208,7 @@ public class DDDRepository : IDDDRepository
     private void Persist(BusinessModel model, T_BUSINESS_MODEL row)
     {
         row.NAME = model.Name;
-        row.RAW_DESCRIPTION = model.RawDescription;
+        row.RAW_DESCRIPTION = model.ContentMermaid;
     }
 
     private Project Map(T_PROJECT rowProject)
@@ -216,7 +216,7 @@ public class DDDRepository : IDDDRepository
         var project = new Project(rowProject.ID, rowProject.NAME)
         {
             Description = rowProject.DESCRIPTION,
-            CreatedOnUTC = rowProject.CREATED_UTC
+            CreatedOnUtc = rowProject.CREATED_UTC
         };
         return project;
     }
@@ -226,7 +226,7 @@ public class DDDRepository : IDDDRepository
         var requirement = new Requirement(rowRequirment.ID)
         {
             Description = rowRequirment.DESCRIPTION,
-            CreatedOnUTC = rowRequirment.CREATE_UTC
+            CreatedOnUtc = rowRequirment.CREATE_UTC
         };
 
         return requirement;
@@ -237,9 +237,8 @@ public class DDDRepository : IDDDRepository
         var businessModel = new BusinessModel(rowBusinessModel.ID)
         {
             Name = rowBusinessModel.NAME,
-            RawDescription = rowBusinessModel.RAW_DESCRIPTION,
+            ContentMermaid = rowBusinessModel.RAW_DESCRIPTION,
             ContextId = rowBusinessModel.CONTEXT_ID,
-            Context = rowBusinessModel.CONTEXT?.NAME
         };
 
         return businessModel;

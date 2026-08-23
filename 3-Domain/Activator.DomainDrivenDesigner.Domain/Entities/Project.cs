@@ -15,7 +15,7 @@ public class Project(Guid ID, string ProjectName) : EntityBase(ID)
         return new Project(Guid.NewGuid(), ProjectName)
         {
             Description = ProjectDescription,
-            CreatedOnUTC = DateTime.UtcNow,
+            CreatedOnUtc = DateTime.UtcNow,
         };
     }
 }
