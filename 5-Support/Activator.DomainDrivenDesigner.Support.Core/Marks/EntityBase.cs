@@ -9,5 +9,5 @@ public abstract class EntityBase
 
     public Guid Id { get; set; }
 
-    public DateTime CreatedOnUTC { get; set; }
+    public DateTime CreatedOnUtc { get; set; }
 }

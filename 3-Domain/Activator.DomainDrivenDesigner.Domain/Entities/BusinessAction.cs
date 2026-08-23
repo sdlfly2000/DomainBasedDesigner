@@ -6,7 +6,7 @@ public class BusinessAction(Guid ID) : EntityBase(ID)
 {
     public string? Name { get; set; }
 
-    public BusinessAction? ParentBusinessAction;
+    public string? ContentMermaid { get; set; }
 
-    public List<BusinessAction> ChildBusinessActions { get; set; } = [];
+    public Guid ContextId { get; set;}
 }
