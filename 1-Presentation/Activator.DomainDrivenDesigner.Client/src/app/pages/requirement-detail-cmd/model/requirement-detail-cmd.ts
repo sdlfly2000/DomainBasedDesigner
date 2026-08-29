@@ -10,19 +10,9 @@ export interface AnalyzeRequirementsResponseModel {
 export interface BusinessModel {
     id: string | undefined
     name: string | undefined
-    rawDescription: string | undefined
-    properties: BusinessModelProperty[]
-}
-
-export interface BusinessModelProperty {
-    name?: string
-    Type?: ModelPropertyType
-}
-
-export enum ModelPropertyType {
-    None = 0,
-    String = 1,
-    Int = 2,
+    contentMermaid: string | undefined
+    contextId: string | undefined
+    createdOnUtc: Date | undefined
 }
 
 // Save Requirement Request and Response Models

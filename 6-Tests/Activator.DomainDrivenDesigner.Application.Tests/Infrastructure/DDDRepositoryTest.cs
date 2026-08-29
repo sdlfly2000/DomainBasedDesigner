@@ -30,7 +30,7 @@ public class DddRepositoryTest
         var projectId = Guid.NewGuid();
         var project = new Project(projectId, "Test Project")
         {
-            CreatedOnUTC = DateTime.UtcNow
+            CreatedOnUtc = DateTime.UtcNow
         };
 
         await repository.CreateProject(project);
@@ -39,7 +39,7 @@ public class DddRepositoryTest
         var requirement = new Requirement(requirementId)
         {
             Description = "Test Requirement",
-            CreatedOnUTC = DateTime.UtcNow
+            CreatedOnUtc = DateTime.UtcNow
         };
 
         // Act
@@ -76,7 +76,7 @@ public class DddRepositoryTest
         var requirement = new Requirement(Guid.NewGuid())
         {
             Description = "Test Requirement",
-            CreatedOnUTC = DateTime.UtcNow
+            CreatedOnUtc = DateTime.UtcNow
         };
 
         // Act & Assert

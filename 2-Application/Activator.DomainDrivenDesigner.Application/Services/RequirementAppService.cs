@@ -36,34 +36,18 @@ public class RequirementAppService(
     public async Task<AnalyzeRequirementsResponse> AnalyzeRequirement(AnalyzeRequirementsRequest request)
     {
         var semanticAnalysisResponse = await _semanticAnalysisAgent.Analyze(request.RequirementDescription).ConfigureAwait(false);
-        
-        var models = semanticAnalysisResponse.Result.nouns.Select(n => new BusinessModel(Guid.NewGuid()) { Name = n }).ToArray();
-        var actions = semanticAnalysisResponse.Result.verbs.Select(v => new BusinessAction(Guid.NewGuid()) { Name = v }).ToArray();
-
-        foreach (var relationship in semanticAnalysisResponse.Result.relationships)
-        {
-            if (semanticAnalysisResponse.Result.nouns.Contains(relationship.noun))
-            {
-                relationship.modifiers.ToList().ForEach(modifier =>
-                {
-                    var model = models.SingleOrDefault(m => m.Name == relationship.noun);
-                    model?.Properties.Add(new BusinessModelProperty(Guid.NewGuid()) { Name = modifier });
-                });
-            }
-        }
-
-        var serializedModel = JsonSerializer.Serialize(models);
+        var businessModels = semanticAnalysisResponse.Result.nouns.Select(noun => new BusinessModel(Guid.NewGuid()) { Name = noun }).ToArray(); ;
+        var serializedModel = JsonSerializer.Serialize(semanticAnalysisResponse.Result.relationships);
         var mermaidResponse = await _mermaidConverterAgent.Convert(serializedModel).ConfigureAwait(false);
 
         return semanticAnalysisResponse != null
             ? new AnalyzeRequirementsResponse(
                 request.RequestId,
-                models,
-                actions,
+                businessModels,
                 mermaidResponse.Text,
                 true, 
                 null)
-            : new AnalyzeRequirementsResponse(request.RequestId, null, null, "", false, "Failed to analyze requirement");
+            : new AnalyzeRequirementsResponse(request.RequestId, Array.Empty<BusinessModel>(), string.Empty, false, "Failed to analyze requirement");
     }
 
     [LogTrace(returnType: typeof(SaveRequirementResponse))]

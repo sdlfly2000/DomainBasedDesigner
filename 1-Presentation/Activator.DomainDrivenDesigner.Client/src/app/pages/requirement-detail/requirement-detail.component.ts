@@ -33,8 +33,9 @@ export class RequirementDetailComponent implements AfterViewInit {
     CurrentBusinessModel: BusinessModel = {
         id: '',
         name: '',
-        rawDescription: '',
-        properties: []
+        contentMermaid: '',
+        contextId: '',
+        createdOnUtc: undefined
     };
 
     private graphDefinition: string = '';
@@ -96,14 +97,15 @@ export class RequirementDetailComponent implements AfterViewInit {
                         this.CurrentBusinessModel = {
                             id: '',
                             name: '',
-                            rawDescription: '',
-                            properties: []
+                            contentMermaid: '',
+                            contextId: '',
+                            createdOnUtc: undefined
                         };
                         return;
                     }
                     this.ModelIdList[index] = model.id;
                     this.CurrentBusinessModel = model;
-                    this.ModelMermaidRaws[index] = model.rawDescription != undefined ? model.rawDescription : '';
+                    this.ModelMermaidRaws[index] = model.contentMermaid != undefined ? model.contentMermaid : '';
                     this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
                     await this.renderDiagram();
                 },
@@ -120,7 +122,7 @@ export class RequirementDetailComponent implements AfterViewInit {
     SaveModel() {
         let tabIndex: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === this.CurrentModelName);
         this.CurrentBusinessModel.id = this.ModelIdList[tabIndex];
-        this.CurrentBusinessModel.rawDescription = this.ModelMermaidRaws[tabIndex]
+        this.CurrentBusinessModel.contentMermaid = this.ModelMermaidRaws[tabIndex]
         this.CurrentBusinessModel.name = this.CurrentModelName;
         this.requirementDetailService.UpsertBusinessModel(this.CurrentBusinessModel, this.RequirementId).subscribe({
             next: (success) => {

@@ -32,7 +32,6 @@ public class BusinessModelController(RequirementAppService requirementAppService
         { 
             Name = model.name,
             ContentMermaid = model.rawDescription,
-            Properties = model.properties ?? new List<BusinessModelProperty>()
         };
 
         var response = await _requirementAppService.UpsertProjectBusinessModels(

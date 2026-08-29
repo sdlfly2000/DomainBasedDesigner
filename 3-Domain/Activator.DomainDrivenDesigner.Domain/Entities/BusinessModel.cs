@@ -8,7 +8,5 @@ public class BusinessModel(Guid ID) : EntityBase(ID)
 
     public string? ContentMermaid { get; set; }
 
-    public Guid? ContextId { get; set; }
-    
-    public List<BusinessModelProperty> Properties { get; set; } = [];
+    public Guid? ContextId { get; set; }    
 }

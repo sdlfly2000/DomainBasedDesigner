@@ -16,49 +16,9 @@ public class MermaidConverterAgent
     Example
 
     structured class:
-    
-    [
-        {
-            "name": "User",
-            "properties": [
-                {
-                    "Name": "Id",
-                    "Type": "Guid"
-                },
-                {
-                    "Name": "Name",
-                    "Type": "String"
-                },
-                {
-                    "Name": "Email",
-                    "Type": "String"
-                },
-                {
-                    "Name": "new",
-                    "Type": null
-                }
-            ],
-            "methods": ["Login()", "Logout()"]
-        },
-        {
-            "name": "Product",
-            "properties": [            
-                {
-                    "Name": "Id",
-                    "Type": "Guid"
-                },
-                {
-                    "Name": "Name",
-                    "Type": "String"
-                },
-                {
-                    "Name": "Price",
-                    "Type": "Decimal"
-                }
-            ]
-        }
-    ]
-    
+
+    [{"noun":"User","modifiers":["Id","Name","Email","New"]},{"noun":"Product","modifiers":["Id","Name","Price"]}]]
+
 
     Mermaid Class Chart
 
@@ -68,8 +28,6 @@ public class MermaidConverterAgent
             + Name: String
             + Email: String
             + new
-            + Login(): boolean
-            + Logout(): void
         }
 
         class Product {
