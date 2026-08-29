@@ -203,6 +203,13 @@ public class DDDRepository : IDDDRepository
         return model.Id;
     }
 
+    public async Task<List<Domain.Entities.Context>> RetrieveContexts()
+    {
+        return await _context.T_BUSINESS_CONTEXTs
+            .Select(c => Map(c))
+            .ToListAsync();
+    }
+
     #region Private Mapper
 
     private void Persist(BusinessModel model, T_BUSINESS_MODEL row)
@@ -242,6 +249,15 @@ public class DDDRepository : IDDDRepository
         };
 
         return businessModel;
+    }
+
+    private Domain.Entities.Context Map(T_BUSINESS_CONTEXT rowBusinessContext)
+    {
+        return new Domain.Entities.Context(rowBusinessContext.ID)
+        {
+            Name = rowBusinessContext.NAME,
+            CreatedOnUtc = rowBusinessContext.CREATED_UTC
+        };
     }
 
     #endregion
