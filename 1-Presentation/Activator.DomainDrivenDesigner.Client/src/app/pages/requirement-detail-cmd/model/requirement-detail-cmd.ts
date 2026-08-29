@@ -12,7 +12,13 @@ export interface BusinessModel {
     name: string | undefined
     contentMermaid: string | undefined
     contextId: string | undefined
+    contextName: string | undefined
     createdOnUtc: Date | undefined
+}
+
+export interface Context {
+    id: string | undefined
+    name: string | undefined
 }
 
 // Save Requirement Request and Response Models

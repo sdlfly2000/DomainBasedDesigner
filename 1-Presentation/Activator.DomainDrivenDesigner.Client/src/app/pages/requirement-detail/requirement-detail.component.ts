@@ -8,17 +8,21 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToolbarModule } from 'primeng/toolbar';
 import { QueryStringService } from '../../../services/shared.QueryString.service';
 import { EnumInfoSeverity, StatusMessageModel, StatusMessageService } from '../../../services/statusmessage.service';
-import { AnalyzeRequirementsResponseModel, BusinessModel } from '../requirement-detail-cmd/model/requirement-detail-cmd';
+import { AnalyzeRequirementsResponseModel, BusinessModel, Context } from '../requirement-detail-cmd/model/requirement-detail-cmd';
 import { RequirementDetailCommandAnalyzeComponent } from '../requirement-detail-cmd/requirement-detail-cmd-analyze/requirement-detail-cmd-analyze.component';
 import { RequirementDetailCommandSaveComponent } from '../requirement-detail-cmd/requirement-detail-cmd-save/requirement-detail-cmd-save.component';
 import { RequirementDetailService } from './requirement-detail.service';
 import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-requirement-detail',
   templateUrl: './requirement-detail.component.html',
   styleUrls: ['./requirement-detail.component.css'],
-  imports: [FormsModule, ButtonModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, RequirementDetailCommandAnalyzeComponent, RequirementDetailCommandSaveComponent]
+  imports: [
+      FormsModule, ButtonModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, SelectModule,
+      RequirementDetailCommandAnalyzeComponent, RequirementDetailCommandSaveComponent
+  ]
 })
 export class RequirementDetailComponent implements AfterViewInit {
     title = 'Requirement Detail';
@@ -29,12 +33,15 @@ export class RequirementDetailComponent implements AfterViewInit {
     AnalyzedResult: AnalyzeRequirementsResponseModel = { businessModels: [], raw: '' };
     ModelIdList: (string | undefined)[] = [];
     ModelMermaidRaws: string[] = [];
+    Contexts: Context[] = []
+    CurrentContext: Context | undefined
     CurrentModelName: string = '';
     CurrentBusinessModel: BusinessModel = {
         id: '',
         name: '',
         contentMermaid: '',
         contextId: '',
+        contextName: '',
         createdOnUtc: undefined
     };
 
@@ -99,6 +106,7 @@ export class RequirementDetailComponent implements AfterViewInit {
                             name: '',
                             contentMermaid: '',
                             contextId: '',
+                            contextName: '',
                             createdOnUtc: undefined
                         };
                         return;

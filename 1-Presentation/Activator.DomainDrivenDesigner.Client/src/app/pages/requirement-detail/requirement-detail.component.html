@@ -30,7 +30,12 @@
                 <p-tabpanels>
                     @for (model of AnalyzedResult.businessModels; track model.name; let i = $index) {
                     <p-tabpanel [value]="model.name">
-                        <div class="flex flex-wrap items-stretch gap-4">
+                        <div class="flex justify-start items-center gap-4">
+                            <label pLabel for="context">Context</label>
+                            <p-select [options]="Contexts" [(ngModel)]="CurrentContext" placeholder="Select/Create a Conext" [editable]="true" optionLabel="context" />
+                            <button pButton>Create</button>
+                        </div>
+                        <div class="flex flex-wrap items-stretch gap-4 requirement-detail-modelrawmermaid">
                             <textarea rows="10"
                                       cols="60"
                                       pTextarea
