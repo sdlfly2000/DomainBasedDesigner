@@ -30,75 +30,45 @@ public class ActionGeneratorAgentTest
         var instruction =
             """
             ## Generate complete C# code 
-            File: **Domain/User/UserService.cs**
+            File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/ContextAppService.cs**
 
             ## Format:
-            Write a C# **UserService** class
+            Write a C# **ContextAppService** class
 
             ```csharp
-            public class UserService
+            public class ContextAppService
             {
                 ### Your Code Fixed (Allman Style)
             }
             ```
 
             ## Rules:
-            1. Class: **UserService**, Implements: **IUserService**
+            1. Class: **ContextAppService**, Implements: **IContextAppService**
 
             2. Inject below through constructor
-            - **IUserRepository**
+            - **IDDDRepository**
+            - **IServiceProvider**
 
-            3. Public async method signature: ```Task<User> GetUser(Guid Id)```
+            3. Public async method signature: ```Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)```
 
-                Method **GetUser** logic: 
+                Method **RetrieveContexts** logic: 
                 ```mermaid
-                    flowchart TB
-                        subgraph main [Domain.User.UserService.GetUser]
+                    graph TB
+                        subgraph main [Activator.DomainDrivenDesigner.Application.Services.ContextAppService]
                             direction TB
-                            start(("Start -> [UserId: Guid]")) -->
-                            FindUser["`Find User By *UserId* -> [IUserRepository.GetUserById(Id)]`"] -->
-                            check1{Found?} --"no"-->
-                            userNotFound["`Throw *DomainNotFoundException* exception`"]      
-                            check1 --""yes""--> 
-                            return["`Return **User**`"]
+                            start(("Start"s)) -->
+                            |request: RetrieveContextAppRequest| loadAllContext["Load All Context -> IDDDRepository.RetrieveContexts()"] -->
+                            return["`Return **Context**`"]
                         end
                 ```
-            4. Public async method signature: ```Task<User> UpsertUser(User user)```
-
-                Method **UpsertUser** logic: 
-                ```mermaid
-                    flowchart TB
-                        subgraph main [Domain.User.UserService.UpsertUser]
-                            direction TB
-                            start(("Start -> [User: User]")) -->
-                            FindUser["`Find User By *User.Id* -> [IUserRepository.GetUserById(User.Id)]`"] -->
-                            check1{Found?} --"no"-->
-                            userNotFound["`Create a **User** -> [IUserRepository.Create(User)]`"]     
-                            check1 --"yes"--> 
-                            map["`Map **User** -> [Map(user, ref existingUser)]`"] -->
-                            save["`Save Mapped **User** -> [IUserRepository.Save(mappedUser)]]`"]
-                        end
-                ```
-
-            ## Private Methods
-            ```csharp
-            private void Map(User user, ref User existingUser)
-            {
-                existingUser.Name = user.Name;
-                existingUser.Email = user.Email;
-            };
-            ```
 
             ## Reference Interface Signatures:
             ```csharp
-            Task<User> IUserRepository.GetUserById(Guid Id);
-            Task<User> IUserRepository.Create(User user);
-            Task<User> IUserRepository.Save(User user);
-      
+            Task<List<Domain.Entities.Context>> IDDDRepository.RetrieveContexts();
             ```
 
             ## Output
-            Only output full source code of **UserService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
+            Only output full source code of **ContextAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
             """;
 
         // Action
