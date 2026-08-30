@@ -25,4 +25,12 @@ public class ContextAppService
 
         return new RetrieveContextAppResponse(request.Id, contexts, true, null);
     }
+
+    [LogTrace(returnType: typeof(CreateContextAppResponse))]
+    public async Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)
+    {
+        var contextId = await _repository.CreateContext(request.Name).ConfigureAwait(false);
+
+        return new CreateContextAppResponse(request.Id, contextId, true, null);
+    }
 }

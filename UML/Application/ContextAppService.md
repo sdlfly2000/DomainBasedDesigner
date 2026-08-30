@@ -1,14 +1,20 @@
-# ContextAppService
+# Activator.DomainDrivenDesigner.Application.Services.ContextAppService
 ```mermaid
 graph TB
-    subgraph main [Activator.DomainDrivenDesigner.Application.Services.ContextAppService]
+    subgraph RetrieveContexts[RetrieveContexts]
         direction TB
-        start(("Start")) --> 
+        start1(("Start")) --> 
         |request: RetrieveContextAppRequest| loadAllContext["Load All Context -> IDDDRepository.RetrieveContexts()"]-->
-        return["`Return **Context**s`"]
+        return1["`Return **Context**s`"]
+    end
+
+    subgraph main CreateContext[CreateContext]
+        direction TB
+        start2(("Start")) --> 
+        |request: CreateContextAppRequest| CreateContext["Create a Context -> IDDDRepository.CreateContexts()"]-->
+        return2["`Return **ContextId**`"]
     end
 ```
-
 ---
 
 ```mermaid
@@ -22,6 +28,14 @@ classDiagram
         + Success: bool
         + ErrorMessage: string?
     }
+    
+    class CreateContextAppRequest {
+        + Name: string
+    }
+
+    class CreateContextAppResponse {
+        + ContextId: Guid
+    }
 
     class RetrieveContextAppRequest {
 
@@ -34,4 +48,8 @@ classDiagram
     %% Relationship
     AppRequest <|-- RetrieveContextAppRequest
     AppResponse <|-- RetrieveContextAppResponse
+
+    AppRequest <|-- CreateContextAppRequest
+    AppResponse <|-- CreateContextAppResponse
+
 ```

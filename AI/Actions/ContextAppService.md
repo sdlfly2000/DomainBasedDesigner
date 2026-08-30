@@ -23,17 +23,68 @@ public class ContextAppService
     Method **RetrieveContexts** logic: 
     ```mermaid
         graph TB
-            subgraph main [Activator.DomainDrivenDesigner.Application.Services.ContextAppService]
+            subgraph main [RetrieveContexts]
                 direction TB
                 start(("Start"s)) -->
                 |request: RetrieveContextAppRequest| loadAllContext["Load All Context -> IDDDRepository.RetrieveContexts()"] -->
                 return["`Return **Context**`"]
             end
     ```
+4. Public async method signature: ```Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)```
+
+    Method **CreateContext** logic: 
+    ```mermaid
+        graph TB
+            subgraph main CreateContext[CreateContext]
+                direction TB
+                start2(("Start")) --> 
+                |request: CreateContextAppRequest| CreateContext["Create a Context -> IDDDRepository.CreateContexts(request.Name)"]-->
+                return2["`Return **ContextId**`"]
+            end
+    ```
 
 ## Reference Interface Signatures:
 ```csharp
 Task<List<Domain.Entities.Context>> IDDDRepository.RetrieveContexts();
+Task<Guid>> IDDDRepository.CreateContext(string name);
+```
+
+## Reference Requests and Responses
+```mermaid
+classDiagram
+    class AppRequest {
+        + Id: Guid
+    }
+
+    class AppResponse {
+        + RequestId： Guid
+        + Success: bool
+        + ErrorMessage: string?
+    }
+    
+    class CreateContextAppRequest {
+        + Name: string
+    }
+
+    class CreateContextAppResponse {
+        + ContextId: Guid
+    }
+
+    class RetrieveContextAppRequest {
+
+    }
+
+    class RetrieveContextAppResponse {
+        + Contexts: List~Context~
+    }
+
+    %% Relationship
+    AppRequest <|-- RetrieveContextAppRequest
+    AppResponse <|-- RetrieveContextAppResponse
+
+    AppRequest <|-- CreateContextAppRequest
+    AppResponse <|-- CreateContextAppResponse
+
 ```
 
 ## Output

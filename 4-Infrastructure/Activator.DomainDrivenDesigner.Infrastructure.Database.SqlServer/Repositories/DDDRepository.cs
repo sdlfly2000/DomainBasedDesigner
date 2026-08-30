@@ -210,6 +210,20 @@ public class DDDRepository : IDDDRepository
             .ToListAsync();
     }
 
+    public async Task<Guid> CreateContext(string name)
+    {
+        var contextEntry = _context.T_BUSINESS_CONTEXTs.Add(new T_BUSINESS_CONTEXT
+        {
+            ID = Guid.NewGuid(),
+            NAME = name,
+            CREATED_UTC = DateTime.UtcNow
+        });
+
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+
+        return contextEntry.Entity.ID;
+    }
+
     #region Private Mapper
 
     private void Persist(BusinessModel model, T_BUSINESS_MODEL row)
