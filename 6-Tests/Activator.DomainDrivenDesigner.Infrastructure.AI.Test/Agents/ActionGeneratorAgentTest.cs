@@ -29,7 +29,7 @@ public class ActionGeneratorAgentTest
         // Arrange
         var instruction =
             """
-            ## Generate complete C# code 
+            ## Generate complete C# code            
             File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/ContextAppService.cs**
 
             ## Format:
@@ -49,7 +49,11 @@ public class ActionGeneratorAgentTest
             - **IDDDRepository**
             - **IServiceProvider**
 
-            3. Public async method signature: ```Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)```
+            3. Place Attributes
+            - Put Attribute [ServiceLocate(typeof(ContextAppService))] to **ContextAppService** class.
+            - Put Attribute [LogTrace(typeof(*response))] to each method below.
+
+            4. Public async method signature: ```Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)```
 
                 Method **RetrieveContexts** logic: 
                 ```mermaid
@@ -61,7 +65,7 @@ public class ActionGeneratorAgentTest
                             return["`Return **Context**`"]
                         end
                 ```
-            4. Public async method signature: ```Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)```
+            5. Public async method signature: ```Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)```
 
                 Method **CreateContext** logic: 
                 ```mermaid
@@ -73,6 +77,7 @@ public class ActionGeneratorAgentTest
                             return2["`Return **ContextId**`"]
                         end
                 ```
+            ## Ignore Exception Handler since it is included in LogTrace Attribute
 
             ## Reference Interface Signatures:
             ```csharp
@@ -80,7 +85,7 @@ public class ActionGeneratorAgentTest
             Task<Guid>> IDDDRepository.CreateContext(string name);
             ```
 
-            ## Reference Requests and Responses
+            ## Reference Requests and Responses:
             ```mermaid
             classDiagram
                 class AppRequest {
@@ -116,6 +121,13 @@ public class ActionGeneratorAgentTest
                 AppRequest <|-- CreateContextAppRequest
                 AppResponse <|-- CreateContextAppResponse
 
+            ```
+
+            ```csharp
+            public record CreateContextAppRequest(Guid Id, string Name) : AppRequest(Id);
+            public record RetrieveContextAppRequest(Guid Id) : AppRequest(Id);
+            public record CreateContextAppResponse(Guid RequestId, Guid? ContextId, bool Success, string? ErrorMessage) : AppResponse(RequestId, Success, ErrorMessage);
+            public record RetrieveContextAppResponse(Guid RequestId, List<Context>? Contexts, bool Success, string? ErrorMessage) : AppResponse(RequestId, Success, ErrorMessage);
             ```
 
             ## Output
