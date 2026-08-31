@@ -3,16 +3,16 @@
 graph TB
     subgraph RetrieveContexts[RetrieveContexts]
         direction TB
-        start1(("Start")) --> 
-        |request: RetrieveContextAppRequest| loadAllContext["Load All Context -> IDDDRepository.RetrieveContexts()"]-->
-        return1["`Return **Context**s`"]
+        start(("Start"s)) -->
+        |request: RetrieveContextAppRequest| loadAllContext["Load All Context -> IDDDRepository.RetrieveContexts()"] -->
+        return["`Return **Context**`"]
     end
 
     subgraph main CreateContext[CreateContext]
         direction TB
         start2(("Start")) --> 
-        |request: CreateContextAppRequest| CreateContext["Create a Context -> IDDDRepository.CreateContexts()"]-->
-        return2["`Return **ContextId**`"]
+        |request: CreateContextAppRequest| CreateContext["Create a Context -> IDDDRepository.CreateContexts(request.Name, request.projectId)"]-->
+        return2["`Return **ContextId**`"]            
     end
 ```
 ---
@@ -31,6 +31,7 @@ classDiagram
     
     class CreateContextAppRequest {
         + Name: string
+        + ProjectId: Guid
     }
 
     class CreateContextAppResponse {

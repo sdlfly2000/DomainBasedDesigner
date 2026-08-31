@@ -205,17 +205,17 @@ public class DDDRepository : IDDDRepository
 
     public async Task<List<Domain.Entities.Context>> RetrieveContexts()
     {
-        return await _context.T_BUSINESS_CONTEXTs
-            .Select(c => Map(c))
-            .ToListAsync();
+        var dbContexts = await _context.T_BUSINESS_CONTEXTs.ToListAsync().ConfigureAwait(false);
+        return dbContexts.Select(c => Map(c)).ToList();
     }
 
-    public async Task<Guid> CreateContext(string name)
+    public async Task<Guid> CreateContext(string name, Guid projectId)
     {
         var contextEntry = _context.T_BUSINESS_CONTEXTs.Add(new T_BUSINESS_CONTEXT
         {
             ID = Guid.NewGuid(),
             NAME = name,
+            T_PROJECT_ID = projectId,
             CREATED_UTC = DateTime.UtcNow
         });
 

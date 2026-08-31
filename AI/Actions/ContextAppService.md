@@ -14,15 +14,17 @@ public class ContextAppService
 ## Rules:
 1. Class: **ContextAppService**, Implements: **IContextAppService**
 
-2. Inject below through constructor
+2. Namespace in file-scope: `namespace Activator.DomainDrivenDesigner.Application.Services;`
+
+3. Inject below through constructor
 - **IDDDRepository**
 - **IServiceProvider**
 
-3. Place Attributes
+4. Place Attributes
 - Put Attribute [ServiceLocate(typeof(ContextAppService))] to **ContextAppService** class.
 - Put Attribute [LogTrace(typeof(*response))] to each method below.
 
-4. Public async method signature: ```Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)```
+5. Public async method signature: `Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)`
 
     Method **RetrieveContexts** logic: 
     ```mermaid
@@ -34,7 +36,7 @@ public class ContextAppService
                 return["`Return **Context**`"]
             end
     ```
-5. Public async method signature: ```Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)```
+6. Public async method signature: `Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)`
 
     Method **CreateContext** logic: 
     ```mermaid
@@ -42,7 +44,7 @@ public class ContextAppService
             subgraph main CreateContext[CreateContext]
                 direction TB
                 start2(("Start")) --> 
-                |request: CreateContextAppRequest| CreateContext["Create a Context -> IDDDRepository.CreateContexts(request.Name)"]-->
+                |request: CreateContextAppRequest| CreateContext["Create a Context -> IDDDRepository.CreateContexts(request.Name, request.projectId)"]-->
                 return2["`Return **ContextId**`"]
             end
     ```
@@ -51,7 +53,7 @@ public class ContextAppService
 ## Reference Interface Signatures:
 ```csharp
 Task<List<Domain.Entities.Context>> IDDDRepository.RetrieveContexts();
-Task<Guid>> IDDDRepository.CreateContext(string name);
+Task<Guid>> IDDDRepository.CreateContext(string name, Guid projectId);
 ```
 
 ## Reference Requests and Responses:
@@ -66,9 +68,10 @@ classDiagram
         + Success: bool
         + ErrorMessage: string?
     }
-    
+
     class CreateContextAppRequest {
         + Name: string
+        + ProjectId: Guid
     }
 
     class CreateContextAppResponse {
@@ -93,7 +96,7 @@ classDiagram
 ```
 
 ```csharp
-public record CreateContextAppRequest(Guid Id, string Name) : AppRequest(Id);
+public record CreateContextAppRequest(Guid Id, string Name, Guid ProjectId) : AppRequest(Id);
 public record RetrieveContextAppRequest(Guid Id) : AppRequest(Id);
 public record CreateContextAppResponse(Guid RequestId, Guid? ContextId, bool Success, string? ErrorMessage) : AppResponse(RequestId, Success, ErrorMessage);
 public record RetrieveContextAppResponse(Guid RequestId, List<Context>? Contexts, bool Success, string? ErrorMessage) : AppResponse(RequestId, Success, ErrorMessage);

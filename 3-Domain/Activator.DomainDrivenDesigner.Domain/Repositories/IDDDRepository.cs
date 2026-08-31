@@ -30,5 +30,5 @@ public interface IDDDRepository
 
     Task<List<Context>> RetrieveContexts();
 
-    Task<Guid> CreateContext(string name);
+    Task<Guid> CreateContext(string name, Guid projectId);
 }

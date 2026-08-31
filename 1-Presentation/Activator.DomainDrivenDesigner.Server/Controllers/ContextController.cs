@@ -32,6 +32,21 @@ public class ContextController : ControllerBase
 
         var response = await _contextAppService.RetrieveContexts(new RetrieveContextAppRequest(requestId)).ConfigureAwait(false);
         
-        return response.Success ? Ok(response) : Problem(response.ErrorMessage, statusCode: 500);
+        return response.Success ? Ok(response.Contexts) : Problem(response.ErrorMessage, statusCode: 500);
+    }
+
+    [HttpPost("create")]
+    public async Task<IActionResult> Create([FromBody] string name)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var requestId = Guid.Parse(_requestContext.TraceId);
+
+        var response = await _contextAppService.CreateContext(new CreateContextAppRequest(requestId, name)).ConfigureAwait(false);
+
+        return response.Success ? Ok(response.ContextId) : Problem(response.ErrorMessage, statusCode: 500);
     }
 }

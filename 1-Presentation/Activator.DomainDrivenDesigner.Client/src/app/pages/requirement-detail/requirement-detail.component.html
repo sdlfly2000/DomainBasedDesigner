@@ -32,8 +32,8 @@
                     <p-tabpanel [value]="model.name">
                         <div class="flex justify-start items-center gap-4">
                             <label pLabel for="context">Context</label>
-                            <p-select [options]="Contexts" [(ngModel)]="CurrentContext" placeholder="Select/Create a Conext" [editable]="true" optionLabel="context" />
-                            <button pButton>Create</button>
+                            <p-select [options]="Contexts" [(ngModel)]="CurrentContext.name" placeholder="Select/Create a Conext" [editable]="true" optionLabel="context" />
+                            <button pButton (click)="OnCreateContext()">Create</button>
                         </div>
                         <div class="flex flex-wrap items-stretch gap-4 requirement-detail-modelrawmermaid">
                             <textarea rows="10"

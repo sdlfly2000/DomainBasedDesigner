@@ -18,19 +18,17 @@ public class ContextAppService
         _serviceProvider = serviceProvider;
     }
 
-    [LogTrace(returnType: typeof(RetrieveContextAppResponse))]
+    [LogTrace(typeof(RetrieveContextAppResponse))]
     public async Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)
     {
         var contexts = await _repository.RetrieveContexts().ConfigureAwait(false);
-
         return new RetrieveContextAppResponse(request.Id, contexts, true, null);
     }
 
-    [LogTrace(returnType: typeof(CreateContextAppResponse))]
+    [LogTrace(typeof(CreateContextAppResponse))]
     public async Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)
     {
-        var contextId = await _repository.CreateContext(request.Name).ConfigureAwait(false);
-
+        var contextId = await _repository.CreateContext(request.Name, request.ProjectId).ConfigureAwait(false);
         return new CreateContextAppResponse(request.Id, contextId, true, null);
     }
 }

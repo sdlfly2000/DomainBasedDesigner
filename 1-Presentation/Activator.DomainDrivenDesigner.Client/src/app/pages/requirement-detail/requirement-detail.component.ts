@@ -8,12 +8,13 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToolbarModule } from 'primeng/toolbar';
 import { QueryStringService } from '../../../services/shared.QueryString.service';
 import { EnumInfoSeverity, StatusMessageModel, StatusMessageService } from '../../../services/statusmessage.service';
-import { AnalyzeRequirementsResponseModel, BusinessModel, Context } from '../requirement-detail-cmd/model/requirement-detail-cmd';
+import { AnalyzeRequirementsResponseModel, BusinessModel } from '../requirement-detail-cmd/model/requirement-detail-cmd';
 import { RequirementDetailCommandAnalyzeComponent } from '../requirement-detail-cmd/requirement-detail-cmd-analyze/requirement-detail-cmd-analyze.component';
 import { RequirementDetailCommandSaveComponent } from '../requirement-detail-cmd/requirement-detail-cmd-save/requirement-detail-cmd-save.component';
 import { RequirementDetailService } from './requirement-detail.service';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
+import { Context } from './model/requirement-detail';
 
 @Component({
   selector: 'app-requirement-detail',
@@ -34,7 +35,7 @@ export class RequirementDetailComponent implements AfterViewInit {
     ModelIdList: (string | undefined)[] = [];
     ModelMermaidRaws: string[] = [];
     Contexts: Context[] = []
-    CurrentContext: Context | undefined
+    CurrentContext: Context
     CurrentModelName: string = '';
     CurrentBusinessModel: BusinessModel = {
         id: '',
@@ -55,6 +56,11 @@ export class RequirementDetailComponent implements AfterViewInit {
         private statusMessageService: StatusMessageService,
         private cdr: ChangeDetectorRef) {
 
+        this.CurrentContext = {
+            id: '',
+            name: '',
+            projectId: ''
+        }
     }
     ngAfterViewInit(): void {
         if (this.RequirementId != "") {
@@ -70,6 +76,18 @@ export class RequirementDetailComponent implements AfterViewInit {
                 complete: () => this.cdr.detectChanges()
             });
         }
+
+        this.requirementDetailService.RetrieveContexts().subscribe({
+            next: (contexts) => {
+                this.Contexts = contexts;
+            },
+            error: (error) => {
+                if (error instanceof HttpErrorResponse) {
+                    this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
+                }
+            },
+            complete: () => this.cdr.detectChanges()
+        })
     }
 
     ngOnInit(): void {
@@ -125,6 +143,24 @@ export class RequirementDetailComponent implements AfterViewInit {
                 complete: () => this.cdr.detectChanges()
             });
         }
+    }
+
+    OnCreateContext() {
+        this.requirementDetailService.CreateContext(this.CurrentContext.name).subscribe({
+            next: (contextId) => {
+                this.CurrentContext = {
+                    id: contextId,
+                    name: this.CurrentContext.name ?? '',
+                    projectId: this.ProjectId   
+                }
+            },
+            error: (error) => {
+                if (error instanceof HttpErrorResponse) {
+                    this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
+                }
+            },
+            complete: () => this.cdr.detectChanges()
+        });
     }
 
     SaveModel() {
