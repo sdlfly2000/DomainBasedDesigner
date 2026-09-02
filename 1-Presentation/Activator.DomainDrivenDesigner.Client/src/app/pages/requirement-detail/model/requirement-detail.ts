@@ -8,3 +8,8 @@ export interface Context {
     name: string
     projectId: string
 }
+
+export interface CreateContextRequest {
+    name: string
+    projectId: string
+}

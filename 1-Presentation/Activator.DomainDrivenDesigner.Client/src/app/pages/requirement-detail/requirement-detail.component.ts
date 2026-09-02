@@ -14,7 +14,7 @@ import { RequirementDetailCommandSaveComponent } from '../requirement-detail-cmd
 import { RequirementDetailService } from './requirement-detail.service';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
-import { Context } from './model/requirement-detail';
+import { Context, CreateContextRequest } from './model/requirement-detail';
 
 @Component({
   selector: 'app-requirement-detail',
@@ -35,7 +35,9 @@ export class RequirementDetailComponent implements AfterViewInit {
     ModelIdList: (string | undefined)[] = [];
     ModelMermaidRaws: string[] = [];
     Contexts: Context[] = []
+    ContextNames : string[] = []
     CurrentContext: Context
+    CurrentContextName: string = ''
     CurrentModelName: string = '';
     CurrentBusinessModel: BusinessModel = {
         id: '',
@@ -77,7 +79,7 @@ export class RequirementDetailComponent implements AfterViewInit {
             });
         }
 
-        this.requirementDetailService.RetrieveContexts().subscribe({
+        this.requirementDetailService.RetrieveContexts(this.ProjectId).subscribe({
             next: (contexts) => {
                 this.Contexts = contexts;
             },
@@ -146,7 +148,11 @@ export class RequirementDetailComponent implements AfterViewInit {
     }
 
     OnCreateContext() {
-        this.requirementDetailService.CreateContext(this.CurrentContext.name).subscribe({
+        let request: CreateContextRequest = {
+            name: this.CurrentContextName,
+            projectId: this.ProjectId
+        };
+        this.requirementDetailService.CreateContext(request).subscribe({
             next: (contextId) => {
                 this.CurrentContext = {
                     id: contextId,

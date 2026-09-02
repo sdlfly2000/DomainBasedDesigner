@@ -21,7 +21,7 @@ public class ContextAppService
     [LogTrace(typeof(RetrieveContextAppResponse))]
     public async Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)
     {
-        var contexts = await _repository.RetrieveContexts().ConfigureAwait(false);
+        var contexts = await _repository.RetrieveContexts(request.ProjectId).ConfigureAwait(false);
         return new RetrieveContextAppResponse(request.Id, contexts, true, null);
     }
 

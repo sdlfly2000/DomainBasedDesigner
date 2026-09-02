@@ -3,7 +3,7 @@ import { Inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { BASE_URL } from "../../app.config";
 import { BusinessModel } from "../requirement-detail-cmd/model/requirement-detail-cmd";
-import { Context, RequirementDetailModel } from "./model/requirement-detail";
+import { Context, CreateContextRequest, RequirementDetailModel } from "./model/requirement-detail";
 
 @Injectable({
   providedIn: "root"
@@ -29,11 +29,11 @@ export class RequirementDetailService {
         return this.httpClient.get<RequirementDetailModel>(this.BaseUrl + `api/requirement/retrieve/${requirementId}`, { headers: this.httpHeaders });
     }
 
-    public RetrieveContexts(): Observable<Context[]> {
-        return this.httpClient.get<Context[]>(this.BaseUrl + `api/context/retrieve`, { headers: this.httpHeaders });
+    public RetrieveContexts(projectId: string): Observable<Context[]> {
+        return this.httpClient.get<Context[]>(this.BaseUrl + `api/context/retrieve/${projectId}`, { headers: this.httpHeaders });
     }
 
-    public CreateContext(name: string | undefined): Observable<string> {
-        return this.httpClient.post<string>(this.BaseUrl + `api/context/create`, { name }, { headers: this.httpHeaders });
+    public CreateContext(request: CreateContextRequest): Observable<string> {
+        return this.httpClient.post<string>(this.BaseUrl + `api/context/create`, request, { headers: this.httpHeaders });
     }
 }

@@ -16,3 +16,7 @@
 .requirement-detail-modelrawmermaid {
     margin-top: 10px;
 }
+
+.requirement-detail-context-select {
+    width: 80%;
+}

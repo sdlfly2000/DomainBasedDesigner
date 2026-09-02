@@ -203,9 +203,11 @@ public class DDDRepository : IDDDRepository
         return model.Id;
     }
 
-    public async Task<List<Domain.Entities.Context>> RetrieveContexts()
+    public async Task<List<Domain.Entities.Context>> RetrieveContexts(Guid projectId)
     {
-        var dbContexts = await _context.T_BUSINESS_CONTEXTs.ToListAsync().ConfigureAwait(false);
+        var dbContexts = await _context.T_BUSINESS_CONTEXTs
+                                .Where(c => c.T_PROJECT_ID == projectId)
+                                .ToListAsync().ConfigureAwait(false);
         return dbContexts.Select(c => Map(c)).ToList();
     }
 
