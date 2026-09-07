@@ -127,7 +127,7 @@ export class RequirementDetailComponent implements AfterViewInit {
                     this.ModelIdList[index] = model.id;
                     this.CurrentBusinessModel = model;
                     this.ModelMermaidRaws[index] = model.contentMermaid != undefined ? model.contentMermaid : '';
-                    this.CurrentContextId = this.Contexts.find(c => c.id == model.contextId)?.id;
+                    this.CurrentContextId = model.contextId;
                     this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
                     await this.renderDiagram();
                 },
@@ -142,6 +142,7 @@ export class RequirementDetailComponent implements AfterViewInit {
     }
 
     OnCreateContext() {
+        this.CurrentContextName = this.CurrentContextId ?? "";
         let request: CreateContextRequest = {
             name: this.CurrentContextName,
             projectId: this.ProjectId
@@ -154,6 +155,7 @@ export class RequirementDetailComponent implements AfterViewInit {
                     name: this.CurrentContextName
                 }
                 this.Contexts.push(newContext);
+                this.statusMessageService.StatusMessage = new StatusMessageModel("Success to Create Context" + newContext.name, EnumInfoSeverity.Info);
             },
             error: (error) => {
                 if (error instanceof HttpErrorResponse) {
