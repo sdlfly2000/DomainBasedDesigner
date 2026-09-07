@@ -232,6 +232,7 @@ public class DDDRepository : IDDDRepository
     {
         row.NAME = model.Name;
         row.RAW_DESCRIPTION = model.ContentMermaid;
+        row.CONTEXT_ID = model.ContextId;
     }
 
     private Project Map(T_PROJECT rowProject)

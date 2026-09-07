@@ -6,7 +6,6 @@ export interface RequirementDetailModel {
 export interface Context {
     id: string
     name: string
-    projectId: string
 }
 
 export interface CreateContextRequest {

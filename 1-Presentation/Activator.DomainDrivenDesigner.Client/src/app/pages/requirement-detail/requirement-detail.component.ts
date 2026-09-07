@@ -35,8 +35,7 @@ export class RequirementDetailComponent implements AfterViewInit {
     ModelIdList: (string | undefined)[] = [];
     ModelMermaidRaws: string[] = [];
     Contexts: Context[] = []
-    ContextNames : string[] = []
-    CurrentContext: Context
+    CurrentContextId: string | undefined;
     CurrentContextName: string = ''
     CurrentModelName: string = '';
     CurrentBusinessModel: BusinessModel = {
@@ -57,12 +56,6 @@ export class RequirementDetailComponent implements AfterViewInit {
         private queryStringService: QueryStringService,
         private statusMessageService: StatusMessageService,
         private cdr: ChangeDetectorRef) {
-
-        this.CurrentContext = {
-            id: '',
-            name: '',
-            projectId: ''
-        }
     }
     ngAfterViewInit(): void {
         if (this.RequirementId != "") {
@@ -134,6 +127,7 @@ export class RequirementDetailComponent implements AfterViewInit {
                     this.ModelIdList[index] = model.id;
                     this.CurrentBusinessModel = model;
                     this.ModelMermaidRaws[index] = model.contentMermaid != undefined ? model.contentMermaid : '';
+                    this.CurrentContextId = this.Contexts.find(c => c.id == model.contextId)?.id;
                     this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
                     await this.renderDiagram();
                 },
@@ -154,11 +148,12 @@ export class RequirementDetailComponent implements AfterViewInit {
         };
         this.requirementDetailService.CreateContext(request).subscribe({
             next: (contextId) => {
-                this.CurrentContext = {
+                this.CurrentContextId = contextId;
+                let newContext: Context = {
                     id: contextId,
-                    name: this.CurrentContext.name ?? '',
-                    projectId: this.ProjectId   
+                    name: this.CurrentContextName
                 }
+                this.Contexts.push(newContext);
             },
             error: (error) => {
                 if (error instanceof HttpErrorResponse) {
@@ -174,6 +169,8 @@ export class RequirementDetailComponent implements AfterViewInit {
         this.CurrentBusinessModel.id = this.ModelIdList[tabIndex];
         this.CurrentBusinessModel.contentMermaid = this.ModelMermaidRaws[tabIndex]
         this.CurrentBusinessModel.name = this.CurrentModelName;
+        this.CurrentBusinessModel.contextId = this.CurrentContextId;
+        this.CurrentBusinessModel.contextName = this.Contexts.find(c => c.id == this.CurrentContextId)?.name
         this.requirementDetailService.UpsertBusinessModel(this.CurrentBusinessModel, this.RequirementId).subscribe({
             next: (success) => {
                 if (success) {

@@ -31,7 +31,8 @@ public class BusinessModelController(RequirementAppService requirementAppService
         BusinessModel businessModel = new BusinessModel(modelId)
         { 
             Name = model.name,
-            ContentMermaid = model.rawDescription,
+            ContentMermaid = model.contentMermaid,
+            ContextId = Guid.Parse(model.contextId)
         };
 
         var response = await _requirementAppService.UpsertProjectBusinessModels(
