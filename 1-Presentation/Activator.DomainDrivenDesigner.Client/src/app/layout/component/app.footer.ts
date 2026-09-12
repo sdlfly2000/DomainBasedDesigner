@@ -4,7 +4,7 @@ import { AppFooterService } from '../service/app.footer.service';
 @Component({
     standalone: true,
     selector: 'app-footer',
-    template: `<div class="layout-footer">Auth Service [{{Version}}]</div>`
+    template: `<div class="layout-footer">Design Service [{{Version}}]</div>`
 })
 export class AppFooter implements OnInit {
     private _version: string = '';

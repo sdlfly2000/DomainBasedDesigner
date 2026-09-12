@@ -32,7 +32,7 @@
                     <p-tabpanel [value]="model.name">
                         <div class="flex justify-start items-center gap-4">
                             <label pLabel for="context">Context</label>
-                            <p-select [options]="Contexts" [(ngModel)]="CurrentContextId" placeholder="Select/Create a Conext" [editable]="true" optionLabel="name" optionValue="id" class="requirement-detail-context-select" />
+                            <p-select [options]="FullContexts" [(ngModel)]="ContextIdTab[i]" placeholder="Select/Create a Conext" [editable]="true" optionLabel="name" optionValue="id" class="requirement-detail-context-select" />
                             <button pButton (click)="OnCreateContext()">Create</button>
                         </div>
                         <div class="flex flex-wrap items-stretch gap-4 requirement-detail-modelrawmermaid">
@@ -40,7 +40,7 @@
                                       cols="60"
                                       pTextarea
                                       name="modelrawmermaid"
-                                      [(ngModel)]="ModelMermaidRaws[i]"
+                                      [(ngModel)]="ModelMermaidRawsTab[i]"
                                       placeholder="AI Raw Output"
                                       (ngModelChange)="OnAnalyzedResultChange($event)"
                                       fluid>

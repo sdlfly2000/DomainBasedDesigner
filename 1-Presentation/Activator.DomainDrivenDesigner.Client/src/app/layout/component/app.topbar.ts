@@ -18,7 +18,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
                 <i class="pi pi-bars"></i>
             </button>
             <a class="layout-topbar-logo" routerLink="/">
-                <span>Auth Service</span>
+                <span>Design Service</span>
             </a>
         </div>
 

@@ -33,9 +33,9 @@ export class RequirementDetailComponent implements AfterViewInit {
     RequirementDescription: string = '';
     AnalyzedResult: AnalyzeRequirementsResponseModel = { businessModels: [], raw: '' };
     ModelIdList: (string | undefined)[] = [];
-    ModelMermaidRaws: string[] = [];
-    Contexts: Context[] = []
-    CurrentContextId: string | undefined;
+    ModelMermaidRawsTab: string[] = [];
+    ContextIdTab: (string | undefined)[] = [];
+    FullContexts: Context[] = [];
     CurrentContextName: string = ''
     CurrentModelName: string = '';
     CurrentBusinessModel: BusinessModel = {
@@ -74,7 +74,7 @@ export class RequirementDetailComponent implements AfterViewInit {
 
         this.requirementDetailService.RetrieveContexts(this.ProjectId).subscribe({
             next: (contexts) => {
-                this.Contexts = contexts;
+                this.FullContexts = contexts;
             },
             error: (error) => {
                 if (error instanceof HttpErrorResponse) {
@@ -110,7 +110,7 @@ export class RequirementDetailComponent implements AfterViewInit {
     async OnModelTabClick(model: string | number | undefined) {
         this.CurrentModelName = model as string;
         let index: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === model);
-        if (this.ModelMermaidRaws[index] == undefined || this.ModelMermaidRaws[index] == '') {
+        if (this.ModelMermaidRawsTab[index] == undefined || this.ModelMermaidRawsTab[index] == '') {
             this.requirementDetailService.RetrieveBusinessModel(this.CurrentModelName, this.RequirementId).subscribe({
                 next: async (model) => {
                     if (model == undefined || model == null) {
@@ -126,9 +126,9 @@ export class RequirementDetailComponent implements AfterViewInit {
                     }
                     this.ModelIdList[index] = model.id;
                     this.CurrentBusinessModel = model;
-                    this.ModelMermaidRaws[index] = model.contentMermaid != undefined ? model.contentMermaid : '';
-                    this.CurrentContextId = model.contextId;
-                    this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRaws[index]);
+                    this.ModelMermaidRawsTab[index] = model.contentMermaid != undefined ? model.contentMermaid : '';
+                    this.ContextIdTab[index] = model.contextId;
+                    this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRawsTab[index]);
                     await this.renderDiagram();
                 },
                 error: (error) => {
@@ -138,23 +138,27 @@ export class RequirementDetailComponent implements AfterViewInit {
                 },
                 complete: () => this.cdr.detectChanges()
             });
+        } else {
+            this.graphDefinition = this.applyMermaidClassDefinition(this.ModelMermaidRawsTab[index]);
+            await this.renderDiagram();
         }
     }
 
     OnCreateContext() {
-        this.CurrentContextName = this.CurrentContextId ?? "";
+        let tabIndex: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === this.CurrentModelName);
+        this.CurrentContextName = this.ContextIdTab[tabIndex] ?? "";
         let request: CreateContextRequest = {
             name: this.CurrentContextName,
             projectId: this.ProjectId
         };
         this.requirementDetailService.CreateContext(request).subscribe({
             next: (contextId) => {
-                this.CurrentContextId = contextId;
+                this.ContextIdTab[tabIndex] = contextId;
                 let newContext: Context = {
                     id: contextId,
                     name: this.CurrentContextName
                 }
-                this.Contexts.push(newContext);
+                this.FullContexts.push(newContext);
                 this.statusMessageService.StatusMessage = new StatusMessageModel("Success to Create Context" + newContext.name, EnumInfoSeverity.Info);
             },
             error: (error) => {
@@ -169,10 +173,10 @@ export class RequirementDetailComponent implements AfterViewInit {
     SaveModel() {
         let tabIndex: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === this.CurrentModelName);
         this.CurrentBusinessModel.id = this.ModelIdList[tabIndex];
-        this.CurrentBusinessModel.contentMermaid = this.ModelMermaidRaws[tabIndex]
+        this.CurrentBusinessModel.contentMermaid = this.ModelMermaidRawsTab[tabIndex]
         this.CurrentBusinessModel.name = this.CurrentModelName;
-        this.CurrentBusinessModel.contextId = this.CurrentContextId;
-        this.CurrentBusinessModel.contextName = this.Contexts.find(c => c.id == this.CurrentContextId)?.name
+        this.CurrentBusinessModel.contextId = this.ContextIdTab[tabIndex];
+        this.CurrentBusinessModel.contextName = this.FullContexts.find(c => c.id == this.ContextIdTab[tabIndex])?.name
         this.requirementDetailService.UpsertBusinessModel(this.CurrentBusinessModel, this.RequirementId).subscribe({
             next: (success) => {
                 if (success) {
