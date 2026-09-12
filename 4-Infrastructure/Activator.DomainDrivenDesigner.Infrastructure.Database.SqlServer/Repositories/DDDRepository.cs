@@ -203,29 +203,6 @@ public class DDDRepository : IDDDRepository
         return model.Id;
     }
 
-    public async Task<List<Domain.Entities.Context>> RetrieveContexts(Guid projectId)
-    {
-        var dbContexts = await _context.T_BUSINESS_CONTEXTs
-                                .Where(c => c.T_PROJECT_ID == projectId)
-                                .ToListAsync().ConfigureAwait(false);
-        return dbContexts.Select(c => Map(c)).ToList();
-    }
-
-    public async Task<Guid> CreateContext(string name, Guid projectId)
-    {
-        var contextEntry = _context.T_BUSINESS_CONTEXTs.Add(new T_BUSINESS_CONTEXT
-        {
-            ID = Guid.NewGuid(),
-            NAME = name,
-            T_PROJECT_ID = projectId,
-            CREATED_UTC = DateTime.UtcNow
-        });
-
-        await _context.SaveChangesAsync().ConfigureAwait(false);
-
-        return contextEntry.Entity.ID;
-    }
-
     #region Private Mapper
 
     private void Persist(BusinessModel model, T_BUSINESS_MODEL row)
@@ -266,15 +243,6 @@ public class DDDRepository : IDDDRepository
         };
 
         return businessModel;
-    }
-
-    private Domain.Entities.Context Map(T_BUSINESS_CONTEXT rowBusinessContext)
-    {
-        return new Domain.Entities.Context(rowBusinessContext.ID)
-        {
-            Name = rowBusinessContext.NAME,
-            CreatedOnUtc = rowBusinessContext.CREATED_UTC
-        };
     }
 
     #endregion

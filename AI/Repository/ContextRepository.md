@@ -78,24 +78,18 @@ public partial class T_BUSINESS_CONTEXT
 ```
 
 ## Reference Domain Entities:
-```csharp
-public class Context(Guid ID) : EntityBase(ID)
-{
-    public string? Name { get; set; }
-}
-
-public abstract class EntityBase
-{
-    protected EntityBase(Guid ID)
-    {   
-        Id = ID;
+```mermaid
+classDiagram
+namespace nsContext["Domain.Context"] {
+    class Context {
+        <<AggregateRoot>>
+        + Id: Guid
+        + Name: String
+        + CreatedOnUtc: Datetime
     }
-
-    public Guid Id { get; set; }
-
-    public DateTime CreatedOnUtc { get; set; }
 }
 ```
+
 
 ## Output
 Only output full source code of **ContextRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.

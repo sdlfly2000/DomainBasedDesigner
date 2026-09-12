@@ -27,8 +27,4 @@ public interface IDDDRepository
     Task<BusinessModel> RetrieveBusinessModelsById(Guid BusinessModelId);
 
     Task<Guid> UpdateBusinessModels(BusinessModel model);
-
-    Task<List<Context>> RetrieveContexts(Guid projectId);
-
-    Task<Guid> CreateContext(string name, Guid projectId);
 }

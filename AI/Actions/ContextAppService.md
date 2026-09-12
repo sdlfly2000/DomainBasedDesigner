@@ -17,7 +17,7 @@ public class ContextAppService
 2. Namespace in file-scope: `namespace Activator.DomainDrivenDesigner.Application.Services;`
 
 3. Inject below through constructor
-- **IDDDRepository**
+- **IContextRepository**
 - **IServiceProvider**
 
 4. Place Attributes
@@ -32,8 +32,8 @@ public class ContextAppService
             subgraph main [RetrieveContexts]
                 direction TB
                 start(("Start"s)) -->
-                |request: RetrieveContextAppRequest| loadAllContext["Load All Context -> IDDDRepository.RetrieveContexts()"] -->
-                return["`Return **Context**`"]
+                |request: RetrieveContextAppRequest| loadAllContext["Load All Contexts in Project -> IContextRepository.RetrieveContexts(request.ProjectId)"] -->
+                return["`Return **Context**s`"]
             end
     ```
 6. Public async method signature: `Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)`
@@ -44,7 +44,7 @@ public class ContextAppService
             subgraph main CreateContext[CreateContext]
                 direction TB
                 start2(("Start")) --> 
-                |request: CreateContextAppRequest| CreateContext["Create a Context -> IDDDRepository.CreateContexts(request.Name, request.projectId)"]-->
+                |request: CreateContextAppRequest| CreateContext["Create a Context -> IContextRepository.CreateContext(request.Name, request.ProjectId)"]-->
                 return2["`Return **ContextId**`"]
             end
     ```
@@ -52,8 +52,8 @@ public class ContextAppService
 
 ## Reference Interface Signatures:
 ```csharp
-Task<List<Domain.Entities.Context>> IDDDRepository.RetrieveContexts();
-Task<Guid>> IDDDRepository.CreateContext(string name, Guid projectId);
+Task<List<Domain.Entities.Context>> IContextRepository.RetrieveContexts(Guid projectId);
+Task<Guid>> IContextRepository.CreateContext(string name, Guid projectId);
 ```
 
 ## Reference Requests and Responses:
@@ -79,7 +79,7 @@ classDiagram
     }
 
     class RetrieveContextAppRequest {
-
+        + ProjectId: Guid
     }
 
     class RetrieveContextAppResponse {

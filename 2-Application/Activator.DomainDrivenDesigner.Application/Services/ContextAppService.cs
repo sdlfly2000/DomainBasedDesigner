@@ -9,26 +9,28 @@ namespace Activator.DomainDrivenDesigner.Application.Services;
 [ServiceLocate(typeof(ContextAppService))]
 public class ContextAppService
 {
-    private readonly IDDDRepository _repository;
+    private readonly IContextRepository _contextRepository;
     private readonly IServiceProvider _serviceProvider;
 
-    public ContextAppService(IDDDRepository repository, IServiceProvider serviceProvider)
+    public ContextAppService(
+        IContextRepository contextRepository,
+        IServiceProvider serviceProvider)
     {
-        _repository = repository;
+        _contextRepository = contextRepository;
         _serviceProvider = serviceProvider;
     }
 
     [LogTrace(typeof(RetrieveContextAppResponse))]
     public async Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)
     {
-        var contexts = await _repository.RetrieveContexts(request.ProjectId).ConfigureAwait(false);
-        return new RetrieveContextAppResponse(request.Id, contexts, true, null);
+        var contexts = await _contextRepository.RetrieveContexts(request.ProjectId).ConfigureAwait(false);
+        return new RetrieveContextAppResponse(Guid.Empty, contexts, true, null);
     }
 
     [LogTrace(typeof(CreateContextAppResponse))]
     public async Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)
     {
-        var contextId = await _repository.CreateContext(request.Name, request.ProjectId).ConfigureAwait(false);
-        return new CreateContextAppResponse(request.Id, contextId, true, null);
+        var context = await _contextRepository.CreateContext(request.Name, request.ProjectId).ConfigureAwait(false);
+        return new CreateContextAppResponse(Guid.Empty, context, true, null);
     }
 }
