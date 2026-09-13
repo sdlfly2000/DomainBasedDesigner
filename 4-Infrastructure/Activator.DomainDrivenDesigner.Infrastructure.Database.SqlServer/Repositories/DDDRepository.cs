@@ -18,22 +18,6 @@ public class DDDRepository : IDDDRepository
         _context = context;
     }
 
-    public async Task<Guid?> CreateProject(Project project)
-    {
-        var efProject = new T_PROJECT
-        {
-            ID = project.Id,
-            NAME = project.Name,
-            DESCRIPTION = project.Description,
-            CREATED_UTC = project.CreatedOnUtc
-        };
-
-        _context.T_PROJECTs.Add(efProject);
-        await _context.SaveChangesAsync().ConfigureAwait(false);
-
-        return project.Id;
-    }
-
     public async Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)
     {
         var rowRequirement = new T_REQUIREMENT
@@ -64,21 +48,6 @@ public class DDDRepository : IDDDRepository
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
         return requirement.Id;
-    }
-
-    public async Task<List<Project>> RetrieveFullProjects()
-    {
-        var efProjects = await _context.T_PROJECTs
-            .Include(p => p.T_REQUIREMENTs)
-            .ToListAsync()
-            .ConfigureAwait(false);
-
-        return [.. efProjects.Select(p => {
-            var project = Map(p);
-            var requirements = p.T_REQUIREMENTs.Select(r => Map(r)).ToList();
-            project.Requirements.AddRange(requirements);
-            return project;
-        })];
     }
 
     public async Task<Project> RetrieveProjectById(Guid projectId)
@@ -122,25 +91,6 @@ public class DDDRepository : IDDDRepository
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
         return rowBusinessModel.ID;
-    }
-
-    public async Task<List<BusinessModel>> RetrieveBusinessModelsByProjectId(Guid projectId)
-    {
-        var rowProject = await _context.T_PROJECTs
-            .Include(p => p.T_REQUIREMENTs)
-            .ThenInclude(r => r.T_BUSINESS_MODELs)
-            .ThenInclude(bm => bm.CONTEXT)
-            .SingleOrDefaultAsync(p => p.ID == projectId)
-            .ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
-
-        var businessModels = new List<BusinessModel>();
-
-        var rowBusinessModels = rowProject.T_REQUIREMENTs.SelectMany(r => r.T_BUSINESS_MODELs);
-        businessModels.AddRange(rowBusinessModels.Select(bm => Map(bm)));
-
-        return businessModels;
     }
 
     public async Task<List<BusinessModel>> RetrieveBusinessModelsByRequirementId(Guid requirementId)

@@ -7,47 +7,33 @@ using Common.Core.DependencyInjection;
 
 namespace Activator.DomainDrivenDesigner.Application.Services;
 
-[ServiceLocate(default)]
+[ServiceLocate(typeof(ProjectAppService))]
 public class ProjectAppService
 {
-    private readonly IDDDRepository _repository;
+    private readonly IProjectRepository _projectRepository;
     private readonly IServiceProvider _serviceProvider;
 
-    public ProjectAppService(IDDDRepository repository, IServiceProvider serviceProvider)
+    public ProjectAppService(IProjectRepository projectRepository, IServiceProvider serviceProvider)
     {
-        _repository = repository;
+        _projectRepository = projectRepository;
         _serviceProvider = serviceProvider;
     }
 
-    [LogTrace(returnType: typeof(CreateProjectAppResponse))]
+    [LogTrace(typeof(CreateProjectAppResponse))]
     public async Task<CreateProjectAppResponse> Create(CreateProjectAppRequest request)
     {
         var project = Project.Create(request.ProjectName, request.ProjectDescription);
 
-        var projectId = await _repository.CreateProject(project).ConfigureAwait(false);
+        await _projectRepository.CreateProject(project).ConfigureAwait(false);
 
-        return projectId != null
-            ? new CreateProjectAppResponse(request.Id, true, null)
-            : new CreateProjectAppResponse(request.Id, false, "Failed to create project");
+        return new CreateProjectAppResponse(request.Id, true, null);
     }
 
-    [LogTrace(returnType: typeof(RetrieveFullProjectAppResponse))]
+    [LogTrace(typeof(RetrieveFullProjectAppResponse))]
     public async Task<RetrieveFullProjectAppResponse> RetrieveFullProjects(RetrieveFullProjectAppRequest request)
     {
-        var projects = await _repository.RetrieveFullProjects().ConfigureAwait(false);
+        var projects = await _projectRepository.RetrieveFullProjects().ConfigureAwait(false);
 
-        return projects != null
-            ? new RetrieveFullProjectAppResponse(request.Id, projects, true, null)
-            : new RetrieveFullProjectAppResponse(request.Id, null, false, "Failed to retrieve projects");
-    }
-
-    [LogTrace(returnType: typeof(RetrieveBusinessModelsAppResponse))]
-    public async Task<RetrieveBusinessModelsAppResponse> RetrieveProjectBusinessModels(RetrieveBusinessModelsAppRequest request)
-    {
-        var businessModels = await _repository.RetrieveBusinessModelsByProjectId(request.ProjectId).ConfigureAwait(false);
-
-        return businessModels != null && businessModels.Count > 0
-            ? new RetrieveBusinessModelsAppResponse(request.Id, businessModels, true, null)
-            : new RetrieveBusinessModelsAppResponse(request.Id, businessModels, false, "No business models found for the specified project");
+        return new RetrieveFullProjectAppResponse(request.Id, projects, true, null);
     }
 }
