@@ -2,16 +2,18 @@
 File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/ProjectAppService.cs**
 
 ## Format:
-Write a C# **ProjectAppService** class
+- **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
 
-```csharp
-namespace Activator.DomainDrivenDesigner.Application.Services;
+- Write a C# **ProjectAppService** class
 
-public class ProjectAppService
-{
-    ### Your Code Fixed (Allman Style)
-}
-```
+    ```csharp
+    namespace Activator.DomainDrivenDesigner.Application.Services;
+
+    public class ProjectAppService
+    {
+        // Your Full Code Implementation (Allman Style including Using statements)
+    }
+    ```
 
 ## Rules:
 1. Class: **ProjectAppService**, Implements: **IProjectAppService**
@@ -19,22 +21,21 @@ public class ProjectAppService
 2. Namespace in file-scope: `namespace Activator.DomainDrivenDesigner.Application.Services;`
 
 3. Inject below through constructor
-- **IProjectRepository**
-- **IServiceProvider**
+- **IProjectRepository** (store in a private readonly field `_projectRepository`)
+- **IServiceProvider** (store in a private readonly field `_serviceProvider`)
 
 4. Place Attributes
-- Put Attribute [ServiceLocate(typeof(ProjectAppService))] to **ProjectAppService** class.
-- Put Attribute [LogTrace(typeof(*response))] to each method below.
+- Decorate **ProjectAppService** class with [ServiceLocate(typeof(ProjectAppService))].
+- Decorate each public method with `[LogTrace(typeof({ResponseTypeName}))]`, replacing `{ResponseTypeName}` with the corresponding concrete return type. Ensure the `[LogTrace]` attribute target type references the underlying response record, *not* the wrapping `Task<>` type.
 
 5. Public async method signature: `Task<CreateProjectAppResponse> Create(CreateProjectAppRequest request)`
 
     Method **Create** logic: 
     ```mermaid
         graph TB
-            subgraph main [Create]
+            subgraph main [Create Project]
                 direction TB
-                start(("Start"s)) -->
-                
+                start(("Start"s)) -->                
 
                 |request: CreateProjectAppRequest| newProject["`Create a new **Project** -> Project.Create(request.ProjectName, request.ProjectDescription`"] -->
 
@@ -51,7 +52,7 @@ public class ProjectAppService
     Method **RetrieveFullProjects** logic: 
     ```mermaid
         graph TB
-            subgraph main [Create]
+            subgraph main [Retrieve Full Projects]
                 direction TB
                 start(("Start"s)) -->
 
@@ -68,87 +69,38 @@ public class ProjectAppService
     Method **RetrieveProjectBusinessModels** logic: 
     ```mermaid
         graph TB
-            subgraph main [Create]
+            subgraph main [Retrieve Project Business Models]
                 direction TB
                 start(("Start"s)) -->
                 
                 %% {/* IProjectRepository.RetrieveBusinessModelsByProjectId(request.ProjectId).ConfigureAwait(false) */} 
-                |request: RetrieveBusinessModelsAppRequest| retrieveBusniessModelViaProjectId["`Retrieve **BusniessModel** by ProjectId`"] -->
+                |request: RetrieveBusinessModelsAppRequest| retrieveBusinessModelViaProjectId["`Retrieve **BusinessModel** by ProjectId`"] -->
 
                 %% {/* return new RetrieveBusinessModelsAppResponse(request.Id, businessModels, true, null)  */} 
                 return["`Return **RetrieveBusinessModelsAppResponse**`"]
             end
     ```
+## Context Boundaries:
+- **Ignore Exception Handling:** Omit manual try-catch wrappers since exceptions are decoupled via the infrastructure `LogTrace` attribute tier.
+- **Asynchronous Execution:** Every data tier interaction must map via explicit asynchronous operations utilizing `ConfigureAwait(false)`.
 
-## Ignore Exception Handler since it is included in LogTrace Attribute
-
-## Reference Interface Signatures:
-
-IProjectRepository:
-
+## Reference Dependency Interface Signatures:
 ```csharp
-Task<Guid?> CreateProject(Project project);
-Task<List<Project>> RetrieveFullProjects();
- Task<List<BusinessModel>> RetrieveBusinessModelsByProjectId(Guid ProjectId);
+public interface IProjectRepository
+{
+    Task<Guid?> CreateProject(Project project);
+    Task<List<Project>> RetrieveFullProjects();
+    Task<List<BusinessModel>> RetrieveBusinessModelsByProjectId(Guid ProjectId);
+}
 ```
 
 ## Reference Requests and Responses:
-```mermaid
-classDiagram
-    class AppRequest {
-        + Id: Guid
-    }
-
-    class AppResponse {
-        + RequestId： Guid
-        + Success: bool
-        + ErrorMessage: string?
-    }
-
-    class CreateProjectAppRequest {
-        + ProjectName: string
-        + ProjectDescription: string
-    }
-
-    class CreateProjectAppResponse {
-
-    }
-
-    class RetrieveFullProjectAppRequest {
-
-    }
-
-    class RetrieveFullProjectAppResponse {
-        + Projects: List~Proejct~
-    }
-
-    
-    class RetrieveBusinessModelsAppRequest {
-        + ProjectId: Guid
-    }
-
-    class RetrieveBusinessModelsAppResponse {
-        + BusinessModels: List~BusinessModel~
-    }
-
-    %% Relationship
-    AppRequest <|-- CreateProjectAppRequest
-    AppResponse <|-- CreateProjectAppResponse
-
-    AppRequest <|-- RetrieveFullProjectAppRequest
-    AppResponse <|-- RetrieveFullProjectAppResponse
-
-    AppRequest <|-- RetrieveBusinessModelsAppRequest
-    AppResponse <|-- RetrieveBusinessModelsAppResponse
-```
-
 ```csharp
 public abstract record AppRequest(Guid Id);
 public record RetrieveBusinessModelsAppRequest(Guid Id, Guid ProjectId) : AppRequest(Id);
 public record CreateProjectAppRequest(Guid Id, string ProjectName, string ProjectDescription) : AppRequest(Id);
 public record RetrieveFullProjectAppRequest(Guid Id) : AppRequest(Id);
-```
-```csharp
+
 public abstract record AppResponse(Guid RequestId, bool Success, string? ErrorMessage);
 public record RetrieveBusinessModelsAppResponse(Guid RequestId, List<BusinessModel>? BusinessModels, bool Success, string? ErrorMessage) 
     : AppResponse(RequestId, Success, ErrorMessage);
@@ -156,9 +108,7 @@ public record CreateProjectAppResponse(Guid RequestId, bool Success, string? Err
     : AppResponse(RequestId, Success, ErrorMessage);
 public record RetrieveFullProjectAppResponse(Guid RequestId, List<Project>? Projects, bool Success, string? ErrorMessage) 
     : AppResponse(RequestId, Success, ErrorMessage);
-
 ```
-
 
 ## Output
 Only output full source code of **ProjectAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
