@@ -2,15 +2,18 @@
 File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories/ProjectRepository.cs**
 
 ## Format:
-Write a C# **ProjectRepository** class
+- **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
 
-```csharp
-namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;
-public class ProjectRepository
-{
-    ### Your Code Fixed (Allman Style)
-}
-```
+- Write a C# **ProjectRepository** class
+
+    ```csharp
+    namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;
+
+    public class ProjectRepository
+    {
+        // Your Full Code Implementation (Allman Style including Using statements)
+    }
+    ```
 
 ## Rules:
 1. Class: **ProjectRepository**, Implements: **IProjectRepository**
@@ -45,25 +48,10 @@ public class ProjectRepository
         graph TB
             subgraph main [CRetrieve Full Projects]
                 direction TB
-                start(("Start"s)) -->
-
-                |Argument: 
-                - null| loadProjects["`Load **T_PROJECT**s, including **T_REQUIREMENTs**`"] -->
-
-                ForEachProjectLoaded["`Foreach loaded **T_PROJECT**`"] -->
-
-                %% {/* Map(T_PROJECT)*/}
-                MapToProject["`Map loaded **T_PROJECT** to **Project**`"] -->
-
-                %% {/* Map(T_REQUIREMENT)*/}
-                MapToRequirement["`Map **T_REQUIREMENT**s from loaded **T_PROJECT**. to **Requirement**s`"] -->
-
-                AddRequirementToProject["`Add **Requirement**s to **Project**`"] -->
-
-                return["`Return **Project**s`"]
+                start(("Start")) --> load["`Eagerly load **T_PROJECT**s including **T_REQUIREMENT**s from DomainDbContext`"]
+                load --> map["`Map each **T_PROJECT** into a **Project** domain model, mapping nested **T_REQUIREMENT**s collections`"]
+                map --> return["Return the list of mapped **Project** domain objects"]
             end
-        %% relationship
-        AddRequirementToProject --> ForEachProjectLoaded
     ```
 
 ## Private Method:
@@ -89,6 +77,10 @@ private Requirement Map(T_REQUIREMENT rowRequirment)
     return requirement;
 }
 ```
+
+## Persistence Rules:
+- **Self-Contained Commit:** Call `await _dbContext.SaveChangesAsync().ConfigureAwait(false)` immediately after adding the entity to ensure change state tracking is flushed to SQL Server before returning.
+
 
 ## Ignore Exception Handler since it is included in LogTrace Attribute
 
@@ -125,7 +117,7 @@ public partial class T_REQUIREMENT
 }
 ```
 
-## Reference Domain Entities:
+## Reference Domain Models:
 ```csharp
 public class Project(Guid ID, string ProjectName) : EntityBase(ID)
 {
@@ -144,7 +136,19 @@ public class Project(Guid ID, string ProjectName) : EntityBase(ID)
         };
     }
 }
+
+public abstract class EntityBase
+{
+    protected EntityBase(Guid ID)
+    {   
+        Id = ID;
+    }
+
+    public Guid Id { get; private set; }
+
+    public DateTime CreatedOnUtc { get; set; }
+}
 ```
 
 ## Output
-Only output full source code of **ContextRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.
+Only output full source code of **ProjectRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.
