@@ -4,6 +4,9 @@ using Activator.DomainDrivenDesigner.Domain.Entities;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
 using Common.Core.AOP.LogTrace;
 using Common.Core.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Activator.DomainDrivenDesigner.Application.Services;
 
@@ -22,9 +25,9 @@ public class ProjectAppService
     [LogTrace(typeof(CreateProjectAppResponse))]
     public async Task<CreateProjectAppResponse> Create(CreateProjectAppRequest request)
     {
-        var project = Project.Create(request.ProjectName, request.ProjectDescription);
+        var newProject = Project.Create(request.ProjectName, request.ProjectDescription);
 
-        await _projectRepository.CreateProject(project).ConfigureAwait(false);
+        await _projectRepository.CreateProject(newProject).ConfigureAwait(false);
 
         return new CreateProjectAppResponse(request.Id, true, null);
     }

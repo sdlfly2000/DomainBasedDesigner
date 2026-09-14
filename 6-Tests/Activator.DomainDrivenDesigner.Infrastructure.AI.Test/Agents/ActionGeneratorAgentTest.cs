@@ -29,156 +29,120 @@ public class ActionGeneratorAgentTest
         // Arrange
         var instruction =
             """
-            ## Generate complete C# code 
-            File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories/ProjectRepository.cs**
+             ## Generate complete C# code 
+             File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/ProjectAppService.cs**
 
-            ## Format:
-            Write a C# **ProjectRepository** class
+             ## Format:
+             - **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
 
-            ```csharp
-            namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;
-            public class ProjectRepository
-            {
-                ### Your Code Fixed (Allman Style)
-            }
-            ```
+             - Write a C# **ProjectAppService** class
 
-            ## Rules:
-            1. Class: **ProjectRepository**, Implements: **IProjectRepository**
+                 ```csharp
+                 namespace Activator.DomainDrivenDesigner.Application.Services;
 
-            2. Namespace in file-scope: `namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;`
+                 public class ProjectAppService
+                 {
+                     // Your Full Code Implementation (Allman Style including Using statements)
+                 }
+                 ```
 
-            3. Inject below through constructor
-            - **DomainDbContext**
+             ## Rules:
+             1. Class: **ProjectAppService**, Implements: **IProjectAppService**
 
-            4. Place Attributes
-            - Put Attribute [ServiceLocate(typeof(IProjectRepository))] to **ProjectRepository** class.
+             2. Namespace in file-scope: `namespace Activator.DomainDrivenDesigner.Application.Services;`
 
-            5. Public async method signature: `Task<Guid?> CreateProject(Project project)`
+             3. Inject below through constructor
+             - **IProjectRepository** (store in a private readonly field `_projectRepository`)
+             - **IServiceProvider** (store in a private readonly field `_serviceProvider`)
 
-                Method **CreateProject** logic: 
-                ```mermaid
-                    graph TB
-                        subgraph main [Create Project]
-                            direction TB
-                            start(("Start"s)) -->
-                            |Argument: 
-                            - project: Project| newProject["New a **T_PROJECT** and mapped by project passed in"] -->
-                            addProjectToDb["Add new **T_PROJECT** to DomainDbContext.T_PROJECTs"] -->
-                            return["`Return **Project**'s Id`"]
-                        end
-                ```
+             4. Place Attributes
+             - Decorate **ProjectAppService** class with [ServiceLocate(typeof(ProjectAppService))].
+             - Decorate each public method with `[LogTrace(typeof({ResponseTypeName}))]`, replacing `{ResponseTypeName}` with the corresponding concrete return type. Ensure the `[LogTrace]` attribute target type references the underlying response record, *not* the wrapping `Task<>` type.
 
-            5. Public async method signature: `Task<List<Project>> RetrieveFullProjects()`
+             5. Public async method signature: `Task<CreateProjectAppResponse> Create(CreateProjectAppRequest request)`
 
-                Method **RetrieveFullProjects** logic: 
-                ```mermaid
-                    graph TB
-                        subgraph main [CRetrieve Full Projects]
-                            direction TB
-                            start(("Start"s)) -->
+                 Method **Create** logic: 
+                 ```mermaid
+                     graph TB
+                         subgraph main [Create Project]
+                             direction TB
+                             start(("Start"s)) -->                
 
-                            |Argument: 
-                            - null| loadProjects["`Load **T_PROJECT**s, including **T_REQUIREMENTs**`"] -->
+                             |request: CreateProjectAppRequest| newProject["`Create a new **Project** -> Project.Create(request.ProjectName, request.ProjectDescription`"] -->
 
-                            ForEachProjectLoaded["`Foreach loaded **T_PROJECT**`"] -->
+                             %% {/* ProjectRepository.CreateProject(project).ConfigureAwait(false) */} 
+                             CreateProject["`Create the **Project** in Db`"] -->
 
-                            %% {/* Map(T_PROJECT)*/}
-                            MapToProject["`Map loaded **T_PROJECT** to **Project**`"] -->
+                             %% {/* return new CreateProjectAppResponse(request.Id, true, null)  */}
+                             return["`Return **CreateProjectAppResponse**`"]
+                         end
+                 ```
 
-                            %% {/* Map(T_REQUIREMENT)*/}
-                            MapToRequirement["`Map **T_REQUIREMENT**s from loaded **T_PROJECT**. to **Requirement**s`"] -->
+             5. Public async method signature: `Task<RetrieveFullProjectAppResponse> RetrieveFullProjects(RetrieveFullProjectAppRequest request)`
 
-                            AddRequirementToProject["`Add **Requirement**s to **Project**`"] -->
+                 Method **RetrieveFullProjects** logic: 
+                 ```mermaid
+                     graph TB
+                         subgraph main [Retrieve Full Projects]
+                             direction TB
+                             start(("Start"s)) -->
 
-                            return["`Return **Project**s`"]
-                        end
-                    %% relationship
-                    AddRequirementToProject --> ForEachProjectLoaded
-                ```
+                             %% {/* IProjectRepository.RetrieveFullProjects().ConfigureAwait(false) */} 
+                             |request: RetrieveFullProjectAppRequest| retrieveAllProjects["`Retrieve all **Project**s`"] -->
 
-            ## Private Method:
-            ```csharp
-            private Project Map(T_PROJECT rowProject)
-            {
-                var project = new Project(rowProject.ID, rowProject.NAME)
-                {
-                    Description = rowProject.DESCRIPTION,
-                    CreatedOnUtc = rowProject.CREATED_UTC
-                };
-                return project;
-            }
+                             %% {/* return new RetrieveFullProjectAppResponse(request.Id, projects, true, null)  */}
+                             return["`Return **RetrieveFullProjectAppResponse**`"]
+                         end
+                 ```
 
-            private Requirement Map(T_REQUIREMENT rowRequirment)
-            {
-                var requirement = new Requirement(rowRequirment.ID)
-                {
-                    Description = rowRequirment.DESCRIPTION,
-                    CreatedOnUtc = rowRequirment.CREATE_UTC
-                };
+             5. Public async method signature: ` Task<RetrieveBusinessModelsAppResponse> RetrieveProjectBusinessModels(RetrieveBusinessModelsAppRequest request)`
 
-                return requirement;
-            }
-            ```
+                 Method **RetrieveProjectBusinessModels** logic: 
+                 ```mermaid
+                     graph TB
+                         subgraph main [Retrieve Project Business Models]
+                             direction TB
+                             start(("Start"s)) -->
 
-            ## Ignore Exception Handler since it is included in LogTrace Attribute
+                             %% {/* IProjectRepository.RetrieveBusinessModelsByProjectId(request.ProjectId).ConfigureAwait(false) */} 
+                             |request: RetrieveBusinessModelsAppRequest| retrieveBusinessModelViaProjectId["`Retrieve **BusinessModel** by ProjectId`"] -->
 
-            ## Reference Interface Signatures:
+                             %% {/* return new RetrieveBusinessModelsAppResponse(request.Id, businessModels, true, null)  */} 
+                             return["`Return **RetrieveBusinessModelsAppResponse**`"]
+                         end
+                 ```
+             ## Context Boundaries:
+             - **Ignore Exception Handling:** Omit manual try-catch wrappers since exceptions are decoupled via the infrastructure `LogTrace` attribute tier.
+             - **Asynchronous Execution:** Every data tier interaction must map via explicit asynchronous operations utilizing `ConfigureAwait(false)`.
 
-            ## Reference Database Entities:
-            ```csharp
-            public partial class T_PROJECT
-            {
-                public Guid ID { get; set; }
+             ## Reference Dependency Interface Signatures:
+             ```csharp
+             public interface IProjectRepository
+             {
+                 Task<Guid?> CreateProject(Project project);
+                 Task<List<Project>> RetrieveFullProjects();
+                 Task<List<BusinessModel>> RetrieveBusinessModelsByProjectId(Guid ProjectId);
+             }
+             ```
 
-                public string NAME { get; set; } = null!;
+             ## Reference Requests and Responses:
+             ```csharp
+             public abstract record AppRequest(Guid Id);
+             public record RetrieveBusinessModelsAppRequest(Guid Id, Guid ProjectId) : AppRequest(Id);
+             public record CreateProjectAppRequest(Guid Id, string ProjectName, string ProjectDescription) : AppRequest(Id);
+             public record RetrieveFullProjectAppRequest(Guid Id) : AppRequest(Id);
 
-                public string? DESCRIPTION { get; set; }
+             public abstract record AppResponse(Guid RequestId, bool Success, string? ErrorMessage);
+             public record RetrieveBusinessModelsAppResponse(Guid RequestId, List<BusinessModel>? BusinessModels, bool Success, string? ErrorMessage) 
+                 : AppResponse(RequestId, Success, ErrorMessage);
+             public record CreateProjectAppResponse(Guid RequestId, bool Success, string? ErrorMessage) 
+                 : AppResponse(RequestId, Success, ErrorMessage);
+             public record RetrieveFullProjectAppResponse(Guid RequestId, List<Project>? Projects, bool Success, string? ErrorMessage) 
+                 : AppResponse(RequestId, Success, ErrorMessage);
+             ```
 
-                public DateTime CREATED_UTC { get; set; }
-
-                public virtual ICollection<T_BUSINESS_CONTEXT> T_BUSINESS_CONTEXTs { get; set; } = new List<T_BUSINESS_CONTEXT>();
-
-                public virtual ICollection<T_REQUIREMENT> T_REQUIREMENTs { get; set; } = new List<T_REQUIREMENT>();
-            }
-
-            public partial class T_REQUIREMENT
-            {
-                public Guid ID { get; set; }
-
-                public string? DESCRIPTION { get; set; }
-
-                public DateTime CREATE_UTC { get; set; }
-
-                public Guid? PROJECT_ID { get; set; }
-
-                public virtual T_PROJECT? PROJECT { get; set; }
-            }
-            ```
-
-            ## Reference Domain Entities:
-            ```csharp
-            public class Project(Guid ID, string ProjectName) : EntityBase(ID)
-            {
-                public List<Requirement> Requirements { get; set; } = [];
-
-                public string Name { get; } = ProjectName;
-
-                public string? Description { get; set; }
-
-                public static Project Create(string ProjectName, string ProjectDescription)
-                {
-                    return new Project(Guid.NewGuid(), ProjectName)
-                    {
-                        Description = ProjectDescription,
-                        CreatedOnUtc = DateTime.UtcNow,
-                    };
-                }
-            }
-            ```
-
-            ## Output
-            Only output full source code of **ContextRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.
+             ## Output
+             Only output full source code of **ProjectAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
             """;
 
         // Action

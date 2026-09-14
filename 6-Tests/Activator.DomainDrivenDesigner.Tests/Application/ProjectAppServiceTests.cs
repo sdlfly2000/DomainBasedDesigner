@@ -10,14 +10,14 @@ namespace Activator.DomainDrivenDesigner.Application.Tests.Application;
 
 public class ProjectAppServiceTests
 {
-    private IDDDRepository _repository = null!;
+    private IProjectRepository _repository = null!;
     private IServiceProvider _serviceProvider = null!;
     private ProjectAppService _service = null!;
 
     [SetUp]
     public void Setup()
     {
-        _repository = A.Fake<IDDDRepository>();
+        _repository = A.Fake<IProjectRepository>();
         _serviceProvider = A.Fake<IServiceProvider>();
         _service = new ProjectAppService(_repository, _serviceProvider);
     }
