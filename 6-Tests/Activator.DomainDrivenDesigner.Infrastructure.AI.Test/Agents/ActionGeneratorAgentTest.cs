@@ -68,9 +68,8 @@ public class ActionGeneratorAgentTest
                              direction TB
                              start(("Start"s)) -->                
 
-                             |request: CreateProjectAppRequest| newProject["`Create a new **Project** -> Project.Create(request.ProjectName, request.ProjectDescription`"] -->
+                             |request: CreateProjectAppRequest| newProject["`Create a new **Project**`"] -->
 
-                             %% {/* ProjectRepository.CreateProject(project).ConfigureAwait(false) */} 
                              CreateProject["`Create the **Project** in Db`"] -->
 
                              %% {/* return new CreateProjectAppResponse(request.Id, true, null)  */}
@@ -87,7 +86,6 @@ public class ActionGeneratorAgentTest
                              direction TB
                              start(("Start"s)) -->
 
-                             %% {/* IProjectRepository.RetrieveFullProjects().ConfigureAwait(false) */} 
                              |request: RetrieveFullProjectAppRequest| retrieveAllProjects["`Retrieve all **Project**s`"] -->
 
                              %% {/* return new RetrieveFullProjectAppResponse(request.Id, projects, true, null)  */}
@@ -104,7 +102,6 @@ public class ActionGeneratorAgentTest
                              direction TB
                              start(("Start"s)) -->
 
-                             %% {/* IProjectRepository.RetrieveBusinessModelsByProjectId(request.ProjectId).ConfigureAwait(false) */} 
                              |request: RetrieveBusinessModelsAppRequest| retrieveBusinessModelViaProjectId["`Retrieve **BusinessModel** by ProjectId`"] -->
 
                              %% {/* return new RetrieveBusinessModelsAppResponse(request.Id, businessModels, true, null)  */} 
@@ -116,41 +113,21 @@ public class ActionGeneratorAgentTest
              - **Asynchronous Execution:** Every data tier interaction must map via explicit asynchronous operations utilizing `ConfigureAwait(false)`.
 
              ## Reference Dependency Interface Signatures:
-             ```csharp
-             public interface IProjectRepository
-             {
-                 Task<Guid?> CreateProject(Project project);
-                 Task<List<Project>> RetrieveFullProjects();
-                 Task<List<BusinessModel>> RetrieveBusinessModelsByProjectId(Guid ProjectId);
-             }
-             ```
+             - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IProjectRepository.cs")`.
 
              ## Reference Requests and Responses:
-             ```csharp
-             public abstract record AppRequest(Guid Id);
-             public record RetrieveBusinessModelsAppRequest(Guid Id, Guid ProjectId) : AppRequest(Id);
-             public record CreateProjectAppRequest(Guid Id, string ProjectName, string ProjectDescription) : AppRequest(Id);
-             public record RetrieveFullProjectAppRequest(Guid Id) : AppRequest(Id);
-
-             public abstract record AppResponse(Guid RequestId, bool Success, string? ErrorMessage);
-             public record RetrieveBusinessModelsAppResponse(Guid RequestId, List<BusinessModel>? BusinessModels, bool Success, string? ErrorMessage) 
-                 : AppResponse(RequestId, Success, ErrorMessage);
-             public record CreateProjectAppResponse(Guid RequestId, bool Success, string? ErrorMessage) 
-                 : AppResponse(RequestId, Success, ErrorMessage);
-             public record RetrieveFullProjectAppResponse(Guid RequestId, List<Project>? Projects, bool Success, string? ErrorMessage) 
-                 : AppResponse(RequestId, Success, ErrorMessage);
-             ```
-
+             - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IDDDRepository.cs")`.
+     
              ## Output
              Only output full source code of **ProjectAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
             """;
 
         // Action
-        var result = await _actionGeneratorAgent.Create(instruction, CancellationToken.None).ConfigureAwait(false);
+        var result = await _actionGeneratorAgent.CreateDebug(instruction, CancellationToken.None).ConfigureAwait(false);
 
         // Assert
         result.Should().NotBeNull();
-        Console.WriteLine(string.Concat("File: ", result.Result.file_path));
-        Console.WriteLine(string.Concat("Content: ", Environment.NewLine, result.Result.content));
+        //Console.WriteLine(string.Concat("File: ", result.Result.file_path));
+        //Console.WriteLine(string.Concat("Content: ", Environment.NewLine, result.Result.content));
     }
 }
