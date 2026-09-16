@@ -1,5 +1,4 @@
 ﻿using Common.Core.DependencyInjection;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
@@ -41,9 +40,9 @@ public class AIAgentClientFactory
             defaultModel: opt.Model
         );
         var chatClient = applyQwenToolFix == true
-                        ? new ChatClientBuilder(ollamaApiClient)
-                                .Use(client => new QwenToolFixMiddleware(client))
+                        ? new ChatClientBuilder(ollamaApiClient)                                
                                 .UseFunctionInvocation(loggerFactory: null, options => { options.MaximumIterationsPerRequest = 10; })
+                                .Use(client => new ToolCallingFixMiddleware(client))
                                 .Build()
                         : new ChatClientBuilder(ollamaApiClient)
                                 .Build();
@@ -64,9 +63,9 @@ public class AIAgentClientFactory
     }
 }
 
-public sealed class QwenToolFixMiddleware : DelegatingChatClient
+public sealed class ToolCallingFixMiddleware : DelegatingChatClient
 {
-    public QwenToolFixMiddleware(IChatClient innerClient) : base(innerClient) { }
+    public ToolCallingFixMiddleware(IChatClient innerClient) : base(innerClient) { }
 
     public override async Task<ChatResponse> GetResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions? options = null, CancellationToken cancellationToken = default)
     {

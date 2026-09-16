@@ -17,9 +17,8 @@ public class ActionGeneratorAgent
     CRITICAL RULE: 
     Before generating any code file, you MUST inspect your dependency contracts.
     If you need to read a file, output a single, raw text block in this exact format:
-    <tool_call>
     {"name": "read_code_file", "arguments": {"relativePath": "your/file/path.cs"}}
-    </tool_call>
+    Do not generate any markdown or code block. Only output the JSON object.
     Do not generate code or assume model properties until you have requested and evaluated the file contents.
     """;
 
@@ -27,7 +26,7 @@ public class ActionGeneratorAgent
 
     public ActionGeneratorAgent(AIAgentClientFactory agentFactory, string model = "qwen2.5-coder:7b-instruct")
     {
-        _aiAgent = agentFactory.Get(Instructions, model, true, [AIFunctionFactory.Create((string relativePath) => this.read_code_file(relativePath), "read_code_file")]);
+        _aiAgent = agentFactory.Get(Instructions, model, true, [AIFunctionFactory.Create(this.read_code_file, "read_code_file")]);
     }
 
     public async Task<AgentResponse<ActionGeneratorResult>> Create(string input, CancellationToken token)
@@ -53,9 +52,11 @@ public class ActionGeneratorAgent
         [Description("The relative path of the C# file (Example: 4-Infrastructure/T_PROJECT.cs)")]
         string relativePath)
     {
+        var projectBaseDirectory = "C:\\Users\\25982\\Documents\\Projects\\DomainBasedDesigner";
+
         // Security boundary check
-        string fullPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, relativePath));
-        if (!fullPath.StartsWith(AppContext.BaseDirectory, StringComparison.OrdinalIgnoreCase))
+        string fullPath = Path.GetFullPath(Path.Combine(projectBaseDirectory, relativePath));
+        if (!fullPath.StartsWith(projectBaseDirectory, StringComparison.OrdinalIgnoreCase))
         {
             return "Error: Access denied. Cannot read files outside the workspace root.";
         }

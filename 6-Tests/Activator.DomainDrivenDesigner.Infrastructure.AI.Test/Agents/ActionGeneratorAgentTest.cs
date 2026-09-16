@@ -93,25 +93,13 @@ public class ActionGeneratorAgentTest
                          end
                  ```
 
-             5. Public async method signature: ` Task<RetrieveBusinessModelsAppResponse> RetrieveProjectBusinessModels(RetrieveBusinessModelsAppRequest request)`
-
-                 Method **RetrieveProjectBusinessModels** logic: 
-                 ```mermaid
-                     graph TB
-                         subgraph main [Retrieve Project Business Models]
-                             direction TB
-                             start(("Start"s)) -->
-
-                             |request: RetrieveBusinessModelsAppRequest| retrieveBusinessModelViaProjectId["`Retrieve **BusinessModel** by ProjectId`"] -->
-
-                             %% {/* return new RetrieveBusinessModelsAppResponse(request.Id, businessModels, true, null)  */} 
-                             return["`Return **RetrieveBusinessModelsAppResponse**`"]
-                         end
-                 ```
              ## Context Boundaries:
              - **Ignore Exception Handling:** Omit manual try-catch wrappers since exceptions are decoupled via the infrastructure `LogTrace` attribute tier.
              - **Asynchronous Execution:** Every data tier interaction must map via explicit asynchronous operations utilizing `ConfigureAwait(false)`.
 
+             ## Reference Domain Entities:
+             - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Entities//Project.cs")`.
+             
              ## Reference Dependency Interface Signatures:
              - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IProjectRepository.cs")`.
 
@@ -127,6 +115,7 @@ public class ActionGeneratorAgentTest
 
         // Assert
         result.Should().NotBeNull();
+        Console.WriteLine(result.Text);
         //Console.WriteLine(string.Concat("File: ", result.Result.file_path));
         //Console.WriteLine(string.Concat("Content: ", Environment.NewLine, result.Result.content));
     }
