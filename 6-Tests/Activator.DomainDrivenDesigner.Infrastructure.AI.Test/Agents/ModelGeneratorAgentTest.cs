@@ -1,23 +1,35 @@
 ﻿using Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 using Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Serilog;
+using Serilog.Extensions.Logging;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Test.Agents;
 
 public class ModelGeneratorAgentTest
 {
     private ModelGeneratorAgent _modelGeneratorAgent;
+    private ILogger _logger;
 
     [SetUp]
     public void Setup()
     {
+        var serilogLogger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .CreateLogger();
+
+        _logger = new SerilogLoggerFactory(serilogLogger).CreateLogger<ModelGeneratorAgentTest>();
+
         var aiOptions = Options.Create(new AIOptions
         {
             Endpoint = "http://homeserver4:11434"
         });
 
-        var aIAgentClientFactory = new AIAgentClientFactory(aiOptions);
+        var aIAgentClientFactory = new AIAgentClientFactory(aiOptions, _logger);
 
         //_modelGeneratorAgent = new ModelGeneratorAgent(aIAgentClientFactory, "ornith:9b");
         _modelGeneratorAgent = new ModelGeneratorAgent(aIAgentClientFactory);

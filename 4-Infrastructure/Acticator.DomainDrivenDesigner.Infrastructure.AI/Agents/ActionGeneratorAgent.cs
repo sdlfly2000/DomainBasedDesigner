@@ -1,5 +1,4 @@
 ﻿using Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
-using Activator.DomainDrivenDesigner.Infrastructure.AI.Model;
 using Common.Core.DependencyInjection;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
@@ -24,27 +23,20 @@ public class ActionGeneratorAgent
 
     private readonly AIAgent _aiAgent;
 
-    public ActionGeneratorAgent(AIAgentClientFactory agentFactory, string model = "qwen2.5-coder:7b-instruct")
+    public ActionGeneratorAgent(AIAgentClientFactory agentFactory, string model = "qwen2.5-coder:7b-instruct", bool applyQwenToolFix = true)
     {
-        _aiAgent = agentFactory.Get(Instructions, model, true, [AIFunctionFactory.Create(this.read_code_file, "read_code_file")]);
+        _aiAgent = agentFactory.Get(Instructions, model, applyQwenToolFix, [AIFunctionFactory.Create(this.read_code_file, "read_code_file")]);
     }
 
-    public async Task<AgentResponse<ActionGeneratorResult>> Create(string input, CancellationToken token)
+    public async Task<string> Create(string input, CancellationToken token)
     {
-        return await _aiAgent
-            .RunAsync<ActionGeneratorResult>(
-            $"Please create following instruction to generate C# classes in C# syntax, {input}", 
-            cancellationToken: token)
-            .ConfigureAwait(false);
-    }
-
-    public async Task<AgentResponse> CreateDebug(string input, CancellationToken token)
-    {
-        return await _aiAgent
+        var response = await _aiAgent
             .RunAsync(
             $"Please create following instruction to generate C# classes in C# syntax, {input}",
             cancellationToken: token)
             .ConfigureAwait(false);
+
+        return response.Text.Replace("```csharp", "").Replace("```", "");
     }
 
     [Description("read_code_file")]

@@ -1,25 +1,37 @@
 ﻿using Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 using Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Serilog;
+using Serilog.Extensions.Logging;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Test.Agents;
 
 public class ActionGeneratorAgentTest
 {
     private ActionGeneratorAgent _actionGeneratorAgent;
+    private ILogger _logger;
 
     [SetUp]
     public void Setup()
     {
+        var serilogLogger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .CreateLogger();
+
+        _logger = new SerilogLoggerFactory(serilogLogger).CreateLogger<ActionGeneratorAgentTest>();
+
         var aiOptions = Options.Create(new AIOptions
         {
             Endpoint = "http://homeserver4:11434"
         });
 
-        var aIAgentClientFactory = new AIAgentClientFactory(aiOptions);
+        var aIAgentClientFactory = new AIAgentClientFactory(aiOptions, _logger);
 
-        //_actionGeneratorAgent = new ActionGeneratorAgent(aIAgentClientFactory, "deepseek-coder:6.7b");
+        //_actionGeneratorAgent = new ActionGeneratorAgent(aIAgentClientFactory, "ornith:9b", true);
         _actionGeneratorAgent = new ActionGeneratorAgent(aIAgentClientFactory);
     }
 
@@ -104,18 +116,22 @@ public class ActionGeneratorAgentTest
              - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IProjectRepository.cs")`.
 
              ## Reference Requests and Responses:
-             - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IDDDRepository.cs")`.
+             - Execute `read_code_file("2-Application\Activator.DomainDrivenDesigner.Application\AppRequests\CreateProjectAppRequest.cs")`.
+             - Execute `read_code_file("2-Application\Activator.DomainDrivenDesigner.Application\AppResponses\CreateProjectAppResponse.cs")`.
+
+             ## Reference ProjectAppService.cs if existing:
+            - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//Services//ProjectAppService.cs")`.
      
              ## Output
              Only output full source code of **ProjectAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
             """;
 
         // Action
-        var result = await _actionGeneratorAgent.CreateDebug(instruction, CancellationToken.None).ConfigureAwait(false);
+        var result = await _actionGeneratorAgent.Create(instruction, CancellationToken.None).ConfigureAwait(false);
 
         // Assert
         result.Should().NotBeNull();
-        Console.WriteLine(result.Text);
+        _logger.LogInformation(result);
         //Console.WriteLine(string.Concat("File: ", result.Result.file_path));
         //Console.WriteLine(string.Concat("Content: ", Environment.NewLine, result.Result.content));
     }
