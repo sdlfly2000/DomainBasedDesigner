@@ -18,7 +18,6 @@ public sealed class ToolCallingFixMiddleware : DelegatingChatClient
         foreach (var message in response.Messages)
         {
             // 2. Check if the model returned plain text containing a tool invocation signature
-            
             if (IsToolCallRequest(message.Text, out string textContent))
             {
                 try
@@ -44,7 +43,7 @@ public sealed class ToolCallingFixMiddleware : DelegatingChatClient
                 }
                 catch(Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to parse tool call request from model response.");
+                    _logger.LogError(ex, $"Failed to parse tool call request from model response, When handling request {message.Text}");
                 }
             }
         }

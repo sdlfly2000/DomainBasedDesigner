@@ -12,16 +12,19 @@ public class ActionGeneratorAgent
 {
     private readonly ILogger _logger;
 
-    private const string Instructions =
+    private const string ToolCallInstructions =
     """
     You are a expert of C# programming language. You can generate C# class files based on step-by-step instructions.
         
     CRITICAL RULE: 
     Before generating any code file, you MUST inspect your dependency contracts.
-    If you need to read a file, output a single, raw text block in this exact format:
-    {"name": "read_code_file", "arguments": {"relativePath": "your/file/path.cs"}}
     Do not generate any markdown or code block. Only output the JSON object.
     Do not generate code or assume model properties until you have requested and evaluated the file contents.
+    """;
+
+    private const string Instructions =
+    """
+    You are a expert of C# programming language. You can generate C# class files based on step-by-step instructions.
     """;
 
     private readonly AIAgent _aiAgent;
@@ -29,7 +32,9 @@ public class ActionGeneratorAgent
     public ActionGeneratorAgent(ILogger logger, AIAgentClientFactory agentFactory, string model = "qwen2.5-coder:7b-instruct", bool applyQwenToolFix = true)
     {
         _logger = logger;
-        _aiAgent = agentFactory.Get(Instructions, model, applyQwenToolFix, [AIFunctionFactory.Create(this.read_code_file, "read_code_file")]);
+        _aiAgent = applyQwenToolFix 
+                    ? agentFactory.Get(Instructions, model, applyQwenToolFix, [AIFunctionFactory.Create(this.read_code_file, "read_code_file")])
+                    : agentFactory.Get(Instructions, model, applyQwenToolFix);
     }
 
     public async Task<string> Create(string input, CancellationToken token)
