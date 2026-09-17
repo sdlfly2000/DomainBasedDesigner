@@ -2,6 +2,7 @@
 using Common.Core.DependencyInjection;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
@@ -9,6 +10,8 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 [ServiceLocate(default, ServiceType.Singleton)]
 public class ActionGeneratorAgent
 {
+    private readonly ILogger _logger;
+
     private const string Instructions =
     """
     You are a expert of C# programming language. You can generate C# class files based on step-by-step instructions.
@@ -23,8 +26,9 @@ public class ActionGeneratorAgent
 
     private readonly AIAgent _aiAgent;
 
-    public ActionGeneratorAgent(AIAgentClientFactory agentFactory, string model = "qwen2.5-coder:7b-instruct", bool applyQwenToolFix = true)
+    public ActionGeneratorAgent(ILogger logger, AIAgentClientFactory agentFactory, string model = "qwen2.5-coder:7b-instruct", bool applyQwenToolFix = true)
     {
+        _logger = logger;
         _aiAgent = agentFactory.Get(Instructions, model, applyQwenToolFix, [AIFunctionFactory.Create(this.read_code_file, "read_code_file")]);
     }
 
@@ -50,14 +54,17 @@ public class ActionGeneratorAgent
         string fullPath = Path.GetFullPath(Path.Combine(projectBaseDirectory, relativePath));
         if (!fullPath.StartsWith(projectBaseDirectory, StringComparison.OrdinalIgnoreCase))
         {
+            _logger.LogWarning($"Warning: Access denied. Cannot read files outside the workspace root. {relativePath}");
             return "Error: Access denied. Cannot read files outside the workspace root.";
         }
 
         if (!File.Exists(fullPath))
         {
+            _logger.LogWarning($"Warning: File not found at path '{relativePath}'.");
             return $"Error: File not found at path '{relativePath}'.";
         }
 
+        _logger.LogInformation($"Reading file at path '{relativePath}'.");
         return File.ReadAllText(fullPath);
     }
 }

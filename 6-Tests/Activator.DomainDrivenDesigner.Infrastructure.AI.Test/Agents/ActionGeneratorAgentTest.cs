@@ -32,7 +32,7 @@ public class ActionGeneratorAgentTest
         var aIAgentClientFactory = new AIAgentClientFactory(aiOptions, _logger);
 
         //_actionGeneratorAgent = new ActionGeneratorAgent(aIAgentClientFactory, "ornith:9b", true);
-        _actionGeneratorAgent = new ActionGeneratorAgent(aIAgentClientFactory);
+        _actionGeneratorAgent = new ActionGeneratorAgent(_logger, aIAgentClientFactory);
     }
 
     [Test]

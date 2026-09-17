@@ -1,5 +1,5 @@
 ## Generate complete C# code 
-File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/ProjectAppService.cs**
+Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/ProjectAppService.cs**
 
 ## Format:
 - **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
@@ -37,9 +37,8 @@ File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/Projec
                 direction TB
                 start(("Start"s)) -->                
 
-                |request: CreateProjectAppRequest| newProject["`Create a new **Project** -> Project.Create(request.ProjectName, request.ProjectDescription`"] -->
+                |request: CreateProjectAppRequest| newProject["`Create a new **Project**`"] -->
 
-                %% {/* ProjectRepository.CreateProject(project).ConfigureAwait(false) */} 
                 CreateProject["`Create the **Project** in Db`"] -->
 
                 %% {/* return new CreateProjectAppResponse(request.Id, true, null)  */}
@@ -56,7 +55,6 @@ File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/Projec
                 direction TB
                 start(("Start"s)) -->
 
-                %% {/* IProjectRepository.RetrieveFullProjects().ConfigureAwait(false) */} 
                 |request: RetrieveFullProjectAppRequest| retrieveAllProjects["`Retrieve all **Project**s`"] -->
 
                 %% {/* return new RetrieveFullProjectAppResponse(request.Id, projects, true, null)  */}
@@ -64,51 +62,22 @@ File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/Projec
             end
     ```
 
-5. Public async method signature: ` Task<RetrieveBusinessModelsAppResponse> RetrieveProjectBusinessModels(RetrieveBusinessModelsAppRequest request)`
-
-    Method **RetrieveProjectBusinessModels** logic: 
-    ```mermaid
-        graph TB
-            subgraph main [Retrieve Project Business Models]
-                direction TB
-                start(("Start"s)) -->
-                
-                %% {/* IProjectRepository.RetrieveBusinessModelsByProjectId(request.ProjectId).ConfigureAwait(false) */} 
-                |request: RetrieveBusinessModelsAppRequest| retrieveBusinessModelViaProjectId["`Retrieve **BusinessModel** by ProjectId`"] -->
-
-                %% {/* return new RetrieveBusinessModelsAppResponse(request.Id, businessModels, true, null)  */} 
-                return["`Return **RetrieveBusinessModelsAppResponse**`"]
-            end
-    ```
 ## Context Boundaries:
 - **Ignore Exception Handling:** Omit manual try-catch wrappers since exceptions are decoupled via the infrastructure `LogTrace` attribute tier.
 - **Asynchronous Execution:** Every data tier interaction must map via explicit asynchronous operations utilizing `ConfigureAwait(false)`.
 
+## Reference Domain Entities:
+- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Entities//Project.cs")`.
+
 ## Reference Dependency Interface Signatures:
-```csharp
-public interface IProjectRepository
-{
-    Task<Guid?> CreateProject(Project project);
-    Task<List<Project>> RetrieveFullProjects();
-    Task<List<BusinessModel>> RetrieveBusinessModelsByProjectId(Guid ProjectId);
-}
-```
+- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IProjectRepository.cs")`.
 
 ## Reference Requests and Responses:
-```csharp
-public abstract record AppRequest(Guid Id);
-public record RetrieveBusinessModelsAppRequest(Guid Id, Guid ProjectId) : AppRequest(Id);
-public record CreateProjectAppRequest(Guid Id, string ProjectName, string ProjectDescription) : AppRequest(Id);
-public record RetrieveFullProjectAppRequest(Guid Id) : AppRequest(Id);
+- Execute `read_code_file("2-Application\Activator.DomainDrivenDesigner.Application\AppRequests\CreateProjectAppRequest.cs")`.
+- Execute `read_code_file("2-Application\Activator.DomainDrivenDesigner.Application\AppResponses\CreateProjectAppResponse.cs")`.
 
-public abstract record AppResponse(Guid RequestId, bool Success, string? ErrorMessage);
-public record RetrieveBusinessModelsAppResponse(Guid RequestId, List<BusinessModel>? BusinessModels, bool Success, string? ErrorMessage) 
-    : AppResponse(RequestId, Success, ErrorMessage);
-public record CreateProjectAppResponse(Guid RequestId, bool Success, string? ErrorMessage) 
-    : AppResponse(RequestId, Success, ErrorMessage);
-public record RetrieveFullProjectAppResponse(Guid RequestId, List<Project>? Projects, bool Success, string? ErrorMessage) 
-    : AppResponse(RequestId, Success, ErrorMessage);
-```
+## Reference ProjectAppService.cs if existing:
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//Services//ProjectAppService.cs")`.
 
 ## Output
 Only output full source code of **ProjectAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
