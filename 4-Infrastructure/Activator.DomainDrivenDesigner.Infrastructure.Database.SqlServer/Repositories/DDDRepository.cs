@@ -125,42 +125,7 @@ public class DDDRepository : IDDDRepository
         return requirement;
     }
 
-    public async Task<BusinessModel> RetrieveBusinessModelsById(Guid businessModelId)
-    {
-        var rowBusinessModel = await _context.T_BUSINESS_MODELs
-            .Include(bm => bm.CONTEXT)
-            .SingleOrDefaultAsync(bm => bm.ID == businessModelId)
-            .ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(businessModelId, rowBusinessModel);
-
-        return Map(rowBusinessModel);
-    }
-
-    public async Task<Guid> UpdateBusinessModels(BusinessModel model)
-    {
-        var rowBusinessModel = await _context
-            .T_BUSINESS_MODELs
-            .SingleOrDefaultAsync(bm => bm.ID == model.Id)
-            .ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(model.Id, rowBusinessModel);
-
-        Persist(model, rowBusinessModel);
-        
-        await _context.SaveChangesAsync().ConfigureAwait(false);
-
-        return model.Id;
-    }
-
     #region Private Mapper
-
-    private void Persist(BusinessModel model, T_BUSINESS_MODEL row)
-    {
-        row.NAME = model.Name;
-        row.RAW_DESCRIPTION = model.ContentMermaid;
-        row.CONTEXT_ID = model.ContextId;
-    }
 
     private Project Map(T_PROJECT rowProject)
     {

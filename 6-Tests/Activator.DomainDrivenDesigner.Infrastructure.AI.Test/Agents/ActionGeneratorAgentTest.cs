@@ -42,88 +42,95 @@ public class ActionGeneratorAgentTest
         var instruction =
             """
             ## Generate complete C# code 
-            Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/ProjectAppService.cs**
+            File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories/BusinessModelRepository.cs**
 
             ## Format:
             - **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
 
-            - Write a C# **ProjectAppService** class
+            - Write a C# **BusinessModelRepository** class
 
                 ```csharp
-                namespace Activator.DomainDrivenDesigner.Application.Services;
+                namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;
 
-                public class ProjectAppService
+                public class BusinessModelRepository
                 {
                     // Your Full Code Implementation (Allman Style including Using statements)
                 }
                 ```
 
             ## Rules:
-            1. Class: **ProjectAppService**, Implements: **IProjectAppService**
+            1. Class: **BusinessModelRepository**, Implements: **IBusinessModelRepository**
 
-            2. Namespace in file-scope: `namespace Activator.DomainDrivenDesigner.Application.Services;`
+            2. Namespace in file-scope: `namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;`
 
             3. Inject below through constructor
-            - **IProjectRepository** (store in a private readonly field `_projectRepository`)
-            - **IServiceProvider** (store in a private readonly field `_serviceProvider`)
+            - **DomainDbContext**
 
             4. Place Attributes
-            - Decorate **ProjectAppService** class with [ServiceLocate(typeof(ProjectAppService))].
-            - Decorate each public method with `[LogTrace(typeof({ResponseTypeName}))]`, replacing `{ResponseTypeName}` with the corresponding concrete return type. Ensure the `[LogTrace]` attribute target type references the underlying response record, *not* the wrapping `Task<>` type.
+            - Put Attribute [ServiceLocate(typeof(IBusinessModelRepository))] to **BusinessModelRepository** class.
 
-            5. Public async method signature: `Task<CreateProjectAppResponse> Create(CreateProjectAppRequest request)`
+            5. Public async method signature: `Task<BusinessModel> RetrieveBusinessModelsById(Guid businessModelId)`
 
-                Method **Create** logic: 
+                Method **RetrieveBusinessModelsById** logic: 
                 ```mermaid
                     graph TB
                         subgraph main [Create Project]
                             direction TB
-                            start(("Start"s)) -->                
-
-                            |request: CreateProjectAppRequest| newProject["`Create a new **Project**`"] -->
-
-                            CreateProject["`Create the **Project** in Db`"] -->
-
-                            %% {/* return new CreateProjectAppResponse(request.Id, true, null)  */}
-                            return["`Return **CreateProjectAppResponse**`"]
+                            start(("Start")) -->
+                            |Argument: 
+                            - businessModelId: Guid| LoadBusinessModelFromDb["`Eagerly load **T_BUSINESS_MODEL** including **CONTEXT** from DomainDbContext. Note only single T_BUSINESS_MODEL via businessModelId, or throw **DomainEntityNotFoundException**`"] -->
+                            MapBusinessModelFromDb["`Map loaded **T_BUSINESS_MODEL** database entity into **BusinessModel** domain model`"] -->
+                            return["`Return mapped **BusinessModel**`"]
                         end
                 ```
 
-            5. Public async method signature: `Task<RetrieveFullProjectAppResponse> RetrieveFullProjects(RetrieveFullProjectAppRequest request)`
+            5. Public async method signature: `Task<Guid> UpdateBusinessModels(BusinessModel model)`
 
-                Method **RetrieveFullProjects** logic: 
+                Method **UpdateBusinessModels** logic: 
                 ```mermaid
                     graph TB
-                        subgraph main [Retrieve Full Projects]
+                        subgraph main [Create Project]
                             direction TB
-                            start(("Start"s)) -->
+                            start(("Start")) -->
+                            |Argument: 
+                            - model: BusinessModel| LoadBusinessModelFromDb["`Load **T_BUSINESS_MODEL** DomainDbContext by model.Id`"] -->
+                            Exist{"`Exist?`"} --> 
+                            PersistDoaminModelToDbEntity["`Persist **BusinessModel** doamin model to loaded **T_BUSINESS_MODEL** database entity`"] -->
+                            SaveChange["`Save changes to database`"] -->
+                            return["`Return updated model Id`"]
 
-                            |request: RetrieveFullProjectAppRequest| retrieveAllProjects["`Retrieve all **Project**s`"] -->
-
-                            %% {/* return new RetrieveFullProjectAppResponse(request.Id, projects, true, null)  */}
-                            return["`Return **RetrieveFullProjectAppResponse**`"]
+                            %% Exceptions
+                            Exist -->|no| throwException["`Throw **DomainEntityNotFoundException**`"]
                         end
                 ```
 
-            ## Context Boundaries:
-            - **Ignore Exception Handling:** Omit manual try-catch wrappers since exceptions are decoupled via the infrastructure `LogTrace` attribute tier.
-            - **Asynchronous Execution:** Every data tier interaction must map via explicit asynchronous operations utilizing `ConfigureAwait(false)`.
+            ## Private Method:
+            ```csharp
+            private BusinessModel Map(T_BUSINESS_MODEL rowBusinessModel);
+            private T_BUSINESS_MODEL Persist(BusinessModel model);
+            ```
 
-            ## Reference Domain Entities:
-            - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Entities//Project.cs")`.
+            ## Persistence Rules:
+            - **Self-Contained Commit:** Call `await _dbContext.SaveChangesAsync().ConfigureAwait(false)` immediately after adding the entity to ensure change state tracking is flushed to SQL Server before returning.
 
-            ## Reference Dependency Interface Signatures:
-            - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IProjectRepository.cs")`.
+            ## Ignore Exception Handler since it is included in LogTrace Attribute
 
-            ## Reference Requests and Responses:
-            - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//CreateProjectAppRequest.cs")`.
-            - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//CreateProjectAppResponse.cs")`.
+            ## Reference Exceptions:
+            - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Exceptions//DomainEntityNotFoundException.cs")`.
 
-            ## Reference ProjectAppService.cs if existing:
-            - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//Services//ProjectAppService.cs")`.
+            ## Reference Database Context:
+            - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Context//DomainDbContext.cs")`.
+
+            ## Reference Database Entities:
+            - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Entities//T_BUSINESS_MODEL.cs")`.
+            - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Entities//T_BUSINESS_CONTEXT.cs")`.
+
+            ## Reference Domain Models:
+            - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Entities//BusinessModel.cs")`.
+            - Execute `read_code_file("5-Support//Activator.DomainDrivenDesigner.Support.Core//Marks//EntityBase.cs")`.
 
             ## Output
-            Only output full source code of **ProjectAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
+            Only output full source code of **BusinessModelRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.
             """;
 
         // Action

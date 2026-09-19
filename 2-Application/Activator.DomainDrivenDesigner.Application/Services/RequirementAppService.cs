@@ -12,11 +12,13 @@ namespace Activator.DomainDrivenDesigner.Application.Services;
 [ServiceLocate(default)]
 public class RequirementAppService(
     IDDDRepository repository,
+    IBusinessModelRepository businessModelRepository,
     SemanticAnalysisAgent semanticAnalysisAgent,
     MermaidConverterAgent mermaidConverterAgent,
     IServiceProvider serviceProvider)
 {
     private readonly IDDDRepository _repository = repository;
+    private readonly IBusinessModelRepository businessModelRepository = businessModelRepository;
     private readonly SemanticAnalysisAgent _semanticAnalysisAgent = semanticAnalysisAgent;
     private readonly MermaidConverterAgent _mermaidConverterAgent = mermaidConverterAgent;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
@@ -84,11 +86,11 @@ public class RequirementAppService(
     {
         if (request.Model.Id != Guid.Empty)
         {
-            var businessModels = await _repository.RetrieveBusinessModelsById(request.Model.Id).ConfigureAwait(false);
+            var businessModels = await businessModelRepository.RetrieveBusinessModelsById(request.Model.Id).ConfigureAwait(false);
 
             if (businessModels != null)
             {
-                return await _repository.UpdateBusinessModels(request.Model).ConfigureAwait(false) != Guid.Empty
+                return await businessModelRepository.UpdateBusinessModels(request.Model).ConfigureAwait(false) != Guid.Empty
                         ? new UpsertBusinessModelsAppResponse(request.Id, true, null)
                         : new UpsertBusinessModelsAppResponse(request.Id, false, "Failed to update business model");
             }
