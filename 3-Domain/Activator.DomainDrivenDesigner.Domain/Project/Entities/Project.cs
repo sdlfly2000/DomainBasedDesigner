@@ -1,6 +1,6 @@
 ﻿using Activator.DomainDrivenDesigner.Support.Core.Marks;
 
-namespace Activator.DomainDrivenDesigner.Domain.Entities;
+namespace Activator.DomainDrivenDesigner.Domain.Project.Entities;
 
 public class Project(Guid ID, string ProjectName) : EntityBase(ID)
 {

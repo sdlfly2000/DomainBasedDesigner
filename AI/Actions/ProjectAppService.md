@@ -59,7 +59,7 @@ Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services
 - **Asynchronous Execution:** Every data tier interaction must map via explicit asynchronous operations utilizing `ConfigureAwait(false)`.
 
 ## Reference Domain Models:
-- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Entities//Project.cs")`.
+- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Project//Entities//Project.cs")`.
 
 ## Reference Dependency Interface Signatures:
 - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IProjectRepository.cs")`.

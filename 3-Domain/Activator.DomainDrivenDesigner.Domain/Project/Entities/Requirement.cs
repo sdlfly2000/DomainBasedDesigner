@@ -1,6 +1,7 @@
-﻿using Activator.DomainDrivenDesigner.Support.Core.Marks;
+﻿using Activator.DomainDrivenDesigner.Domain.Entities;
+using Activator.DomainDrivenDesigner.Support.Core.Marks;
 
-namespace Activator.DomainDrivenDesigner.Domain.Entities;
+namespace Activator.DomainDrivenDesigner.Domain.Project.Entities;
 
 public class Requirement(Guid ID) : EntityBase(ID)
 {

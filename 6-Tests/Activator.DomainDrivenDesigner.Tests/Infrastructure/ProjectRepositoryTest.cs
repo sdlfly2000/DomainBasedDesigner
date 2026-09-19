@@ -4,6 +4,7 @@ using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositor
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Exceptions;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Activator.DomainDrivenDesigner.Domain.Project.Entities;
 
 namespace Activator.DomainDrivenDesigner.Application.Tests.Infrastructure;
 

@@ -1,4 +1,5 @@
 using Activator.DomainDrivenDesigner.Domain.Entities;
+using Activator.DomainDrivenDesigner.Domain.Project.Entities;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Context;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Entities;

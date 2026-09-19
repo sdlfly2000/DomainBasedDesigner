@@ -1,4 +1,4 @@
-using Activator.DomainDrivenDesigner.Domain.Entities;
+using Activator.DomainDrivenDesigner.Domain.Project.Entities;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Context;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Entities;
@@ -14,43 +14,37 @@ public class ProjectRepository : IProjectRepository
 
     public ProjectRepository(DomainDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        _dbContext = dbContext;
     }
 
     public async Task<Guid?> CreateProject(Project project)
     {
-        if (project == null) throw new ArgumentNullException(nameof(project));
-
-        var newProject = new T_PROJECT
-        {
-            ID = Guid.NewGuid(),
-            NAME = project.Name,
-            DESCRIPTION = project.Description,
-            CREATED_UTC = DateTime.UtcNow
-        };
-
-        _dbContext.T_PROJECTs.Add(newProject);
+        var newProject = Persist(project);
         await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-
         return newProject.ID;
     }
 
     public async Task<List<Project>> RetrieveFullProjects()
     {
-        var loadedProjects = await _dbContext.T_PROJECTs.Include(p => p.T_REQUIREMENTs).ToListAsync().ConfigureAwait(false);
+        var rows = await _dbContext.T_PROJECTs
+            .Include(p => p.T_REQUIREMENTs)
+            .ToListAsync().ConfigureAwait(false);
 
-        var projects = new List<Project>();
+        return rows.Select(Map).ToList();
+    }
 
-        foreach (var rowProject in loadedProjects)
+    private T_PROJECT Persist(Project project)
+    {
+        var rowProject = new T_PROJECT
         {
-            var project = Map(rowProject);
+            ID = project.Id,
+            NAME = project.Name,
+            DESCRIPTION = project.Description,
+            CREATED_UTC = DateTime.UtcNow
+        };
 
-            project.Requirements = rowProject.T_REQUIREMENTs.Select(Map).ToList();
-
-            projects.Add(project);
-        }
-
-        return projects;
+        _dbContext.T_PROJECTs.Add(rowProject);
+        return rowProject;
     }
 
     private Project Map(T_PROJECT rowProject)
@@ -61,17 +55,20 @@ public class ProjectRepository : IProjectRepository
             CreatedOnUtc = rowProject.CREATED_UTC
         };
 
+        foreach (var requirementRow in rowProject.T_REQUIREMENTs)
+        {
+            project.Requirements.Add(Map(requirementRow));
+        }
+
         return project;
     }
 
     private Requirement Map(T_REQUIREMENT rowRequirment)
     {
-        var requirement = new Requirement(rowRequirment.ID)
+        return new Requirement(rowRequirment.ID)
         {
             Description = rowRequirment.DESCRIPTION,
             CreatedOnUtc = rowRequirment.CREATE_UTC
         };
-
-        return requirement;
     }
 }
