@@ -33,7 +33,7 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
         graph TB
             subgraph main [Create Project]
                 direction TB
-                start(("Start"s)) -->
+                start(("Start")) -->
                 |Argument: 
                 - businessModelId: Guid| LoadBusinessModelFromDb["`Eagerly load **T_BUSINESS_MODEL** including **CONTEXT** from DomainDbContext. Note only single T_BUSINESS_MODEL via businessModelId, or throw **DomainEntityNotFoundException**`"] -->
                 MapBusinessModelFromDb["`Map loaded **T_BUSINESS_MODEL** database entity into **BusinessModel** domain model`"] -->
@@ -41,9 +41,30 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
             end
     ```
 
+5. Public async method signature: `Task<Guid> UpdateBusinessModels(BusinessModel model)`
+
+    Method **UpdateBusinessModels** logic: 
+    ```mermaid
+        graph TB
+            subgraph main [Create Project]
+                direction TB
+                start(("Start")) -->
+                |Argument: 
+                - model: BusinessModel| LoadBusinessModelFromDb["`Load **T_BUSINESS_MODEL** DomainDbContext by model.Id`"] -->
+                Exist{"`Exist?`"} --> 
+                PersistDoaminModelToDbEntity["`Persist **BusinessModel** doamin model to loaded **T_BUSINESS_MODEL** database entity`"] -->
+                SaveChange["`Save changes to database`"] -->
+                return["`Return updated model Id`"]
+                
+                %% Exceptions
+                Exist -->|no| throwException["`Throw **DomainEntityNotFoundException**`"]
+            end
+    ```
+
 ## Private Method:
 ```csharp
-private BusinessModel Map(T_BUSINESS_MODEL rowBusinessModel)
+private BusinessModel Map(T_BUSINESS_MODEL rowBusinessModel);
+private T_BUSINESS_MODEL Persist(BusinessModel model);
 ```
 
 ## Persistence Rules:
@@ -53,6 +74,9 @@ private BusinessModel Map(T_BUSINESS_MODEL rowBusinessModel)
 
 ## Reference Exceptions:
 - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Exceptions//DomainEntityNotFoundException.cs")`.
+
+## Reference Database Context:
+- Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Context//DomainDbContext.cs")`.
 
 ## Reference Database Entities:
 - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Entities//T_BUSINESS_MODEL.cs")`.

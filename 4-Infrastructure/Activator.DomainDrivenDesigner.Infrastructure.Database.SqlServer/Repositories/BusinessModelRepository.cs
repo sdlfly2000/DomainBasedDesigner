@@ -24,15 +24,22 @@ public class BusinessModelRepository : IBusinessModelRepository
         return Map(rowBusinessModel);
     }
 
+    public async Task<Guid> UpdateBusinessModels(BusinessModel model)
+    {
+        var rowBusinessModel = await LoadBusinessModelFromDb(model.Id).ConfigureAwait(false);
+        PersistDoaminModelToDbEntity(model, rowBusinessModel);
+        await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+        return model.Id;
+    }
+
     private async Task<T_BUSINESS_MODEL> LoadBusinessModelFromDb(Guid businessModelId)
     {
         var rowBusinessModel = await _dbContext.T_BUSINESS_MODELs
-            .Include(bm => bm.CONTEXT)
-            .FirstOrDefaultAsync(bm => bm.ID == businessModelId)
+            .Include(b => b.CONTEXT)
+            .SingleOrDefaultAsync(b => b.ID == businessModelId)
             .ConfigureAwait(false);
 
         DomainEntityNotFoundException.ThrowIfNull(businessModelId, rowBusinessModel);
-
         return rowBusinessModel;
     }
 
@@ -44,5 +51,12 @@ public class BusinessModelRepository : IBusinessModelRepository
             ContentMermaid = rowBusinessModel.RAW_DESCRIPTION,
             ContextId = rowBusinessModel.CONTEXT_ID
         };
+    }
+
+    private void PersistDoaminModelToDbEntity(BusinessModel model, T_BUSINESS_MODEL rowBusinessModel)
+    {
+        rowBusinessModel.NAME = model.Name;
+        rowBusinessModel.RAW_DESCRIPTION = model.ContentMermaid;
+        rowBusinessModel.CONTEXT_ID = model.ContextId;
     }
 }
