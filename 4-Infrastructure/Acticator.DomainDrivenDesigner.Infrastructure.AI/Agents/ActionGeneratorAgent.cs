@@ -4,10 +4,8 @@ using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using OllamaSharp;
-using System.ComponentModel;
 using System.Text;
 using System.Text.RegularExpressions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 
@@ -15,6 +13,7 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 public class ActionGeneratorAgent
 {
     private string ArgumentPattern = @"(?<tool>\w+)\(""(?<path>[^""]+)""\)";
+    private string _projectBaseDirectory;
     private readonly ILogger _logger;
 
     private const string ToolCallInstructions =
@@ -36,8 +35,9 @@ public class ActionGeneratorAgent
     private readonly AIAgent _aiAgent;
     private readonly AIAgentClientFactory _aiAgentClientFactory;
 
-    public ActionGeneratorAgent(ILogger logger, AIAgentClientFactory agentFactory, string model = "qwen2.5-coder:7b-instruct", bool applyQwenToolFix = false)
+    public ActionGeneratorAgent(ILogger logger, AIAgentClientFactory agentFactory, string projectBaseDirectory, string model = "qwen2.5-coder:7b-instruct", bool applyQwenToolFix = false)
     {
+        _projectBaseDirectory = projectBaseDirectory;
         _model = model;
         _aiAgentClientFactory = agentFactory;
         _logger = logger;
@@ -65,7 +65,6 @@ public class ActionGeneratorAgent
 
     private string FindAndReplaceReference(string input)
     {
-
         string[] lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
         for (var i = 0; i < lines.Length; i++)
@@ -83,11 +82,9 @@ public class ActionGeneratorAgent
 
     private string read_code_file(string relativePath)
     {
-        var projectBaseDirectory = "C:\\Users\\25982\\Documents\\Projects\\DomainBasedDesigner";
-
         // Security boundary check
-        string fullPath = Path.GetFullPath(Path.Combine(projectBaseDirectory, relativePath));
-        if (!fullPath.StartsWith(projectBaseDirectory, StringComparison.OrdinalIgnoreCase))
+        string fullPath = Path.GetFullPath(Path.Combine(_projectBaseDirectory, relativePath));
+        if (!fullPath.StartsWith(_projectBaseDirectory, StringComparison.OrdinalIgnoreCase))
         {
             _logger.LogWarning($"{nameof(read_code_file)}: Warning: Access denied. Cannot read files outside the workspace root. {relativePath}");
             return "Error: Access denied. Cannot read files outside the workspace root.";

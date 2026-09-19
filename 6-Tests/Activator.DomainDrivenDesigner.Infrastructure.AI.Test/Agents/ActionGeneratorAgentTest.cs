@@ -31,8 +31,10 @@ public class ActionGeneratorAgentTest
 
         var aIAgentClientFactory = new AIAgentClientFactory(aiOptions, _logger);
 
+        var projectBaseDirectory = "C:\\Users\\25982\\Documents\\Projects\\DomainBasedDesigner";
+
         //_actionGeneratorAgent = new ActionGeneratorAgent(_logger, aIAgentClientFactory, "ornith:9b", false);
-        _actionGeneratorAgent = new ActionGeneratorAgent(_logger, aIAgentClientFactory, applyQwenToolFix: false);
+        _actionGeneratorAgent = new ActionGeneratorAgent(_logger, aIAgentClientFactory, projectBaseDirectory, applyQwenToolFix: false);
     }
 
     [Test]
