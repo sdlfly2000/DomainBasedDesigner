@@ -52,72 +52,15 @@ private BusinessModel Map(T_BUSINESS_MODEL rowBusinessModel)
 ## Ignore Exception Handler since it is included in LogTrace Attribute
 
 ## Reference Exceptions:
-```csharp
-            public class DomainEntityNotFoundException(string message) : Exception(message)
-{
-    public static void ThrowIfNull<TEntity>(Guid entityId, [NotNull] TEntity? entity)
-    { 
-        if (entity == null)
-        {
-            throw new DomainEntityNotFoundException($"Entity of {typeof(TEntity).Name} with ID({entityId}) not found.");
-        }
-    }
-}
-```
+- Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Exceptions//DomainEntityNotFoundException.cs")`.
 
 ## Reference Database Entities:
-```csharp
-public partial class T_BUSINESS_MODEL
-{
-    public Guid ID { get; set; }
-
-    public string? NAME { get; set; }
-
-    public Guid? REQUIREMENT_ID { get; set; }
-
-    public string? RAW_DESCRIPTION { get; set; }
-
-    public Guid? CONTEXT_ID { get; set; }
-
-    public DateTime CREATED_UTC { get; set; }
-
-    public virtual T_BUSINESS_CONTEXT? CONTEXT { get; set; }
-}
-
-public partial class T_BUSINESS_CONTEXT
-{
-    public Guid ID { get; set; }
-
-    public string? NAME { get; set; }
-
-    public DateTime CREATED_UTC { get; set; }
-
-    public Guid? T_PROJECT_ID { get; set; }
-}
-```
+- Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Entities//T_BUSINESS_MODEL.cs")`.
+- Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Entities//T_BUSINESS_CONTEXT.cs")`.
 
 ## Reference Domain Models:
-```csharp
-public class BusinessModel(Guid ID) : EntityBase(ID)
-{
-    public string? Name { get; set; }
+- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Entities//BusinessModel.cs")`.
+- Execute `read_code_file("5-Support//Activator.DomainDrivenDesigner.Support.Core//Marks//EntityBase.cs")`.
 
-    public string? ContentMermaid { get; set; }
-
-    public Guid? ContextId { get; set; }    
-}
-
-public abstract class EntityBase
-{
-    protected EntityBase(Guid ID)
-    {   
-        Id = ID;
-    }
-
-    public Guid Id { get; set; }
-
-    public DateTime CreatedOnUtc { get; set; }
-}
-```
 ## Output
 Only output full source code of **BusinessModelRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.

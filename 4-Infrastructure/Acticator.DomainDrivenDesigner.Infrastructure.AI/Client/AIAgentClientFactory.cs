@@ -3,6 +3,7 @@ using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Client;
 using OllamaSharp;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
@@ -12,6 +13,8 @@ public class AIAgentClientFactory
 {
     private readonly AIOptions _aiOption;
     private readonly ILogger _logger;
+
+    public OllamaApiClient? OllamaApiClient { get; private set; }
 
     public AIAgentClientFactory(IOptions<AIOptions> aiOptions, ILogger logger)
     {
@@ -59,6 +62,8 @@ public class AIAgentClientFactory
                 Tools = tools,
             }
         };
+
+        OllamaApiClient = ollamaApiClient;
 
         return chatClient.AsAIAgent(
             chatClientAgentOptions

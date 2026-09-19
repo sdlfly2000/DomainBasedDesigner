@@ -43,7 +43,7 @@ public sealed class ToolCallingFixMiddleware : DelegatingChatClient
                 }
                 catch(Exception ex)
                 {
-                    _logger.LogError(ex, $"Failed to parse tool call request from model response, When handling request {message.Text}");
+                    _logger.LogError(ex, $"{nameof(ToolCallingFixMiddleware)}: Failed to parse tool call request from model response, When handling request {message.Text}");
                 }
             }
         }

@@ -73,8 +73,8 @@ Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services
 - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IProjectRepository.cs")`.
 
 ## Reference Requests and Responses:
-- Execute `read_code_file("2-Application\Activator.DomainDrivenDesigner.Application\AppRequests\CreateProjectAppRequest.cs")`.
-- Execute `read_code_file("2-Application\Activator.DomainDrivenDesigner.Application\AppResponses\CreateProjectAppResponse.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//CreateProjectAppRequest.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//CreateProjectAppResponse.cs")`.
 
 ## Reference ProjectAppService.cs if existing:
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//Services//ProjectAppService.cs")`.
