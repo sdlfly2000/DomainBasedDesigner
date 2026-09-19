@@ -1,4 +1,4 @@
-using Activator.DomainDrivenDesigner.Domain.Entities;
+using Activator.DomainDrivenDesigner.Domain.BusinessModel.Entities;
 
 namespace Activator.DomainDrivenDesigner.Application.AppResponses;
 

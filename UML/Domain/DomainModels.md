@@ -23,7 +23,7 @@ namespace nsProject["Domain.Project"] {
     }
 }
 
-namespace nsBusinessAction["Domain.Action"] {
+namespace nsBusinessAction["Domain.BusinessAction"] {
     class BusinessAction {
         <<AggregateRoot>>
         + Id: Guid
@@ -34,7 +34,7 @@ namespace nsBusinessAction["Domain.Action"] {
     }
 }
 
-namespace nsBusinessModel["Domain.Model"] {
+namespace nsBusinessModel["Domain.BusinessModel"] {
     class BusinessModel {
         <<AggregateRoot>>
         + Id: Guid

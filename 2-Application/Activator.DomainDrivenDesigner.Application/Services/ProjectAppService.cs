@@ -1,7 +1,7 @@
 ﻿using Activator.DomainDrivenDesigner.Application.AppRequests;
 using Activator.DomainDrivenDesigner.Application.AppResponses;
+using Activator.DomainDrivenDesigner.Domain.Project;
 using Activator.DomainDrivenDesigner.Domain.Project.Entities;
-using Activator.DomainDrivenDesigner.Domain.Repositories;
 using Common.Core.AOP.LogTrace;
 using Common.Core.DependencyInjection;
 

@@ -1,10 +1,8 @@
-using Activator.DomainDrivenDesigner.Domain.Entities;
-using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Context;
-using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;
-using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Exceptions;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Activator.DomainDrivenDesigner.Domain.Project.Entities;
+using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Context;
+using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Exceptions;
+using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Activator.DomainDrivenDesigner.Application.Tests.Infrastructure;
 

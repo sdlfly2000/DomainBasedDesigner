@@ -1,6 +1,7 @@
 ﻿using Activator.DomainDrivenDesigner.Application.AppRequests;
 using Activator.DomainDrivenDesigner.Application.AppResponses;
-using Activator.DomainDrivenDesigner.Domain.Entities;
+using Activator.DomainDrivenDesigner.Domain.BusinessModel;
+using Activator.DomainDrivenDesigner.Domain.BusinessModel.Entities;
 using Activator.DomainDrivenDesigner.Domain.Project.Entities;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
 using Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;

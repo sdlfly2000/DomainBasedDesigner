@@ -1,4 +1,4 @@
-using Activator.DomainDrivenDesigner.Domain.Repositories;
+using Activator.DomainDrivenDesigner.Domain.Context;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Context;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Entities;
 using Common.Core.DependencyInjection;
@@ -16,7 +16,7 @@ public class ContextRepository : IContextRepository
         _domainDbCtx = domainDbCtx;
     }
 
-    public async Task<List<Domain.Entities.Context>> RetrieveContexts(Guid projectId)
+    public async Task<List<Domain.Context.Entities.Context>> RetrieveContexts(Guid projectId)
     {
         var contexts = await _domainDbCtx.T_BUSINESS_CONTEXTs
             .Where(x => x.T_PROJECT_ID == projectId)
@@ -39,9 +39,9 @@ public class ContextRepository : IContextRepository
         return context.ID;
     }
 
-    private Domain.Entities.Context Map(T_BUSINESS_CONTEXT rowBusinessContext)
+    private Domain.Context.Entities.Context Map(T_BUSINESS_CONTEXT rowBusinessContext)
     {
-        return new Domain.Entities.Context(rowBusinessContext.ID)
+        return new Domain.Context.Entities.Context(rowBusinessContext.ID)
         {
             Name = rowBusinessContext.NAME ?? string.Empty,
             CreatedOnUtc = rowBusinessContext.CREATED_UTC

@@ -1,5 +1,4 @@
-﻿using Activator.DomainDrivenDesigner.Domain.Entities;
-using Activator.DomainDrivenDesigner.Domain.Project.Entities;
+﻿using Activator.DomainDrivenDesigner.Domain.Project.Entities;
 
 namespace Activator.DomainDrivenDesigner.Domain.Repositories;
 
@@ -9,7 +8,7 @@ public interface IDDDRepository
 
     Task<Guid?> UpdateRequirement(Requirement requirement);
 
-    Task<Guid?> CreateBusinessModel(BusinessModel model, Guid requirementId);
+    Task<Guid?> CreateBusinessModel(BusinessModel.Entities.BusinessModel model, Guid requirementId);
 
     Task<Project.Entities.Project> RetrieveProjectById(Guid projectId);
 
@@ -17,5 +16,5 @@ public interface IDDDRepository
 
     Task<Requirement> RetrieveRequirementById(Guid requirementId);
 
-    Task<List<BusinessModel>> RetrieveBusinessModelsByRequirementId(Guid RequirementId);
+    Task<List<BusinessModel.Entities.BusinessModel>> RetrieveBusinessModelsByRequirementId(Guid RequirementId);
 }

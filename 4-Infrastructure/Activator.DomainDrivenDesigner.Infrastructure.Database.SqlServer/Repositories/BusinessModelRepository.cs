@@ -1,5 +1,5 @@
-using Activator.DomainDrivenDesigner.Domain.Entities;
-using Activator.DomainDrivenDesigner.Domain.Repositories;
+using Activator.DomainDrivenDesigner.Domain.BusinessModel;
+using Activator.DomainDrivenDesigner.Domain.BusinessModel.Entities;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Context;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Entities;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Exceptions;

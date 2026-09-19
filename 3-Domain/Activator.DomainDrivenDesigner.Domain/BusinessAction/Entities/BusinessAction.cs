@@ -1,6 +1,6 @@
 ﻿using Activator.DomainDrivenDesigner.Support.Core.Marks;
 
-namespace Activator.DomainDrivenDesigner.Domain.Entities;
+namespace Activator.DomainDrivenDesigner.Domain.BusinessAction.Entities;
 
 public class BusinessAction(Guid ID) : EntityBase(ID)
 {

@@ -1,7 +1,7 @@
 using Activator.DomainDrivenDesigner.Application.AppRequests;
 using Activator.DomainDrivenDesigner.Application.Services;
+using Activator.DomainDrivenDesigner.Domain.Project;
 using Activator.DomainDrivenDesigner.Domain.Project.Entities;
-using Activator.DomainDrivenDesigner.Domain.Repositories;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
