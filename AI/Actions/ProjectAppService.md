@@ -35,13 +35,8 @@ Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services
         graph TB
             subgraph main [Create Project]
                 direction TB
-                start(("Start"s)) -->                
-
+                start(("Start")) -->
                 |request: CreateProjectAppRequest| newProject["`Create a new **Project**`"] -->
-
-                CreateProject["`Create the **Project** in Db`"] -->
-
-                %% {/* return new CreateProjectAppResponse(request.Id, true, null)  */}
                 return["`Return **CreateProjectAppResponse**`"]
             end
     ```
@@ -53,11 +48,8 @@ Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services
         graph TB
             subgraph main [Retrieve Full Projects]
                 direction TB
-                start(("Start"s)) -->
-
+                start(("Start")) -->
                 |request: RetrieveFullProjectAppRequest| retrieveAllProjects["`Retrieve all **Project**s`"] -->
-
-                %% {/* return new RetrieveFullProjectAppResponse(request.Id, projects, true, null)  */}
                 return["`Return **RetrieveFullProjectAppResponse**`"]
             end
     ```
@@ -66,18 +58,19 @@ Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services
 - **Ignore Exception Handling:** Omit manual try-catch wrappers since exceptions are decoupled via the infrastructure `LogTrace` attribute tier.
 - **Asynchronous Execution:** Every data tier interaction must map via explicit asynchronous operations utilizing `ConfigureAwait(false)`.
 
-## Reference Domain Entities:
+## Reference Domain Models:
 - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Entities//Project.cs")`.
 
 ## Reference Dependency Interface Signatures:
 - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IProjectRepository.cs")`.
 
 ## Reference Requests and Responses:
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//AppRequest.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//AppResponse.cs")`.
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//CreateProjectAppRequest.cs")`.
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//CreateProjectAppResponse.cs")`.
-
-## Reference ProjectAppService.cs if existing:
-- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//Services//ProjectAppService.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//RetrieveFullProjectAppRequest.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//RetrieveFullProjectAppResponse.cs")`.
 
 ## Output
 Only output full source code of **ProjectAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
