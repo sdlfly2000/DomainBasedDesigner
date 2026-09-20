@@ -2,6 +2,7 @@
 using Activator.DomainDrivenDesigner.Application.AppResponses;
 using Activator.DomainDrivenDesigner.Domain.BusinessModel;
 using Activator.DomainDrivenDesigner.Domain.BusinessModel.Entities;
+using Activator.DomainDrivenDesigner.Domain.Project;
 using Activator.DomainDrivenDesigner.Domain.Project.Entities;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
 using Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
@@ -14,12 +15,14 @@ namespace Activator.DomainDrivenDesigner.Application.Services;
 [ServiceLocate(default)]
 public class RequirementAppService(
     IDDDRepository repository,
+    IProjectRepository projectRepository,
     IBusinessModelRepository businessModelRepository,
     SemanticAnalysisAgent semanticAnalysisAgent,
     MermaidConverterAgent mermaidConverterAgent,
     IServiceProvider serviceProvider)
 {
     private readonly IDDDRepository _repository = repository;
+    private readonly IProjectRepository _projectRepository = projectRepository;
     private readonly IBusinessModelRepository businessModelRepository = businessModelRepository;
     private readonly SemanticAnalysisAgent _semanticAnalysisAgent = semanticAnalysisAgent;
     private readonly MermaidConverterAgent _mermaidConverterAgent = mermaidConverterAgent;
@@ -69,7 +72,7 @@ public class RequirementAppService(
         }
         else
         {
-            _ = await _repository.CreateRequirement(requirement, request.ProjectId).ConfigureAwait(false);
+            _ = await _projectRepository.CreateRequirement(requirement, request.ProjectId).ConfigureAwait(false);
         }
 
         return new SaveRequirementResponse(request.Id, true, string.Empty);

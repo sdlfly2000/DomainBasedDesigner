@@ -119,6 +119,24 @@ public class ActionGeneratorAgentTest
                         end
                 ```
 
+            5. Public async method signature: `Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)`
+
+                Method **RetrieveProjectById** logic: 
+                ```mermaid
+                    graph TB
+                        subgraph main [Retrieve Project by Id]
+                            direction TB
+                            start(("Start")) --> 
+                            |Args: 
+                            - requirement: Requirement 
+                            - projectId: Guid | newRequirementDbEntity["`New a **T_REQUIREMENT** database entity with **Requirement** and projectId passed in, Id is from requirement`"] -->
+
+                            AddToRequirements["`Add new created **T_REQUIREMENT** to **T_REQUIREMENT**s in DomainDbContext`"] -->
+
+                            return["`Return the id of **Requirement** domain objects`"]
+                        end
+                ```
+
             ## Private Method:
             ```csharp
             private T_PROJECT Persist(Project project);

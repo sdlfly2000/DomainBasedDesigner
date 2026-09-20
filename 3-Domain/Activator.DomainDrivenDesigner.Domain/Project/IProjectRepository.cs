@@ -1,4 +1,6 @@
-﻿namespace Activator.DomainDrivenDesigner.Domain.Project;
+﻿using Activator.DomainDrivenDesigner.Domain.Project.Entities;
+
+namespace Activator.DomainDrivenDesigner.Domain.Project;
 
 public interface IProjectRepository
 {
@@ -7,4 +9,6 @@ public interface IProjectRepository
     Task<List<Entities.Project>> RetrieveFullProjects();
 
     Task<Entities.Project> RetrieveProjectById(Guid projectId);
+
+    Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId);
 }

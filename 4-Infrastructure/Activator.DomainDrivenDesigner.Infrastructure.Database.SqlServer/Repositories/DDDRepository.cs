@@ -19,21 +19,6 @@ public class DDDRepository : IDDDRepository
         _context = context;
     }
 
-    public async Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)
-    {
-        var rowRequirement = new T_REQUIREMENT
-        {
-            ID = requirement.Id,
-            DESCRIPTION = requirement.Description,
-            PROJECT_ID = projectId,
-            CREATE_UTC = DateTime.UtcNow
-        };
-         _context.T_REQUIREMENTs.Add(rowRequirement);
-        await _context.SaveChangesAsync().ConfigureAwait(false);
-
-        return requirement.Id;
-    }
-
     public async Task<Guid?> UpdateRequirement(Requirement requirement)
     {
         var rowRequirement = await _context.T_REQUIREMENTs

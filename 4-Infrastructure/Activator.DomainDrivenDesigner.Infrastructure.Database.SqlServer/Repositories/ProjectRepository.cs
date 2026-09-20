@@ -83,5 +83,10 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repos
                 CreatedOnUtc = rowRequirment.CREATE_UTC
             };
         }
+
+        public Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
