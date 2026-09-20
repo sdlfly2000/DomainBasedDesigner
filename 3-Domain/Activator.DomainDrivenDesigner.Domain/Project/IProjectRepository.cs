@@ -5,4 +5,6 @@ public interface IProjectRepository
     Task<Guid?> CreateProject(Entities.Project project);
 
     Task<List<Entities.Project>> RetrieveFullProjects();
+
+    Task<Entities.Project> RetrieveProjectById(Guid projectId);
 }

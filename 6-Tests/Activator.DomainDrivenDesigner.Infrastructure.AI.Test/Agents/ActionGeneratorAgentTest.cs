@@ -80,7 +80,7 @@ public class ActionGeneratorAgentTest
                             direction TB
                             start(("Start")) -->
                             |Argument: 
-                            - project: Project| newProject["`New a **T_PROJECT** with **Project** passed in`"] -->
+                            - project: Project| newProject["`New a **T_PROJECT** with **Project** passed in, do not handle **Requirement**s in project.`"] -->
                             addProjectToDb["`Add new **T_PROJECT** to DomainDbContext.T_PROJECTs`"] -->
                             return["`Return **Project**'s Id`"]
                         end
@@ -91,11 +91,31 @@ public class ActionGeneratorAgentTest
                 Method **RetrieveFullProjects** logic: 
                 ```mermaid
                     graph TB
-                        subgraph main [CRetrieve Full Projects]
+                        subgraph main [Retrieve Full Projects]
                             direction TB
                             start(("Start")) --> load["`Eagerly load **T_PROJECT**s including **T_REQUIREMENT**s from DomainDbContext`"]
                             load --> map["`Map each **T_PROJECT** into a **Project** domain model, mapping nested **T_REQUIREMENT**s collections. Do not load nested **T_BUSINESS_ACTION** nor **T_BUSINESS_MODEL** in **T_REQUIREMENT**`"]
                             map --> return["`Return the list of mapped **Project** domain objects`"]
+                        end
+                ```
+
+            5. Public async method signature: `Task<Project> RetrieveProjectById(Guid projectId)`
+
+                Method **RetrieveProjectById** logic: 
+                ```mermaid
+                    graph TB
+                        subgraph main [Retrieve Project by Id]
+                            direction TB
+                            start(("Start")) --> 
+                            |Args: - projectId: Guid | load["`Load **T_PROJECT**s by projectId, NOT including **T_REQUIREMENT**s from DomainDbContext`"] -->
+
+                            Exist{"Found?"} -->
+
+                            |yes| map["`Map loaded **T_PROJECT** into a **Project** domain model, NOT mapping nested **T_REQUIREMENT**s collections. Do not load nested **T_BUSINESS_ACTION** nor **T_BUSINESS_MODEL** in **T_REQUIREMENT**`"]
+
+                            map --> return["`Return the mapped **Project** domain objects`"]
+
+                            Exist --> |no| ThrowException["Throw DomainEntityNotFoundException"]
                         end
                 ```
 
@@ -122,6 +142,9 @@ public class ActionGeneratorAgentTest
             - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Project//Entities//Project.cs")`.
             - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Project//Entities//Requirement.cs")`.
             - Execute `read_code_file("5-Support//Activator.DomainDrivenDesigner.Support.Core//Marks//EntityBase.cs")`.
+
+            ## Reference Exception:
+            - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Exceptions//DomainEntityNotFoundException.cs")`.
 
             ## Output
             Only output full source code of **ProjectRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.
