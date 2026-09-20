@@ -10,8 +10,6 @@ public interface IDDDRepository
 
     Task<Guid?> CreateBusinessModel(BusinessModel.Entities.BusinessModel model, Guid requirementId);
 
-    Task<Project.Entities.Project> RetrieveProjectById(Guid projectId);
-
     Task<List<Requirement>> RetrieveRequirementByProjectId(Guid projectId);
 
     Task<Requirement> RetrieveRequirementById(Guid requirementId);

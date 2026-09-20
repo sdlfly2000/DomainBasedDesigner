@@ -51,17 +51,6 @@ public class DDDRepository : IDDDRepository
         return requirement.Id;
     }
 
-    public async Task<Project> RetrieveProjectById(Guid projectId)
-    {
-        var rowProject = await _context.T_PROJECTs
-            .SingleOrDefaultAsync(p => p.ID == projectId)
-            .ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
-
-        return Map(rowProject);
-    }
-
     public async Task<List<Requirement>> RetrieveRequirementByProjectId(Guid projectId)
     {
         var rowProject = await _context.T_PROJECTs
