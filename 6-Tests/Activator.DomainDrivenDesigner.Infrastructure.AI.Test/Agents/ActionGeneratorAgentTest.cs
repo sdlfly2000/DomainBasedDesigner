@@ -106,12 +106,14 @@ public class ActionGeneratorAgentTest
                     graph TB
                         subgraph main [Retrieve Project by Id]
                             direction TB
-                            start(("Start")) --> 
-                            |Args: - projectId: Guid | load["`Load **T_PROJECT**s by projectId, NOT including **T_REQUIREMENT**s from DomainDbContext`"] -->
+                            start(("Start")) -->
 
+                            %% Include referencing **T_REQUIREMENT**s  
+                            |Args: - projectId: Guid | load["`Load **T_PROJECT**s by projectId, from DomainDbContext`"] -->
                             Exist{"Found?"} -->
 
-                            |yes| map["`Map loaded **T_PROJECT** into a **Project** domain model, NOT mapping nested **T_REQUIREMENT**s collections. Do not load nested **T_BUSINESS_ACTION** nor **T_BUSINESS_MODEL** in **T_REQUIREMENT**`"]
+                            %% Do NOT load nested **T_BUSINESS_ACTION** nor **T_BUSINESS_MODEL** in **T_REQUIREMENT** 
+                            |yes| map["`Map loaded **T_PROJECT** into a **Project** domain model.`"]
 
                             map --> return["`Return the mapped **Project** domain objects`"]
 
@@ -129,7 +131,7 @@ public class ActionGeneratorAgentTest
                             start(("Start")) --> 
                             |Args: 
                             - requirement: Requirement 
-                            - projectId: Guid | newRequirementDbEntity["`New a **T_REQUIREMENT** database entity with **Requirement** and projectId passed in, Id is from requirement`"] -->
+                            - projectId: Guid | newRequirementDbEntity["`New a **T_REQUIREMENT** database entity with **Requirement**, and assign projectId to the new created **T_REQUIREMENT**, and assign **Requirement**.ID to the new created **T_REQUIREMENT**`"] -->
 
                             AddToRequirements["`Add new created **T_REQUIREMENT** to **T_REQUIREMENT**s in DomainDbContext`"] -->
 
@@ -137,9 +139,10 @@ public class ActionGeneratorAgentTest
                         end
                 ```
 
-            ## Private Method:
+            ## Create Private Methods:
             ```csharp
             private T_PROJECT Persist(Project project);
+            private T_REQUIREMENT Persist(Requirement requirement, Guid projectId);
             private Project Map(T_PROJECT rowProject);
             private Requirement Map(T_REQUIREMENT rowRequirment);
             ```

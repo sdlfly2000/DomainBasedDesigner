@@ -20,9 +20,9 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repos
 
         public async Task<Guid?> CreateProject(Project project)
         {
-            var newProject = Persist(project);
+            var newProjectDbEntity = Persist(project);
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-            return newProject.ID;
+            return newProjectDbEntity.ID;
         }
 
         public async Task<List<Project>> RetrieveFullProjects()
@@ -36,27 +36,47 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repos
 
         public async Task<Project> RetrieveProjectById(Guid projectId)
         {
-            var rowProject = await _dbContext.T_PROJECTs
+            var row = await _dbContext.T_PROJECTs
+                .Include(p => p.T_REQUIREMENTs)
                 .FirstOrDefaultAsync(p => p.ID == projectId).ConfigureAwait(false);
 
-            DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
+            DomainEntityNotFoundException.ThrowIfNull(projectId, row);
+            return Map(row);
+        }
 
-            return Map(rowProject);
+        public async Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)
+        {
+            var newRequirementDbEntity = Persist(requirement, projectId);
+            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            return newRequirementDbEntity.ID;
         }
 
         private T_PROJECT Persist(Project project)
         {
-            var newProject = new T_PROJECT
+            var rowProject = new T_PROJECT
             {
-                ID = project.Id,
+                ID = project.ID,
                 NAME = project.Name,
                 DESCRIPTION = project.Description,
                 CREATED_UTC = DateTime.UtcNow
             };
 
-            _dbContext.T_PROJECTs.Add(newProject);
+            _dbContext.T_PROJECTs.Add(rowProject);
+            return rowProject;
+        }
 
-            return newProject;
+        private T_REQUIREMENT Persist(Requirement requirement, Guid projectId)
+        {
+            var rowRequirment = new T_REQUIREMENT
+            {
+                ID = requirement.ID,
+                DESCRIPTION = requirement.Description,
+                CREATE_UTC = DateTime.UtcNow,
+                PROJECT_ID = projectId
+            };
+
+            _dbContext.T_REQUIREMENTs.Add(rowRequirment);
+            return rowRequirment;
         }
 
         private Project Map(T_PROJECT rowProject)
@@ -77,16 +97,15 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repos
 
         private Requirement Map(T_REQUIREMENT rowRequirment)
         {
-            return new Requirement(rowRequirment.ID)
+            var requirement = new Requirement(rowRequirment.ID)
             {
                 Description = rowRequirment.DESCRIPTION,
                 CreatedOnUtc = rowRequirment.CREATE_UTC
             };
-        }
 
-        public Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)
-        {
-            throw new NotImplementedException();
+            // Do not load nested T_BUSINESS_ACTION nor T_BUSINESS_MODEL in T_REQUIREMENT
+
+            return requirement;
         }
     }
 }

@@ -2,12 +2,9 @@
 
 public abstract class EntityBase
 {
-    protected EntityBase(Guid ID)
-    {   
-        Id = ID;
-    }
+    protected EntityBase(Guid ID) => this.ID = ID;
 
-    public Guid Id { get; set; }
+    public Guid ID { get; set; }
 
     public DateTime CreatedOnUtc { get; set; }
 }
