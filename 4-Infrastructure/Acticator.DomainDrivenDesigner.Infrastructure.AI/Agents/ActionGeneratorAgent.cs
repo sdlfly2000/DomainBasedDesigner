@@ -87,13 +87,13 @@ public class ActionGeneratorAgent
         if (!fullPath.StartsWith(_projectBaseDirectory, StringComparison.OrdinalIgnoreCase))
         {
             _logger.LogWarning($"{nameof(read_code_file)}: Warning: Access denied. Cannot read files outside the workspace root. {relativePath}");
-            return "Error: Access denied. Cannot read files outside the workspace root.";
+            return string.Empty;
         }
 
         if (!File.Exists(fullPath))
         {
             _logger.LogWarning($"{nameof(read_code_file)}: Warning: File not found at path '{relativePath}'.");
-            return $"Error: File not found at path '{relativePath}'.";
+            return string.Empty;
         }
 
         _logger.LogInformation($"{nameof(read_code_file)}: Reading file at path '{relativePath}'.");

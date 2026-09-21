@@ -65,23 +65,22 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
 
                 %% Include referencing **T_REQUIREMENT**s  
                 |Args: - projectId: Guid | load["`Load **T_PROJECT**s by projectId, from DomainDbContext`"] -->
-                Exist{"Found?"} -->
+
+                ThrowExceptionIfNotExist["Throw DomainEntityNotFoundException"] -->
 
                 %% Do NOT load nested **T_BUSINESS_ACTION** nor **T_BUSINESS_MODEL** in **T_REQUIREMENT** 
-                |yes| map["`Map loaded **T_PROJECT** into a **Project** domain model.`"]
+                map["`Map loaded **T_PROJECT** into a **Project** domain model.`"] -->
 
-                map --> return["`Return the mapped **Project** domain objects`"]
-
-                Exist --> |no| ThrowException["Throw DomainEntityNotFoundException"]
+                return["`Return the mapped **Project** domain objects`"]
             end
     ```
 
 5. Public async method signature: `Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)`
 
-    Method **RetrieveProjectById** logic: 
+    Method **CreateRequirement** logic: 
     ```mermaid
         graph TB
-            subgraph main [Retrieve Project by Id]
+            subgraph main [Create Requirement]
                 direction TB
                 start(("Start")) --> 
                 |Args: 
@@ -94,9 +93,30 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
             end
     ```
 
+5. Public async method signature: `Task<Guid?> UpdateRequirement(Requirement requirement);`
+
+    Method **UpdateRequirement** logic: 
+    ```mermaid
+        graph TB
+            subgraph main [Update Requirement]
+                direction TB
+                start(("Start")) --> 
+                |Args: 
+                - requirement: Requirement | loadRequirementDbEntity["`Load the **T_REQUIREMENT** database entity with **Requirement**.ID`"] -->
+                 
+                ThrowExceptionIfNotExist["Throw DomainEntityNotFoundException"] -->
+
+                %% Do not persist BusinessModels nor BusinessActions in *Requirement*
+                UpdateRequirementDbEntity["`Persist **Requirement** to  **T_REQUIREMENT** in DomainDbContext`"] -->
+
+                return["`Return the id of **Requirement** domain model`"]
+            end
+    ```
+
 ## Create Private Methods:
 ```csharp
 private T_PROJECT Persist(Project project);
+private T_REQUIREMENT Persist(Requirement requirement);
 private T_REQUIREMENT Persist(Requirement requirement, Guid projectId);
 private Project Map(T_PROJECT rowProject);
 private Requirement Map(T_REQUIREMENT rowRequirment);
@@ -121,6 +141,9 @@ private Requirement Map(T_REQUIREMENT rowRequirment);
 
 ## Reference Exception:
 - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Exceptions//DomainEntityNotFoundException.cs")`.
+
+## Reference ProjectRepository If Exists:
+- Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Repositories//ProjectRepository.cs")`.
 
 ## Output
 Only output full source code of **ProjectRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.

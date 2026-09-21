@@ -68,7 +68,7 @@ public class RequirementAppService(
 
         if(request.RequirementId != null)
         {
-            _ = await _repository.UpdateRequirement(requirement).ConfigureAwait(false);
+            _ = await _projectRepository.UpdateRequirement(requirement).ConfigureAwait(false);
         }
         else
         {
@@ -89,9 +89,9 @@ public class RequirementAppService(
     [LogTrace(returnType: typeof(UpsertBusinessModelsAppResponse))]
     public async Task<UpsertBusinessModelsAppResponse> UpsertProjectBusinessModels(UpsertBusinessModelsAppRequest request)
     {
-        if (request.Model.Id != Guid.Empty)
+        if (request.Model.ID != Guid.Empty)
         {
-            var businessModels = await businessModelRepository.RetrieveBusinessModelsById(request.Model.Id).ConfigureAwait(false);
+            var businessModels = await businessModelRepository.RetrieveBusinessModelsById(request.Model.ID).ConfigureAwait(false);
 
             if (businessModels != null)
             {

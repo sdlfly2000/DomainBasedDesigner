@@ -51,7 +51,7 @@ public class RequirementController(RequirementAppService requirementAppService, 
             return NotFound();
         }
 
-        var model = new RetrieveRequirementResponseModel(response.Requirement.Id.ToString(), response.Requirement.Description);
+        var model = new RetrieveRequirementResponseModel(response.Requirement.ID.ToString(), response.Requirement.Description);
 
         return response.Success ? Ok(model) : BadRequest(response);
     }

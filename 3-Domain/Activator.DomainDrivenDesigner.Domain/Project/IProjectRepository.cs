@@ -11,4 +11,6 @@ public interface IProjectRepository
     Task<Entities.Project> RetrieveProjectById(Guid projectId);
 
     Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId);
+
+    Task<Guid?> UpdateRequirement(Requirement requirement);
 }

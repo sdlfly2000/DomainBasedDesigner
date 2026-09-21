@@ -26,10 +26,10 @@ public class BusinessModelRepository : IBusinessModelRepository
 
     public async Task<Guid> UpdateBusinessModels(BusinessModel model)
     {
-        var rowBusinessModel = await LoadBusinessModelFromDb(model.Id).ConfigureAwait(false);
+        var rowBusinessModel = await LoadBusinessModelFromDb(model.ID).ConfigureAwait(false);
         PersistDoaminModelToDbEntity(model, rowBusinessModel);
         await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-        return model.Id;
+        return model.ID;
     }
 
     private async Task<T_BUSINESS_MODEL> LoadBusinessModelFromDb(Guid businessModelId)

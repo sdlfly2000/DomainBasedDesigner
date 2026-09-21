@@ -69,7 +69,7 @@ public class ProjectRepositoryTest
     {
         // Arrange
         var context = CreateSqlServerContext();
-        var repository = new DDDRepository(context);
+        var repository = new ProjectRepository(context);
 
         var nonExistentProjectId = Guid.NewGuid();
         var requirement = new Requirement(Guid.NewGuid())

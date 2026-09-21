@@ -19,23 +19,6 @@ public class DDDRepository : IDDDRepository
         _context = context;
     }
 
-    public async Task<Guid?> UpdateRequirement(Requirement requirement)
-    {
-        var rowRequirement = await _context.T_REQUIREMENTs
-            .SingleOrDefaultAsync(r => r.ID == requirement.Id)
-            .ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(requirement.Id, rowRequirement);
-
-        rowRequirement.DESCRIPTION = requirement.Description;
-
-        _context.T_REQUIREMENTs.Update(rowRequirement);
-
-        await _context.SaveChangesAsync().ConfigureAwait(false);
-
-        return requirement.Id;
-    }
-
     public async Task<List<Requirement>> RetrieveRequirementByProjectId(Guid projectId)
     {
         var rowProject = await _context.T_PROJECTs
