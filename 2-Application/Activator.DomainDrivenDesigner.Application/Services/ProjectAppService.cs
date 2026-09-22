@@ -11,11 +11,13 @@ namespace Activator.DomainDrivenDesigner.Application.Services;
 public class ProjectAppService
 {
     private readonly IProjectRepository _projectRepository;
+    private readonly IProjectPersistor _projectPersistor;
     private readonly IServiceProvider _serviceProvider;
 
-    public ProjectAppService(IProjectRepository projectRepository, IServiceProvider serviceProvider)
+    public ProjectAppService(IProjectRepository projectRepository, IProjectPersistor projectPersistor, IServiceProvider serviceProvider)
     {
         _projectRepository = projectRepository;
+        _projectPersistor = projectPersistor;
         _serviceProvider = serviceProvider;
     }
 
@@ -24,7 +26,7 @@ public class ProjectAppService
     {
         var newProject = Project.Create(request.ProjectName, request.ProjectDescription);
 
-        await _projectRepository.CreateProject(newProject).ConfigureAwait(false);
+        await _projectPersistor.CreateProject(newProject).ConfigureAwait(false);
 
         return new CreateProjectAppResponse(request.Id, true, null);
     }

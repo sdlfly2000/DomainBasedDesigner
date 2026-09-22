@@ -18,21 +18,13 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repos
             _dbContext = dbContext;
         }
 
-        public async Task<Guid?> CreateProject(Project project)
-        {
-            var newProject = Persist(project);
-            await _dbContext.T_PROJECTs.AddAsync(newProject).ConfigureAwait(false);
-            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-            return newProject.ID;
-        }
-
         public async Task<List<Project>> RetrieveFullProjects()
         {
             var projectsDbEntities = await _dbContext.T_PROJECTs
                 .Include(p => p.T_REQUIREMENTs)
                 .ToListAsync().ConfigureAwait(false);
 
-            var projects = projectsDbEntities.Select(Map).ToList();
+            var projects = projectsDbEntities.Select(MapToProjectDomainModel).ToList();
             return projects;
         }
 
@@ -43,63 +35,10 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repos
                 .FirstOrDefaultAsync(p => p.ID == projectId).ConfigureAwait(false);
 
             DomainEntityNotFoundException.ThrowIfNull(projectId, projectDbEntity);
-            return Map(projectDbEntity);
+            return MapToProjectDomainModel(projectDbEntity);
         }
 
-        public async Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)
-        {
-            var newRequirementDbEntity = Persist(requirement, projectId);
-            await _dbContext.T_REQUIREMENTs.AddAsync(newRequirementDbEntity).ConfigureAwait(false);
-            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-            return newRequirementDbEntity.ID;
-        }
-
-        public async Task<Guid?> UpdateRequirement(Requirement requirement)
-        {
-            var loadRequirementDbEntity = await _dbContext.T_REQUIREMENTs
-                .FirstOrDefaultAsync(r => r.ID == requirement.ID).ConfigureAwait(false);
-
-            DomainEntityNotFoundException.ThrowIfNull(requirement.ID, loadRequirementDbEntity);
-
-            loadRequirementDbEntity.DESCRIPTION = requirement.Description;
-            loadRequirementDbEntity.CREATE_UTC = DateTime.UtcNow;
-
-            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-            return requirement.ID;
-        }
-
-        private T_PROJECT Persist(Project project)
-        {
-            var tProject = new T_PROJECT
-            {
-                ID = project.ID,
-                NAME = project.Name,
-                DESCRIPTION = project.Description,
-                CREATED_UTC = DateTime.UtcNow
-            };
-
-            foreach (var requirement in project.Requirements)
-            {
-                tProject.T_REQUIREMENTs.Add(Persist(requirement, project.ID));
-            }
-
-            return tProject;
-        }
-
-        private T_REQUIREMENT Persist(Requirement requirement, Guid projectId)
-        {
-            var tRequirement = new T_REQUIREMENT
-            {
-                ID = requirement.ID,
-                DESCRIPTION = requirement.Description,
-                CREATE_UTC = DateTime.UtcNow,
-                PROJECT_ID = projectId
-            };
-
-            return tRequirement;
-        }
-
-        private Project Map(T_PROJECT rowProject)
+        private Project MapToProjectDomainModel(T_PROJECT rowProject)
         {
             var project = new Project(rowProject.ID, rowProject.NAME)
             {
@@ -109,13 +48,13 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repos
 
             foreach (var requirementDbEntity in rowProject.T_REQUIREMENTs)
             {
-                project.Requirements.Add(Map(requirementDbEntity));
+                project.Requirements.Add(MapToRequirementDomainModel(requirementDbEntity));
             }
 
             return project;
         }
 
-        private Requirement Map(T_REQUIREMENT rowRequirment)
+        private Requirement MapToRequirementDomainModel(T_REQUIREMENT rowRequirment)
         {
             var requirement = new Requirement(rowRequirment.ID)
             {

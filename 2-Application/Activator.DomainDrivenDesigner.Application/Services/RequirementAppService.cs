@@ -16,6 +16,7 @@ namespace Activator.DomainDrivenDesigner.Application.Services;
 public class RequirementAppService(
     IDDDRepository repository,
     IProjectRepository projectRepository,
+    IProjectPersistor projectPersistor,
     IBusinessModelRepository businessModelRepository,
     SemanticAnalysisAgent semanticAnalysisAgent,
     MermaidConverterAgent mermaidConverterAgent,
@@ -23,6 +24,7 @@ public class RequirementAppService(
 {
     private readonly IDDDRepository _repository = repository;
     private readonly IProjectRepository _projectRepository = projectRepository;
+    private readonly IProjectPersistor _projectPersistor = projectPersistor;
     private readonly IBusinessModelRepository businessModelRepository = businessModelRepository;
     private readonly SemanticAnalysisAgent _semanticAnalysisAgent = semanticAnalysisAgent;
     private readonly MermaidConverterAgent _mermaidConverterAgent = mermaidConverterAgent;
@@ -68,11 +70,11 @@ public class RequirementAppService(
 
         if(request.RequirementId != null)
         {
-            _ = await _projectRepository.UpdateRequirement(requirement).ConfigureAwait(false);
+            _ = await _projectPersistor.UpdateRequirement(requirement).ConfigureAwait(false);
         }
         else
         {
-            _ = await _projectRepository.CreateRequirement(requirement, request.ProjectId).ConfigureAwait(false);
+            _ = await _projectPersistor.CreateRequirement(requirement, request.ProjectId).ConfigureAwait(false);
         }
 
         return new SaveRequirementResponse(request.Id, true, string.Empty);

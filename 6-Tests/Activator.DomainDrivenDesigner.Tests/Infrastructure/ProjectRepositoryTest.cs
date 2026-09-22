@@ -1,6 +1,7 @@
 using Activator.DomainDrivenDesigner.Domain.Project.Entities;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Context;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Exceptions;
+using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Persistors;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -69,7 +70,7 @@ public class ProjectRepositoryTest
     {
         // Arrange
         var context = CreateSqlServerContext();
-        var repository = new ProjectRepository(context);
+        var persistor = new ProjectPersistor(context);
 
         var nonExistentProjectId = Guid.NewGuid();
         var requirement = new Requirement(Guid.NewGuid())
@@ -80,7 +81,7 @@ public class ProjectRepositoryTest
 
         // Act & Assert
         Assert.ThrowsAsync<DomainEntityNotFoundException>(
-            () => repository.CreateRequirement(requirement, nonExistentProjectId)
+            () => persistor.CreateRequirement(requirement, nonExistentProjectId)
         );
     }
 }

@@ -11,6 +11,7 @@ namespace Activator.DomainDrivenDesigner.Application.Tests.Application;
 public class ProjectAppServiceTests
 {
     private IProjectRepository _repository = null!;
+    private IProjectPersistor _persistor = null!;
     private IServiceProvider _serviceProvider = null!;
     private ProjectAppService _service = null!;
 
@@ -18,8 +19,9 @@ public class ProjectAppServiceTests
     public void Setup()
     {
         _repository = A.Fake<IProjectRepository>();
+        _persistor = A.Fake<IProjectPersistor>();
         _serviceProvider = A.Fake<IServiceProvider>();
-        _service = new ProjectAppService(_repository, _serviceProvider);
+        _service = new ProjectAppService(_repository, _persistor, _serviceProvider);
     }
 
     [Test]
@@ -32,7 +34,7 @@ public class ProjectAppServiceTests
         var request = new CreateProjectAppRequest(requestId, projectName, projectDescription);
         var projectId = Guid.NewGuid();
 
-        A.CallTo(() => _repository.CreateProject(A<Project>.Ignored)).Returns(projectId);
+        A.CallTo(() => _persistor.CreateProject(A<Project>.Ignored)).Returns(projectId);
 
         // Act
         var response = await _service.Create(request);
@@ -41,7 +43,7 @@ public class ProjectAppServiceTests
         response.RequestId.Should().Be(requestId);
         response.Success.Should().BeTrue();
         response.ErrorMessage.Should().BeNull();
-        A.CallTo(() => _repository.CreateProject(A<Project>.That.Matches(p => p.Name == projectName))).MustHaveHappenedOnceExactly();
+        A.CallTo(() => _persistor.CreateProject(A<Project>.That.Matches(p => p.Name == projectName))).MustHaveHappenedOnceExactly();
     }
 
     [Test]
@@ -51,7 +53,7 @@ public class ProjectAppServiceTests
         var requestId = Guid.NewGuid();
         var request = new CreateProjectAppRequest(requestId, "Test Project", "Test Description");
 
-        A.CallTo(() => _repository.CreateProject(A<Project>.Ignored)).Returns((Guid?)null);
+        A.CallTo(() => _persistor.CreateProject(A<Project>.Ignored)).Returns((Guid?)null);
 
         // Act
         var response = await _service.Create(request);

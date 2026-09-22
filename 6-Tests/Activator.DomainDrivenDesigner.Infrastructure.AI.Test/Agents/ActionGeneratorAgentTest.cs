@@ -44,7 +44,7 @@ public class ActionGeneratorAgentTest
         var instruction =
             """
             ## Generate complete C# code 
-            File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories/ProjectRepository.cs**
+            File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer/Repositories/ProjectRepository.cs**
 
             ## Format:
             - **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
@@ -71,21 +71,6 @@ public class ActionGeneratorAgentTest
             4. Place Attributes
             - Decorate **ProjectRepository** class with [ServiceLocate(typeof(IProjectRepository))].
 
-            5. Public async method signature: `Task<Guid?> CreateProject(Project project)`
-
-                Method **CreateProject** logic: 
-                ```mermaid
-                    graph TB
-                        subgraph main [Create Project]
-                            direction TB
-                            start(("Start")) -->
-                            |Argument: 
-                            - project: Project| newProject["`New a **T_PROJECT** with **Project** passed in, do not handle **Requirement**s in project.`"] -->
-                            addProjectToDb["`Add new **T_PROJECT** to DomainDbContext.T_PROJECTs`"] -->
-                            return["`Return **Project**'s Id`"]
-                        end
-                ```
-
             5. Public async method signature: `Task<List<Project>> RetrieveFullProjects()`
 
                 Method **RetrieveFullProjects** logic: 
@@ -93,9 +78,9 @@ public class ActionGeneratorAgentTest
                     graph TB
                         subgraph main [Retrieve Full Projects]
                             direction TB
-                            start(("Start")) --> load["`Eagerly load **T_PROJECT**s including **T_REQUIREMENT**s from DomainDbContext`"]
-                            load --> map["`Map each **T_PROJECT** into a **Project** domain model, mapping nested **T_REQUIREMENT**s collections. Do not load nested **T_BUSINESS_ACTION** nor **T_BUSINESS_MODEL** in **T_REQUIREMENT**`"]
-                            map --> return["`Return the list of mapped **Project** domain objects`"]
+                            start(("Start")) --> load["`Eagerly load **T_PROJECT**s including **T_REQUIREMENT**s from DomainDbContext`"] -->
+                            MapToProjectDomainModel["`Map each **T_PROJECT** into a **Project** domain model, mapping nested **T_REQUIREMENT**s collections. Do not load nested **T_BUSINESS_ACTION** nor **T_BUSINESS_MODEL** in **T_REQUIREMENT**`"] -->
+                            return["`Return the list of mapped **Project** domain objects`"]
                         end
                 ```
 
@@ -111,60 +96,19 @@ public class ActionGeneratorAgentTest
                             %% Include referencing **T_REQUIREMENT**s  
                             |Args: - projectId: Guid | load["`Load **T_PROJECT**s by projectId, from DomainDbContext`"] -->
 
-                            ThrowExceptionIfNotExist["Throw DomainEntityNotFoundException"] -->
+                            DomainEntityNotFoundException -->
 
                             %% Do NOT load nested **T_BUSINESS_ACTION** nor **T_BUSINESS_MODEL** in **T_REQUIREMENT** 
-                            map["`Map loaded **T_PROJECT** into a **Project** domain model.`"] -->
+                            MapToProjectDomainModel["`Map loaded **T_PROJECT** into a **Project** domain model.`"] -->
 
                             return["`Return the mapped **Project** domain objects`"]
                         end
                 ```
 
-            5. Public async method signature: `Task<Guid?> CreateRequirement(Requirement requirement, Guid projectId)`
-
-                Method **CreateRequirement** logic: 
-                ```mermaid
-                    graph TB
-                        subgraph main [Create Requirement]
-                            direction TB
-                            start(("Start")) --> 
-                            |Args: 
-                            - requirement: Requirement 
-                            - projectId: Guid | newRequirementDbEntity["`New a **T_REQUIREMENT** database entity with **Requirement**, and assign projectId to the new created **T_REQUIREMENT**, and assign **Requirement**.ID to the new created **T_REQUIREMENT**`"] -->
-
-                            AddToRequirements["`Add new created **T_REQUIREMENT** to **T_REQUIREMENT**s in DomainDbContext`"] -->
-
-                            return["`Return the id of **Requirement** domain objects`"]
-                        end
-                ```
-
-            5. Public async method signature: `Task<Guid?> UpdateRequirement(Requirement requirement);`
-
-                Method **UpdateRequirement** logic: 
-                ```mermaid
-                    graph TB
-                        subgraph main [Update Requirement]
-                            direction TB
-                            start(("Start")) --> 
-                            |Args: 
-                            - requirement: Requirement | loadRequirementDbEntity["`Load the **T_REQUIREMENT** database entity with **Requirement**.ID`"] -->
-
-                            ThrowExceptionIfNotExist["Throw DomainEntityNotFoundException"] -->
-
-                            %% Do not persist BusinessModels nor BusinessActions in *Requirement*
-                            UpdateRequirementDbEntity["`Persist **Requirement** to  **T_REQUIREMENT** in DomainDbContext`"] -->
-
-                            return["`Return the id of **Requirement** domain model`"]
-                        end
-                ```
-
             ## Create Private Methods:
             ```csharp
-            private T_PROJECT Persist(Project project);
-            private T_REQUIREMENT Persist(Requirement requirement);
-            private T_REQUIREMENT Persist(Requirement requirement, Guid projectId);
-            private Project Map(T_PROJECT rowProject);
-            private Requirement Map(T_REQUIREMENT rowRequirment);
+            private Project MapToProjectDomainModel(T_PROJECT rowProject);
+            private Requirement MapToRequirementDomainModel(T_REQUIREMENT rowRequirment);
             ```
 
             ## Persistence Rules:
