@@ -58,6 +58,7 @@ public class AIAgentClientFactory
             ChatOptions = new ChatOptions
             {
                 Temperature = 0.0f,
+                Seed = 42,
                 Instructions = instructions,
                 Tools = tools,
             }
