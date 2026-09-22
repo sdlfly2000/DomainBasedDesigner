@@ -60,6 +60,27 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
             end
     ```
 
+5. Public async method signature: `Task<List<Requirement>> RetrieveRequirementByProjectId(Guid projectId)`
+
+    Method **RetrieveRequirementByProjectId** logic: 
+    ```mermaid
+        graph TB
+            subgraph main [Retrieve Requirements by Project Id]
+                direction TB
+                start(("Start")) -->
+
+                %% Include referencing **T_REQUIREMENT**s  
+                |Args: - projectId: Guid | load["`Load **T_PROJECT**s by projectId, from DomainDbContext`"] -->
+
+                DomainEntityNotFoundException -->
+
+                %% Do NOT load nested **T_BUSINESS_ACTION** nor **T_BUSINESS_MODEL** in **T_REQUIREMENT** 
+                MapToRequirementDomainModel["`Map **T_REQUIREMENT**s nested in loaded **T_PROJECT** into a **Requirement** domain models.`"] -->
+
+                return["`Return the mapped **Requirement** domain models`"]
+            end
+    ```
+
 ## Create Private Methods:
 ```csharp
 private Project MapToProjectDomainModel(T_PROJECT rowProject);
@@ -85,9 +106,6 @@ private Requirement MapToRequirementDomainModel(T_REQUIREMENT rowRequirment);
 
 ## Reference Exception:
 - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Exceptions//DomainEntityNotFoundException.cs")`.
-
-## Reference ProjectRepository If Exists:
-- Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Repositories//ProjectRepository.cs")`.
 
 ## Output
 Only output full source code of **ProjectRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.
