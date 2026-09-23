@@ -33,7 +33,7 @@ public class RequirementAppService(
     [LogTrace(returnType: typeof(RetrieveRequirementByProjectAppResponse))]
     public async Task<RetrieveRequirementByProjectAppResponse> RetrieveFullRequirements(RetrieveRequirementByProjectAppRequest request)
     {
-        var requirements = await _repository.RetrieveRequirementByProjectId(request.ProjectId).ConfigureAwait(false);
+        var requirements = await _projectRepository.RetrieveRequirementByProjectId(request.ProjectId).ConfigureAwait(false);
 
         return requirements != null
             ? new RetrieveRequirementByProjectAppResponse(request.RequestId, requirements, true, null)
@@ -63,7 +63,7 @@ public class RequirementAppService(
     public async Task<SaveRequirementResponse> SaveRequirement(SaveRequirementRequest request)
     {
         var requirement = request.RequirementId != null
-            ? await _repository.RetrieveRequirementById(request.RequirementId.Value).ConfigureAwait(false)
+            ? await _projectRepository.RetrieveRequirementById(request.RequirementId.Value).ConfigureAwait(false)
             : new Requirement(Guid.NewGuid());
 
         requirement.Description = request.RequirementDescription;
@@ -83,7 +83,7 @@ public class RequirementAppService(
     [LogTrace(returnType: typeof(RetrieveRequirementResponse))]
     public async Task<RetrieveRequirementResponse> RetrieveRequirement(Guid requestId, Guid requirementId)
     {   
-        var requirement = await _repository.RetrieveRequirementById(requirementId).ConfigureAwait(false);
+        var requirement = await _projectRepository.RetrieveRequirementById(requirementId).ConfigureAwait(false);
 
         return new RetrieveRequirementResponse(requestId, requirement, true, string.Empty);
     }
