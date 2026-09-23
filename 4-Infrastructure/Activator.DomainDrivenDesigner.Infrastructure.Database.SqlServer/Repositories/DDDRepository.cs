@@ -1,5 +1,4 @@
 using Activator.DomainDrivenDesigner.Domain.BusinessModel.Entities;
-using Activator.DomainDrivenDesigner.Domain.Project.Entities;
 using Activator.DomainDrivenDesigner.Domain.Repositories;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Context;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Entities;
@@ -17,20 +16,6 @@ public class DDDRepository : IDDDRepository
     public DDDRepository(DomainDbContext context)
     {
         _context = context;
-    }
-
-    public async Task<List<Requirement>> RetrieveRequirementByProjectId(Guid projectId)
-    {
-        var rowProject = await _context.T_PROJECTs
-            .Include(p => p.T_REQUIREMENTs)
-            .SingleOrDefaultAsync(p => p.ID == projectId)
-            .ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(projectId, rowProject);
-
-        return [.. rowProject
-            .T_REQUIREMENTs
-            .Select(r => Map(r))];
     }
 
     public async Task<Guid?> CreateBusinessModel(BusinessModel model, Guid requirementId)
@@ -67,44 +52,7 @@ public class DDDRepository : IDDDRepository
             .ToList();
     }
 
-    public async Task<Requirement> RetrieveRequirementById(Guid requirementId)
-    {
-        var rowRequirement = await _context.T_REQUIREMENTs
-            .Include(r => r.T_BUSINESS_MODELs)
-            .SingleOrDefaultAsync(r => r.ID == requirementId)
-            .ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(requirementId, rowRequirement);
-
-        var requirement = Map(rowRequirement);
-        var businessModels = rowRequirement.T_BUSINESS_MODELs.Select(bm => Map(bm)).ToList();
-        requirement.BusinessModels.AddRange(businessModels);
-
-        return requirement;
-    }
-
     #region Private Mapper
-
-    private Project Map(T_PROJECT rowProject)
-    {
-        var project = new Project(rowProject.ID, rowProject.NAME)
-        {
-            Description = rowProject.DESCRIPTION,
-            CreatedOnUtc = rowProject.CREATED_UTC
-        };
-        return project;
-    }
-
-    private Requirement Map(T_REQUIREMENT rowRequirment)
-    {
-        var requirement = new Requirement(rowRequirment.ID)
-        {
-            Description = rowRequirment.DESCRIPTION,
-            CreatedOnUtc = rowRequirment.CREATE_UTC
-        };
-
-        return requirement;
-    }
 
     private BusinessModel Map(T_BUSINESS_MODEL rowBusinessModel)
     {

@@ -5,10 +5,6 @@ using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Entities;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Exceptions;
 using Common.Core.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories
 {
@@ -41,11 +37,23 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repos
 
         public async Task<List<Requirement>> RetrieveRequirementByProjectId(Guid projectId)
         {
-            var rows = await _dbContext.T_REQUIREMENTs
-                .Where(r => r.PROJECT_ID == projectId)
-                .ToListAsync().ConfigureAwait(false);
+            var rows = await _dbContext.T_PROJECTs
+                .Include(p => p.T_REQUIREMENTs)
+                .FirstOrDefaultAsync(p => p.ID == projectId).ConfigureAwait(false);
 
-            return rows.Select(MapToRequirementDomainModel).ToList();
+            DomainEntityNotFoundException.ThrowIfNull(projectId, rows);
+
+            return rows.T_REQUIREMENTs.Select(MapToRequirementDomainModel).ToList();
+        }
+
+        public async Task<Requirement> RetrieveRequirementById(Guid requirementId)
+        {
+            var row = await _dbContext.T_REQUIREMENTs
+                .FirstOrDefaultAsync(r => r.ID == requirementId).ConfigureAwait(false);
+
+            DomainEntityNotFoundException.ThrowIfNull(requirementId, row);
+
+            return MapToRequirementDomainModel(row);
         }
 
         private Project MapToProjectDomainModel(T_PROJECT rowProject)

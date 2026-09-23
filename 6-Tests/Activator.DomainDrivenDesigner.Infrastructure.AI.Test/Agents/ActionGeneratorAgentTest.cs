@@ -126,6 +126,26 @@ public class ActionGeneratorAgentTest
                         end
                 ```
 
+            5. Public async method signature: `Task<Requirement> RetrieveRequirementById(Guid requirementId)`
+
+                Method **RetrieveRequirementById** logic: 
+                ```mermaid
+                    graph TB
+                        subgraph main [Retrieve Requirements by Id]
+                            direction TB
+                            start(("Start")) -->
+
+                            |Args: - requirementId: Guid | load["`Load **T_REQUIREMENT** by requirementId from DomainDbContext`"] -->
+
+                            DomainEntityNotFoundException -->
+
+                            %% Do NOT load nested **T_BUSINESS_ACTION** nor **T_BUSINESS_MODEL** in **T_REQUIREMENT** 
+                            MapToRequirementDomainModel["`Map **T_REQUIREMENT** database entity into a **Requirement** domain models.`"] -->
+
+                            return["`Return the mapped **Requirement** domain models`"]
+                        end
+                ```
+
             ## Create Private Methods:
             ```csharp
             private Project MapToProjectDomainModel(T_PROJECT rowProject);
