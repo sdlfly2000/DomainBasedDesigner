@@ -4,7 +4,6 @@ using Activator.DomainDrivenDesigner.Domain.BusinessModel;
 using Activator.DomainDrivenDesigner.Domain.BusinessModel.Entities;
 using Activator.DomainDrivenDesigner.Domain.Project;
 using Activator.DomainDrivenDesigner.Domain.Project.Entities;
-using Activator.DomainDrivenDesigner.Domain.Repositories;
 using Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 using Common.Core.AOP.LogTrace;
 using Common.Core.DependencyInjection;
@@ -14,18 +13,18 @@ namespace Activator.DomainDrivenDesigner.Application.Services;
 
 [ServiceLocate(default)]
 public class RequirementAppService(
-    IDDDRepository repository,
     IProjectRepository projectRepository,
     IProjectPersistor projectPersistor,
     IBusinessModelRepository businessModelRepository,
+    IBusinessModelPersistor businessModelPersistor,
     SemanticAnalysisAgent semanticAnalysisAgent,
     MermaidConverterAgent mermaidConverterAgent,
     IServiceProvider serviceProvider)
 {
-    private readonly IDDDRepository _repository = repository;
     private readonly IProjectRepository _projectRepository = projectRepository;
     private readonly IProjectPersistor _projectPersistor = projectPersistor;
-    private readonly IBusinessModelRepository businessModelRepository = businessModelRepository;
+    private readonly IBusinessModelRepository _businessModelRepository = businessModelRepository;
+    private readonly IBusinessModelPersistor _businessModelPersistor = businessModelPersistor;
     private readonly SemanticAnalysisAgent _semanticAnalysisAgent = semanticAnalysisAgent;
     private readonly MermaidConverterAgent _mermaidConverterAgent = mermaidConverterAgent;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
@@ -93,25 +92,25 @@ public class RequirementAppService(
     {
         if (request.Model.ID != Guid.Empty)
         {
-            var businessModels = await businessModelRepository.RetrieveBusinessModelsById(request.Model.ID).ConfigureAwait(false);
+            var businessModels = await _businessModelRepository.RetrieveBusinessModelById(request.Model.ID).ConfigureAwait(false);
 
             if (businessModels != null)
             {
-                return await businessModelRepository.UpdateBusinessModels(request.Model).ConfigureAwait(false) != Guid.Empty
+                return await _businessModelPersistor.UpdateBusinessModel(request.Model).ConfigureAwait(false) != Guid.Empty
                         ? new UpsertBusinessModelsAppResponse(request.Id, true, null)
                         : new UpsertBusinessModelsAppResponse(request.Id, false, "Failed to update business model");
             }
         }
 
-        return await _repository.CreateBusinessModel(request.Model, request.RequirementId).ConfigureAwait(false) != null
-                ? new UpsertBusinessModelsAppResponse(request.Id, true, null)
-                : new UpsertBusinessModelsAppResponse(request.Id, false, "Failed to update business model");
+        _ = await businessModelPersistor.CreateBusinessModel(request.Model, request.RequirementId).ConfigureAwait(false);
+
+        return new UpsertBusinessModelsAppResponse(request.Id, true, null);
     }
 
     [LogTrace(returnType: typeof(RetrieveBusinessModelByNameAppResponse))]
     public async Task<RetrieveBusinessModelByNameAppResponse> RetrieveBusinessModelByName(RetrieveBusinessModelsByNameAppRequest request)
     {
-        var models = await _repository.RetrieveBusinessModelsByRequirementId(request.RequirementId).ConfigureAwait(false);
+        var models = await _businessModelRepository.RetrieveBusinessModelsByRequirementId(request.RequirementId).ConfigureAwait(false);
 
         var model = models.SingleOrDefault(m => m.Name == request.ModelName);
 

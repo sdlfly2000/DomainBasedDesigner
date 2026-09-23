@@ -6,57 +6,63 @@ using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Exception
 using Common.Core.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
-namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;
-
-[ServiceLocate(typeof(IBusinessModelRepository))]
-public class BusinessModelRepository : IBusinessModelRepository
+namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories
 {
-    private readonly DomainDbContext _dbContext;
-
-    public BusinessModelRepository(DomainDbContext dbContext)
+    [ServiceLocate(typeof(IBusinessModelRepository))]
+    public class BusinessModelRepository : IBusinessModelRepository
     {
-        _dbContext = dbContext;
-    }
+        private readonly DomainDbContext _dbContext;
 
-    public async Task<BusinessModel> RetrieveBusinessModelsById(Guid businessModelId)
-    {
-        var rowBusinessModel = await LoadBusinessModelFromDb(businessModelId).ConfigureAwait(false);
-        return Map(rowBusinessModel);
-    }
-
-    public async Task<Guid> UpdateBusinessModels(BusinessModel model)
-    {
-        var rowBusinessModel = await LoadBusinessModelFromDb(model.ID).ConfigureAwait(false);
-        PersistDoaminModelToDbEntity(model, rowBusinessModel);
-        await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-        return model.ID;
-    }
-
-    private async Task<T_BUSINESS_MODEL> LoadBusinessModelFromDb(Guid businessModelId)
-    {
-        var rowBusinessModel = await _dbContext.T_BUSINESS_MODELs
-            .Include(b => b.CONTEXT)
-            .SingleOrDefaultAsync(b => b.ID == businessModelId)
-            .ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(businessModelId, rowBusinessModel);
-        return rowBusinessModel;
-    }
-
-    private BusinessModel Map(T_BUSINESS_MODEL rowBusinessModel)
-    {
-        return new BusinessModel(rowBusinessModel.ID)
+        public BusinessModelRepository(DomainDbContext dbContext)
         {
-            Name = rowBusinessModel.NAME,
-            ContentMermaid = rowBusinessModel.RAW_DESCRIPTION,
-            ContextId = rowBusinessModel.CONTEXT_ID
-        };
-    }
+            _dbContext = dbContext;
+        }
 
-    private void PersistDoaminModelToDbEntity(BusinessModel model, T_BUSINESS_MODEL rowBusinessModel)
-    {
-        rowBusinessModel.NAME = model.Name;
-        rowBusinessModel.RAW_DESCRIPTION = model.ContentMermaid;
-        rowBusinessModel.CONTEXT_ID = model.ContextId;
+        public async Task<BusinessModel> RetrieveBusinessModelById(Guid businessModelId)
+        {
+            var rowBusinessModel = await LoadByIdFromDb(businessModelId).ConfigureAwait(false);
+            return MapToBusniessModelDoaminModel(rowBusinessModel);
+        }
+
+        public async Task<List<BusinessModel>> RetrieveBusinessModelsByRequirementId(Guid requirementId)
+        {
+            var rowsBusinessModel = await LoadByRequirementIdFromDb(requirementId).ConfigureAwait(false);
+            if (!rowsBusinessModel.Any())
+            {
+                throw new DomainEntityNotFoundException($"No Business Models found for Requirement ID({requirementId}).");
+            }
+
+            return rowsBusinessModel.Select(MapToBusniessModelDoaminModel).ToList();
+        }
+
+        private async Task<T_BUSINESS_MODEL> LoadByIdFromDb(Guid businessModelId)
+        {
+            var rowBusinessModel = await _dbContext.T_BUSINESS_MODELs
+                .Include(bm => bm.CONTEXT)
+                .FirstOrDefaultAsync(bm => bm.ID == businessModelId, default).ConfigureAwait(false);
+
+            DomainEntityNotFoundException.ThrowIfNull<T_BUSINESS_MODEL>(businessModelId, rowBusinessModel);
+            return rowBusinessModel;
+        }
+
+        private async Task<List<T_BUSINESS_MODEL>> LoadByRequirementIdFromDb(Guid requirementId)
+        {
+            var rowsBusinessModel = await _dbContext.T_BUSINESS_MODELs
+                .Include(bm => bm.CONTEXT)
+                .Where(bm => bm.REQUIREMENT_ID == requirementId)
+                .ToListAsync(default).ConfigureAwait(false);
+
+            return rowsBusinessModel;
+        }
+
+        private BusinessModel MapToBusniessModelDoaminModel(T_BUSINESS_MODEL rowBusinessModel)
+        {
+            return new BusinessModel(rowBusinessModel.ID)
+            {
+                Name = rowBusinessModel.NAME,
+                ContentMermaid = rowBusinessModel.RAW_DESCRIPTION,
+                ContextId = rowBusinessModel.CONTEXT_ID
+            };
+        }
     }
 }
