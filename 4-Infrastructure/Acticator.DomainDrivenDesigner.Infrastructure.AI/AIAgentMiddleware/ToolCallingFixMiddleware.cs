@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.AI;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 public sealed class ToolCallingFixMiddleware : DelegatingChatClient
 {
@@ -43,7 +43,7 @@ public sealed class ToolCallingFixMiddleware : DelegatingChatClient
                 }
                 catch(Exception ex)
                 {
-                    _logger.LogError(ex, $"{nameof(ToolCallingFixMiddleware)}: Failed to parse tool call request from model response, When handling request {message.Text}");
+                    _logger.Error(ex, $"{nameof(ToolCallingFixMiddleware)}: Failed to parse tool call request from model response, When handling request {message.Text}");
                 }
             }
         }

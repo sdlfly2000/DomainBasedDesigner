@@ -102,7 +102,7 @@ public class RequirementAppService(
             }
         }
 
-        _ = await businessModelPersistor.CreateBusinessModel(request.Model, request.RequirementId).ConfigureAwait(false);
+        _ = await _businessModelPersistor.CreateBusinessModel(request.Model, request.RequirementId).ConfigureAwait(false);
 
         return new UpsertBusinessModelsAppResponse(request.Id, true, null);
     }

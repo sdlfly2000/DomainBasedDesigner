@@ -1,15 +1,13 @@
 ﻿using Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
-using Common.Core.DependencyInjection;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.Logging;
 using OllamaSharp;
+using Serilog;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 
-[ServiceLocate(default, ServiceType.Singleton)]
 public class ActionGeneratorAgent
 {
     private string ArgumentPattern = @"(?<tool>\w+)\(""(?<path>[^""]+)""\)";
@@ -86,17 +84,17 @@ public class ActionGeneratorAgent
         string fullPath = Path.GetFullPath(Path.Combine(_projectBaseDirectory, relativePath));
         if (!fullPath.StartsWith(_projectBaseDirectory, StringComparison.OrdinalIgnoreCase))
         {
-            _logger.LogWarning($"{nameof(read_code_file)}: Warning: Access denied. Cannot read files outside the workspace root. {relativePath}");
+            _logger.Warning($"{nameof(read_code_file)}: Warning: Access denied. Cannot read files outside the workspace root. {relativePath}");
             return string.Empty;
         }
 
         if (!File.Exists(fullPath))
         {
-            _logger.LogWarning($"{nameof(read_code_file)}: Warning: File not found at path '{relativePath}'.");
+            _logger.Warning($"{nameof(read_code_file)}: Warning: File not found at path '{relativePath}'.");
             return string.Empty;
         }
 
-        _logger.LogInformation($"{nameof(read_code_file)}: Reading file at path '{relativePath}'.");
+        _logger.Information($"{nameof(read_code_file)}: Reading file at path '{relativePath}'.");
         var fileContent = File.ReadAllText(fullPath);
         var content = new StringBuilder();
         content.Append("```csharp")

@@ -1,11 +1,10 @@
 ﻿using Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 using Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
+using Activator.DomainDrivenDesigner.Support.Core.Configurations;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Extensions.Logging;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Test.Agents;
 
@@ -21,8 +20,6 @@ public class ModelGeneratorAgentTest
             .MinimumLevel.Debug()
             .WriteTo.Console()
             .CreateLogger();
-
-        _logger = new SerilogLoggerFactory(serilogLogger).CreateLogger<ModelGeneratorAgentTest>();
 
         var aiOptions = Options.Create(new AIOptions
         {
@@ -66,6 +63,15 @@ public class ModelGeneratorAgentTest
         foreach (var item in result.Result) {
             Console.WriteLine(string.Concat("File: ", item.file_path));
             Console.WriteLine(string.Concat("Content: ", Environment.NewLine, item.content));
+        }
+    }
+
+    [TearDown]
+    public void CleanUp()
+    {
+        if (_logger is IDisposable disposable)
+        {
+            disposable.Dispose();
         }
     }
 }

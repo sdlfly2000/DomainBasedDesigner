@@ -1,10 +1,10 @@
-﻿using Common.Core.DependencyInjection;
+﻿using Activator.DomainDrivenDesigner.Support.Core.Configurations;
+using Common.Core.DependencyInjection;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Client;
 using OllamaSharp;
+using Serilog;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
 

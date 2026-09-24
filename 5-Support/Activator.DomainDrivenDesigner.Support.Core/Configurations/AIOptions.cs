@@ -1,4 +1,4 @@
-﻿namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
+﻿namespace Activator.DomainDrivenDesigner.Support.Core.Configurations;
 
 public class AIOptions
 {

@@ -1,11 +1,9 @@
 ﻿using Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 using Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
+using Activator.DomainDrivenDesigner.Support.Core.Configurations;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Serilog;
-using Serilog.Extensions.Logging;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Test.Agents;
 
@@ -17,12 +15,10 @@ public class ActionGeneratorAgentTest
     [SetUp]
     public void Setup()
     {
-        var serilogLogger = new LoggerConfiguration()
+        _logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .WriteTo.Console()
             .CreateLogger();
-
-        _logger = new SerilogLoggerFactory(serilogLogger).CreateLogger<ActionGeneratorAgentTest>();
 
         var aiOptions = Options.Create(new AIOptions
         {
@@ -132,8 +128,17 @@ public class ActionGeneratorAgentTest
 
         // Assert
         result.Should().NotBeNull();
-        _logger.LogInformation(result);
+        _logger.Information(result);
         //Console.WriteLine(string.Concat("File: ", result.Result.file_path));
         //Console.WriteLine(string.Concat("Content: ", Environment.NewLine, result.Result.content));
+    }
+
+    [TearDown]
+    public void CleanUp()
+    {
+        if (_logger is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
     }
 }
