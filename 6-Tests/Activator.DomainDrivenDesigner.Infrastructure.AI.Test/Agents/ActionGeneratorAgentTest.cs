@@ -40,15 +40,15 @@ public class ActionGeneratorAgentTest
         var instruction =
             """
             ## Generate complete C# code 
-            File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer/Persistors/BusinessModelPersistor.cs**
+            File: **2-Application/Activator.DomainDrivenDesigner.Application/Services/ContextAppService.cs**
 
             ## Format:
             - **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
 
-            - Write a C# **BusinessModelPersistor** class
+            - Write a C# **ContextAppService** class
 
                 ```csharp
-                namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Persistors;
+                namespace Activator.DomainDrivenDesigner.Application.Services;
 
                 public class BusinessModelPersistor
                 {
@@ -57,70 +57,63 @@ public class ActionGeneratorAgentTest
                 ```
 
             ## Rules:
-            1. Class: **BusinessModelPersistor**, Implements: **IBusinessModelPersistor**
+            1. Class: **ContextAppService**, Implements: **IContextAppService**
 
-            2. Namespace in file-scope: `namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Persistors;`
+            2. Namespace in file-scope: `namespace Activator.DomainDrivenDesigner.Application.Services;`
 
             3. Inject below through constructor
-            - **DomainDbContext**
+            - **IContextRepository**
+            - **IServiceProvider**
 
             4. Place Attributes
-            - Decorate **BusinessModelPersistor** class with [ServiceLocate(typeof(IBusinessModelPersistor))].
+            - Decorate **ContextAppService** class with [ServiceLocate(typeof(ContextAppService))]
+            - Decorate each method below with [LogTrace(typeof(*response))].
 
-            5. Public async method signature: `Task<Guid> CreateBusinessModel(BusinessModel model, Guid requirementId)`
+            5. Public async method signature: `Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)`
 
-                Method **CreateBusinessModel** logic: 
+                Method **RetrieveContexts** logic: 
                 ```mermaid
                     graph TB
-                        subgraph main [Create BusinessModel]
+                        subgraph main [Retrieve Contexts]
                             direction TB
-                            start(("Start")) --> 
-                            |Args: 
-                            - businessModel: BusinessModel 
-                            - requirementId: Guid | PersistToBusinessModelDatabaseEntity["`New a **T_BUSINESS_MODEL** database entity, and Persist **BusinessModel** domain model passed in to new created **T_BUSINESS_MODEL** database entity`"] -->
-                            AddToBusinessModel["`Add new created **T_BUSINESS_MODEL** to **T_BUSINESS_MODEL**s in DomainDbContext`"] -->
-                            return["`Return the id of **BusinessModel** domain objects`"]
+                            start(("Start")) -->
+                            |request: RetrieveContextAppRequest| loadAllContextInProject["`Load All **Context**s domain model by request.ProjectId`"] -->
+                            return["`Return RetrieveContextAppResponse with loaded **Context**s`"]
                         end
                 ```
+            6. Public async method signature: `Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)`
 
-            5. Public async method signature: `Task<Guid> UpdateBusinessModel(BusinessModel model)`
-
-                Method **UpdateBusinessModel** logic: 
+                Method **CreateContext** logic: 
                 ```mermaid
                     graph TB
-                        subgraph main [Update BusinessModel]
+                        subgraph main CreateContext[CreateContext]
                             direction TB
-                            start(("Start")) --> 
-                            |Args: 
-                            - businessModel: BusinessModel | loadBusinessModelDatabaseEntityById["`Load **T_BUSINESS_MODEL** database entity by **BusinessModel**.ID`"] -->
-                            DomainEntityNotFoundException -->
-
-                            PersistToBusinessModelDatabaseEntity["`Persist **BusinessModel** domain model passed in to loaded **T_BUSINESS_MODEL** database entity`"] -->
-                            UpdateToBusinessModelDatabaseEntity["`Update **T_BUSINESS_MODEL** in DomainDbContext`"] -->
-                            return["`Return the Id of **BusinessModel** domain objects`"]
+                            start2(("Start")) --> 
+                            |request: CreateContextAppRequest| newContext["New a **Context** domain model with Name and ProjectId from request"]-->
+                            return2["`Return CreateContextAppResponse with **ContextId**`"]
                         end
                 ```
-
-            ## Persistence Rules:
-            - **Self-Contained Commit:** Call `await _dbContext.SaveChangesAsync().ConfigureAwait(false)` immediately after adding the entity to ensure change state tracking is flushed to SQL Server before returning.
-
             ## Ignore Exception Handler since it is included in LogTrace Attribute
 
-            ## Reference Database Context:
-            - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Context//DomainDbContext.cs")`.
-
-            ## Reference Database Entities:
-            - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Entities//T_BUSINESS_MODEL.cs")`.
+            ## Reference Repositories:
+            - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Context//IConetxtRepository.cs")`.
 
             ## Reference Domain Models:
-            - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//BusinessModel//Entities//BusinessModel.cs")`.
+            - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Context//Entities//Context.cs")`.
             - Execute `read_code_file("5-Support//Activator.DomainDrivenDesigner.Support.Core//Marks//EntityBase.cs")`.
 
-            ## Reference Exception:
-            - Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Exceptions//DomainEntityNotFoundException.cs")`.
+            ## Reference AppRequests:
+            - Execute `read_code_file("2-Application\Activator.DomainDrivenDesigner.Application\AppRequests\RetrieveContextAppRequest.cs")`.
+            - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//CreateContextAppRequest.cs")`.
+            - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//AppRequest.cs")`.
+
+            ## Reference AppResponses:
+            - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//RetrieveContextAppResponse.cs")`.
+            - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//CreateContextAppResponse.cs")`.
+            - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//AppResponse.cs")`.
 
             ## Output
-            Only output full source code of **BusinessModelPersistor.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.
+            Only output full source code of **ContextAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
             """;
 
         // Action

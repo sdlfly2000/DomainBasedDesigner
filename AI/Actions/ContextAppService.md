@@ -1,15 +1,19 @@
 ## Generate complete C# code 
-File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/ContextAppService.cs**
+File: **2-Application/Activator.DomainDrivenDesigner.Application/Services/ContextAppService.cs**
 
 ## Format:
-Write a C# **ContextAppService** class
+- **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
 
-```csharp
-public class ContextAppService
-{
-    ### Your Code Fixed (Allman Style)
-}
-```
+- Write a C# **ContextAppService** class
+
+    ```csharp
+    namespace Activator.DomainDrivenDesigner.Application.Services;
+
+    public class BusinessModelPersistor
+    {
+        // Your Full Code Implementation (Allman Style including Using statements)
+    }
+    ```
 
 ## Rules:
 1. Class: **ContextAppService**, Implements: **IContextAppService**
@@ -21,19 +25,19 @@ public class ContextAppService
 - **IServiceProvider**
 
 4. Place Attributes
-- Put Attribute [ServiceLocate(typeof(ContextAppService))] to **ContextAppService** class.
-- Put Attribute [LogTrace(typeof(*response))] to each method below.
+- Decorate **ContextAppService** class with [ServiceLocate(typeof(ContextAppService))]
+- Decorate each method below with [LogTrace(typeof(*response))].
 
 5. Public async method signature: `Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)`
 
     Method **RetrieveContexts** logic: 
     ```mermaid
         graph TB
-            subgraph main [RetrieveContexts]
+            subgraph main [Retrieve Contexts]
                 direction TB
-                start(("Start"s)) -->
-                |request: RetrieveContextAppRequest| loadAllContext["Load All Contexts in Project -> IContextRepository.RetrieveContexts(request.ProjectId)"] -->
-                return["`Return **Context**s`"]
+                start(("Start")) -->
+                |request: RetrieveContextAppRequest| loadAllContextInProject["`Load All **Context**s domain model by request.ProjectId`"] -->
+                return["`Return RetrieveContextAppResponse with loaded **Context**s`"]
             end
     ```
 6. Public async method signature: `Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)`
@@ -44,63 +48,28 @@ public class ContextAppService
             subgraph main CreateContext[CreateContext]
                 direction TB
                 start2(("Start")) --> 
-                |request: CreateContextAppRequest| CreateContext["Create a Context -> IContextRepository.CreateContext(request.Name, request.ProjectId)"]-->
-                return2["`Return **ContextId**`"]
+                |request: CreateContextAppRequest| newContext["New a **Context** domain model with Name and ProjectId from request"]-->
+                return2["`Return CreateContextAppResponse with **ContextId**`"]
             end
     ```
 ## Ignore Exception Handler since it is included in LogTrace Attribute
 
-## Reference Interface Signatures:
-```csharp
-Task<List<Domain.Entities.Context>> IContextRepository.RetrieveContexts(Guid projectId);
-Task<Guid>> IContextRepository.CreateContext(string name, Guid projectId);
-```
+## Reference Repositories:
+- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Context//IConetxtRepository.cs")`.
 
-## Reference Requests and Responses:
-```mermaid
-classDiagram
-    class AppRequest {
-        + Id: Guid
-    }
+## Reference Domain Models:
+- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Context//Entities//Context.cs")`.
+- Execute `read_code_file("5-Support//Activator.DomainDrivenDesigner.Support.Core//Marks//EntityBase.cs")`.
 
-    class AppResponse {
-        + RequestId： Guid
-        + Success: bool
-        + ErrorMessage: string?
-    }
+## Reference AppRequests:
+- Execute `read_code_file("2-Application\Activator.DomainDrivenDesigner.Application\AppRequests\RetrieveContextAppRequest.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//CreateContextAppRequest.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//AppRequest.cs")`.
 
-    class CreateContextAppRequest {
-        + Name: string
-        + ProjectId: Guid
-    }
-
-    class CreateContextAppResponse {
-        + ContextId: Guid
-    }
-
-    class RetrieveContextAppRequest {
-        + ProjectId: Guid
-    }
-
-    class RetrieveContextAppResponse {
-        + Contexts: List~Context~
-    }
-
-    %% Relationship
-    AppRequest <|-- RetrieveContextAppRequest
-    AppResponse <|-- RetrieveContextAppResponse
-
-    AppRequest <|-- CreateContextAppRequest
-    AppResponse <|-- CreateContextAppResponse
-
-```
-
-```csharp
-public record CreateContextAppRequest(Guid Id, string Name, Guid ProjectId) : AppRequest(Id);
-public record RetrieveContextAppRequest(Guid Id) : AppRequest(Id);
-public record CreateContextAppResponse(Guid RequestId, Guid? ContextId, bool Success, string? ErrorMessage) : AppResponse(RequestId, Success, ErrorMessage);
-public record RetrieveContextAppResponse(Guid RequestId, List<Context>? Contexts, bool Success, string? ErrorMessage) : AppResponse(RequestId, Success, ErrorMessage);
-```
+## Reference AppResponses:
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//RetrieveContextAppResponse.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//CreateContextAppResponse.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//AppResponse.cs")`.
 
 ## Output
 Only output full source code of **ContextAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.
