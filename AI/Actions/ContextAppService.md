@@ -33,7 +33,7 @@ File: **2-Application/Activator.DomainDrivenDesigner.Application/Services/Contex
     Method **RetrieveContexts** logic: 
     ```mermaid
         graph TB
-            subgraph main [Retrieve Contexts]
+            subgraph RetrieveContexts
                 direction TB
                 start(("Start")) -->
                 |request: RetrieveContextAppRequest| loadAllContextInProject["`Load All **Context**s domain model by request.ProjectId`"] -->
@@ -45,7 +45,7 @@ File: **2-Application/Activator.DomainDrivenDesigner.Application/Services/Contex
     Method **CreateContext** logic: 
     ```mermaid
         graph TB
-            subgraph main CreateContext[CreateContext]
+            subgraph CreateContext
                 direction TB
                 start2(("Start")) --> 
                 |request: CreateContextAppRequest| newContext["New a **Context** domain model with Name and ProjectId from request"]-->

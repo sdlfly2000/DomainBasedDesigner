@@ -74,7 +74,7 @@ public class ActionGeneratorAgentTest
                 Method **RetrieveContexts** logic: 
                 ```mermaid
                     graph TB
-                        subgraph main [Retrieve Contexts]
+                        subgraph RetrieveContexts
                             direction TB
                             start(("Start")) -->
                             |request: RetrieveContextAppRequest| loadAllContextInProject["`Load All **Context**s domain model by request.ProjectId`"] -->
@@ -86,7 +86,7 @@ public class ActionGeneratorAgentTest
                 Method **CreateContext** logic: 
                 ```mermaid
                     graph TB
-                        subgraph main CreateContext[CreateContext]
+                        subgraph CreateContext
                             direction TB
                             start2(("Start")) --> 
                             |request: CreateContextAppRequest| newContext["New a **Context** domain model with Name and ProjectId from request"]-->

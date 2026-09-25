@@ -1,18 +1,18 @@
-# Activator.DomainDrivenDesigner.Application.Services.ContextAppService
+# Activator.DomainDrivenDesigner.Application.Services
 ```mermaid
 graph TB
-    subgraph RetrieveContexts[RetrieveContexts]
+    subgraph RetrieveContexts
         direction TB
-        start(("Start"s)) -->
-        |request: RetrieveContextAppRequest| loadAllContext["Load All Context -> IDDDRepository.RetrieveContexts()"] -->
-        return["`Return **Context**`"]
+        start(("Start")) -->
+        |request: RetrieveContextAppRequest| loadAllContextInProject["`Load All **Context**s domain model by request.ProjectId`"] -->
+        return["`Return RetrieveContextAppResponse with loaded **Context**s`"]
     end
 
-    subgraph main CreateContext[CreateContext]
+    subgraph CreateContext
         direction TB
         start2(("Start")) --> 
-        |request: CreateContextAppRequest| CreateContext["Create a Context -> IDDDRepository.CreateContexts(request.Name, request.projectId)"]-->
-        return2["`Return **ContextId**`"]            
+        |request: CreateContextAppRequest| newContext["New a **Context** domain model with Name and ProjectId from request"]-->
+        return2["`Return CreateContextAppResponse with **ContextId**`"]
     end
 ```
 ---
