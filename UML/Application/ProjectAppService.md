@@ -1,5 +1,5 @@
 # Application - Project
-```mermaid
+```mermaid method:"Create"
     graph TB
         subgraph main [Create Project]
             direction TB
@@ -9,7 +9,7 @@
             return["`Return **CreateProjectAppResponse**`"]
         end
 ```
-```mermaid
+```mermaid method:"RetrieveFullProjects"
     graph TB
         subgraph main [Retrieve Full Projects]
             direction TB

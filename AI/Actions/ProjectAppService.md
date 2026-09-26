@@ -1,5 +1,5 @@
 ## Generate complete C# code 
-Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services/ProjectAppService.cs**
+Target File: **2-Application/Activator.DomainDrivenDesigner.Application/Services/ProjectAppService.cs**
 
 ## Format:
 - **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
@@ -22,6 +22,7 @@ Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services
 
 3. Inject below through constructor
 - **IProjectRepository** (store in a private readonly field `_projectRepository`)
+- **IProjectPersistor** (store in a private readonly field `_projectPersistor`)
 - **IServiceProvider** (store in a private readonly field `_serviceProvider`)
 
 4. Place Attributes
@@ -31,28 +32,12 @@ Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services
 5. Public async method signature: `Task<CreateProjectAppResponse> Create(CreateProjectAppRequest request)`
 
     Method **Create** logic: 
-    ```mermaid
-        graph TB
-            subgraph main [Create Project]
-                direction TB
-                start(("Start")) -->
-                |request: CreateProjectAppRequest| newProject["`Create a new **Project**`"] -->
-                return["`Return **CreateProjectAppResponse**`"]
-            end
-    ```
+    Execute `read_action_md_file("UML//Application//ProjectAppService.md","Create")`.
 
 5. Public async method signature: `Task<RetrieveFullProjectAppResponse> RetrieveFullProjects(RetrieveFullProjectAppRequest request)`
 
     Method **RetrieveFullProjects** logic: 
-    ```mermaid
-        graph TB
-            subgraph main [Retrieve Full Projects]
-                direction TB
-                start(("Start")) -->
-                |request: RetrieveFullProjectAppRequest| retrieveAllProjects["`Retrieve all **Project**s`"] -->
-                return["`Return **RetrieveFullProjectAppResponse**`"]
-            end
-    ```
+    Execute `read_action_md_file("UML//Application//ProjectAppService.md","RetrieveFullProjects")`.
 
 ## Context Boundaries:
 - **Ignore Exception Handling:** Omit manual try-catch wrappers since exceptions are decoupled via the infrastructure `LogTrace` attribute tier.
@@ -62,7 +47,8 @@ Target File: **2-Application/Activator.DomainDrivenDesigner.Application.Services
 - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Project//Entities//Project.cs")`.
 
 ## Reference Dependency Interface Signatures:
-- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Repositories//IProjectRepository.cs")`.
+- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Project//IProjectRepository.cs")`.
+- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Project//IProjectPersistor.cs")`.
 
 ## Reference Requests and Responses:
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//AppRequest.cs")`.

@@ -14,7 +14,10 @@ public class ProjectAppService
     private readonly IProjectPersistor _projectPersistor;
     private readonly IServiceProvider _serviceProvider;
 
-    public ProjectAppService(IProjectRepository projectRepository, IProjectPersistor projectPersistor, IServiceProvider serviceProvider)
+    public ProjectAppService(
+        IProjectRepository projectRepository,
+        IProjectPersistor projectPersistor,
+        IServiceProvider serviceProvider)
     {
         _projectRepository = projectRepository;
         _projectPersistor = projectPersistor;
@@ -25,10 +28,13 @@ public class ProjectAppService
     public async Task<CreateProjectAppResponse> Create(CreateProjectAppRequest request)
     {
         var newProject = Project.Create(request.ProjectName, request.ProjectDescription);
-
         await _projectPersistor.CreateProject(newProject).ConfigureAwait(false);
 
-        return new CreateProjectAppResponse(request.Id, true, null);
+        return new CreateProjectAppResponse(
+            request.Id,
+            true,
+            null
+        );
     }
 
     [LogTrace(typeof(RetrieveFullProjectAppResponse))]
@@ -36,6 +42,11 @@ public class ProjectAppService
     {
         var projects = await _projectRepository.RetrieveFullProjects().ConfigureAwait(false);
 
-        return new RetrieveFullProjectAppResponse(request.Id, projects, true, null);
+        return new RetrieveFullProjectAppResponse(
+            request.Id,
+            projects,
+            true,
+            null
+        );
     }
 }
