@@ -1,8 +1,12 @@
 ﻿using Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
+using Markdig;
+using Markdig.Syntax;
 using Microsoft.Agents.AI;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.AI;
 using OllamaSharp;
 using Serilog;
+using System.ComponentModel;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -10,7 +14,8 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 
 public class ActionGeneratorAgent
 {
-    private string ArgumentPattern = @"(?<tool>\w+)\(""(?<path>[^""]+)""\)";
+    private string ReferenceArgumentPattern = @"(?<tool>\w+)\(""(?<path>[^""]+)""\)";
+    private string ActionArgumentPattern    = @"(?<tool>\w+)\(""(?<path>[^""]+)"",""(?<method>[^""]+)""\)";
     private string _projectBaseDirectory;
     private readonly ILogger _logger;
 
@@ -67,35 +72,62 @@ public class ActionGeneratorAgent
 
         for (var i = 0; i < lines.Length; i++)
         {
-            var match = Regex.Match(lines[i], ArgumentPattern);
-            if (match.Success && match.Groups["tool"].Value == "read_code_file")
+            var matchReference = Regex.Match(lines[i], ReferenceArgumentPattern);
+            if (matchReference.Success && matchReference.Groups["tool"].Value == "read_code_file")
             {
-                var argument = match.Groups["path"].Value;
+                var argument = matchReference.Groups["path"].Value;
                 var fileContent = read_code_file(argument);
+                lines[i] = fileContent;
+            }
+
+            var matchAction = Regex.Match(lines[i], ActionArgumentPattern);
+            if (matchAction.Success && matchAction.Groups["tool"].Value == "read_action_md_file")
+            {
+                var argument = matchAction.Groups["path"].Value;
+                var method = matchAction.Groups["method"].Value;
+
+                var fileContent = read_action_md_file(argument, method);
                 lines[i] = fileContent;
             }
         }
         return string.Join(Environment.NewLine, lines);
     }
 
+    [Description("Reads the content of an action in markdown file and returns it wrapped in a code block.")]
+    private string read_action_md_file(string relativePath, string method)
+    {
+        var fileContent = ReadFileContent(relativePath);
+
+        var actionDocument = Markdown.Parse(fileContent);
+
+        var mermaidFencedCodeBlock = actionDocument.Descendants<FencedCodeBlock>()
+                                             .SingleOrDefault(b =>
+                                                    b.Info != null && b.Info.Equals("mermaid") &&
+                                                    b.Arguments != null && b.Arguments.Contains(method));
+                                
+        if (mermaidFencedCodeBlock == null)
+        {
+            _logger.Warning($"{nameof(read_action_md_file)}: Warning: No single mermaid code block(s) found for method '{method}' in {relativePath}.");
+            return string.Empty;
+        }
+
+        var mermaidFencedCodeBlockContent = string.Join(Environment.NewLine, mermaidFencedCodeBlock.Lines.Lines.Select(l => l.ToString()));
+
+        var content = new StringBuilder();
+        content.Append("```mermaid")
+               .Append(Environment.NewLine)
+               .Append(mermaidFencedCodeBlockContent)
+               .Append(Environment.NewLine)
+               .Append("```");
+
+        return content.ToString();
+    }
+
+    [Description("Reads the content of a C# reference code file and returns it wrapped in a code block.")]
     private string read_code_file(string relativePath)
     {
-        // Security boundary check
-        string fullPath = Path.GetFullPath(Path.Combine(_projectBaseDirectory, relativePath));
-        if (!fullPath.StartsWith(_projectBaseDirectory, StringComparison.OrdinalIgnoreCase))
-        {
-            _logger.Warning($"{nameof(read_code_file)}: Warning: Access denied. Cannot read files outside the workspace root. {relativePath}");
-            return string.Empty;
-        }
+        var fileContent = ReadFileContent(relativePath);
 
-        if (!File.Exists(fullPath))
-        {
-            _logger.Warning($"{nameof(read_code_file)}: Warning: File not found at path '{relativePath}'.");
-            return string.Empty;
-        }
-
-        _logger.Information($"{nameof(read_code_file)}: Reading file at path '{relativePath}'.");
-        var fileContent = File.ReadAllText(fullPath);
         var content = new StringBuilder();
         content.Append("```csharp")
                .Append(Environment.NewLine)
@@ -104,5 +136,24 @@ public class ActionGeneratorAgent
                .Append("```");
 
         return content.ToString();
+    }
+
+    private string ReadFileContent(string relativePath)
+    {
+        string fullPath = Path.GetFullPath(Path.Combine(_projectBaseDirectory, relativePath));
+        if (!fullPath.StartsWith(_projectBaseDirectory, StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.Warning($"{nameof(ReadFileContent)}: Warning: Access denied. Cannot read files outside the workspace root. {relativePath}");
+            return string.Empty;
+        }
+
+        if (!File.Exists(fullPath))
+        {
+            _logger.Warning($"{nameof(ReadFileContent)}: Warning: File not found at path '{relativePath}'.");
+            return string.Empty;
+        }
+
+        _logger.Information($"{nameof(ReadFileContent)}: Reading file at path '{relativePath}'.");
+        return File.ReadAllText(fullPath);
     }
 }

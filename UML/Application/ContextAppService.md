@@ -1,5 +1,6 @@
 # Activator.DomainDrivenDesigner.Application.Services
-```mermaid
+
+```mermaid method:"RetrieveContexts"
 graph TB
     subgraph RetrieveContexts
         direction TB
@@ -7,11 +8,14 @@ graph TB
         |request: RetrieveContextAppRequest| loadAllContextInProject["`Load All **Context**s domain model by request.ProjectId`"] -->
         return["`Return RetrieveContextAppResponse with loaded **Context**s`"]
     end
+```
 
+```mermaid method:"CreateContext"
+graph TB
     subgraph CreateContext
         direction TB
         start2(("Start")) --> 
-        |request: CreateContextAppRequest| newContext["New a **Context** domain model with Name and ProjectId from request"]-->
+        |request: CreateContextAppRequest| newContext["New a **Context** domain model with Name and ProjectId from request"] -->
         return2["`Return CreateContextAppResponse with **ContextId**`"]
     end
 ```

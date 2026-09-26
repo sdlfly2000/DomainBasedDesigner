@@ -30,28 +30,14 @@ File: **2-Application/Activator.DomainDrivenDesigner.Application/Services/Contex
 
 5. Public async method signature: `Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)`
 
-    Method **RetrieveContexts** logic: 
-    ```mermaid
-        graph TB
-            subgraph RetrieveContexts
-                direction TB
-                start(("Start")) -->
-                |request: RetrieveContextAppRequest| loadAllContextInProject["`Load All **Context**s domain model by request.ProjectId`"] -->
-                return["`Return RetrieveContextAppResponse with loaded **Context**s`"]
-            end
-    ```
-6. Public async method signature: `Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)`
+   Method **RetrieveContexts** logic: 
+   Execute `read_action_md_file("UML//Application//ContextAppService.md","RetrieveContexts")`.
 
-    Method **CreateContext** logic: 
-    ```mermaid
-        graph TB
-            subgraph CreateContext
-                direction TB
-                start2(("Start")) --> 
-                |request: CreateContextAppRequest| newContext["New a **Context** domain model with Name and ProjectId from request"]-->
-                return2["`Return CreateContextAppResponse with **ContextId**`"]
-            end
-    ```
+6. Public async method signature: `Task<CreateContextAppResponse> CreateContext(CreateContextAppRequest request)`
+             
+   Method **CreateContext** logic:
+   Execute `read_action_md_file("UML//Application//ContextAppService.md","CreateContext")`.
+
 ## Ignore Exception Handler since it is included in LogTrace Attribute
 
 ## Reference Repositories:
@@ -62,7 +48,7 @@ File: **2-Application/Activator.DomainDrivenDesigner.Application/Services/Contex
 - Execute `read_code_file("5-Support//Activator.DomainDrivenDesigner.Support.Core//Marks//EntityBase.cs")`.
 
 ## Reference AppRequests:
-- Execute `read_code_file("2-Application\Activator.DomainDrivenDesigner.Application\AppRequests\RetrieveContextAppRequest.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//RetrieveContextAppRequest.cs")`.
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//CreateContextAppRequest.cs")`.
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//AppRequest.cs")`.
 
