@@ -1,50 +1,68 @@
 using Activator.DomainDrivenDesigner.Domain.Context;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Context;
 using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Entities;
+using Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Exceptions;
 using Common.Core.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
-namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;
-
-[ServiceLocate(typeof(IContextRepository))]
-public class ContextRepository : IContextRepository
+namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories
 {
-    private readonly DomainDbContext _domainDbCtx;
-
-    public ContextRepository(DomainDbContext domainDbCtx)
+    [ServiceLocate(typeof(IContextRepository))]
+    public class ContextRepository : IContextRepository
     {
-        _domainDbCtx = domainDbCtx;
-    }
+        private readonly DomainDbContext _dbContext;
 
-    public async Task<List<Domain.Context.Entities.Context>> RetrieveContexts(Guid projectId)
-    {
-        var contexts = await _domainDbCtx.T_BUSINESS_CONTEXTs
-            .Where(x => x.T_PROJECT_ID == projectId)
-            .ToListAsync().ConfigureAwait(false);
-        return contexts.Select(Map).ToList();
-    }
-
-    public async Task<Guid> CreateContext(string name, Guid projectId)
-    {
-        var context = new T_BUSINESS_CONTEXT
+        public ContextRepository(DomainDbContext dbContext)
         {
-            ID = Guid.NewGuid(),
-            NAME = name,
-            CREATED_UTC = DateTime.UtcNow,
-            T_PROJECT_ID = projectId
-        };
+            _dbContext = dbContext;
+        }
 
-        await _domainDbCtx.T_BUSINESS_CONTEXTs.AddAsync(context).ConfigureAwait(false);
-        await _domainDbCtx.SaveChangesAsync().ConfigureAwait(false);
-        return context.ID;
-    }
-
-    private Domain.Context.Entities.Context Map(T_BUSINESS_CONTEXT rowBusinessContext)
-    {
-        return new Domain.Context.Entities.Context(rowBusinessContext.ID)
+        public async Task<List<Domain.Context.Entities.Context>> RetrieveContexts(Guid projectId)
         {
-            Name = rowBusinessContext.NAME ?? string.Empty,
-            CreatedOnUtc = rowBusinessContext.CREATED_UTC
-        };
-    }
+            var loadAllContextDatabaseEntity = await _dbContext.T_BUSINESS_CONTEXTs
+                .Where(context => context.T_PROJECT_ID == projectId)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            var mapToContext = loadAllContextDatabaseEntity.Select(rowContext => this.mapToContext(rowContext)).ToList();
+
+            return mapToContext;
+        }
+
+        public async Task<Guid> CreateContext(string name, Guid projectId)
+        {
+            var newContext = new T_BUSINESS_CONTEXT
+            {
+                ID = Guid.NewGuid(),
+                NAME = name,
+                CREATED_UTC = DateTime.UtcNow,
+                T_PROJECT_ID = projectId
+            };
+
+            _dbContext.T_BUSINESS_CONTEXTs.Add(newContext);
+            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            return newContext.ID;
+        }
+
+        public async Task<Guid> UpdateContext(Domain.Context.Entities.Context context)
+        {
+            var loadContextDatabseEntity = await _dbContext.T_BUSINESS_CONTEXTs.FindAsync(context.ID).ConfigureAwait(false);
+
+            DomainEntityNotFoundException.ThrowIfNull(context.ID, loadContextDatabseEntity);
+
+            loadContextDatabseEntity.NAME = context.Name;
+
+            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            return loadContextDatabseEntity.ID;
+        }
+
+        private Domain.Context.Entities.Context mapToContext(T_BUSINESS_CONTEXT rowContext)
+        {
+            return new Domain.Context.Entities.Context(rowContext.ID)
+            {
+                Name = rowContext.NAME
+            };
+        }
 }

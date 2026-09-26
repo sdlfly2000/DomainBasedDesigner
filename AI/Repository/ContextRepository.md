@@ -1,15 +1,18 @@
 ## Generate complete C# code 
-File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories/ContextRepository.cs**
+File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer/Repositories/ContextRepository.cs**
 
 ## Format:
-Write a C# **ContextRepository** class
+- **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
 
-```csharp
-public class ContextRepository
-{
-    ### Your Code Fixed (Allman Style)
-}
-```
+- Write a C# **ContextRepository** class
+    ```csharp
+    namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories;
+
+    public class ContextRepository
+    {
+        // Your Full Code Implementation (Allman Style including Using statements)
+    }
+    ```
 
 ## Rules:
 1. Class: **ContextRepository**, Implements: **IContextRepository**
@@ -29,67 +32,68 @@ public class ContextRepository
         graph TB
             subgraph main [RetrieveContexts]
                 direction TB
-                start(("Start"s)) -->
+                start(("Start")) -->
                 |Argument: 
-                - projectId: Guid| loadAllContext["Load All Contexts where ProdjectId == projectId"] -->
-                mapContext["Map T_BUSINESS_CONTEXT to Context -> Map(T_BUSINESS_CONTEXT)"] -->
+                - projectId: Guid| loadAllContextDatabaseEntity["`Load All **T_BUSINESS_CONTEXT**s where ProjectId == projectId`"] -->
+                mapToContext["`Map **T_BUSINESS_CONTEXT** database entity to **Context** doamin model`"] -->
                 return["`Return **Context**s`"]
             end
     ```
 
-6. Public async method signature: `Task<Guid> CreateContext(string name, Guid projectId)`
+5. Public async method signature: `Task<Guid> CreateContext(string name, Guid projectId)`
 
     Method **CreateContext** logic: 
     ```mermaid
         graph TB
             subgraph main [CreateContext]
                 direction TB
-                start(("Start"s)) -->
+                start(("Start")) -->
                 |Argument: 
                 - name: string, 
-                - projectId: Guid| newContext["New a T_BUSINESS_CONTEXT with Name and ProjectId, Guid.NewGuid() -> Id and DateTime.UtcNow -> CREATED_UTC"] -->
+                - projectId: Guid| newContext["`New a **T_BUSINESS_CONTEXT** with Name and ProjectId, Guid.NewGuid()`"] -->
                 AddToContext["`Add it to **T_BUSINESS_CONTEXT**`"] -->
                 return["`Return ContextId`"]
             end
     ```
+
+5. Public async method signature: `Task<Guid> UpdateContext(Context context)`
+
+    Method **UpdateContext** logic: 
+    ```mermaid
+        graph TB
+            subgraph main [UpdateContext]
+                direction TB
+                start(("Start")) -->
+                |Argument: 
+                - context: Context| loadContextDatabseEntity["Load existing **T_BUSINESS_CONTEXT** from database by context.ID"] -->
+                DomainEntityNotFoundException -->
+                updateContext["Update **T_BUSINESS_CONTEXT** with values from context"] -->
+                return["`Return ContextId`"]
+            end
+    ```
+
 ## Private Method:
-- private method signature: `private Domain.Entities.Context Map(T_BUSINESS_CONTEXT rowBusinessContext)`
+```csharp
+private Context mapToContext(T_BUSINESS_CONTEXT rowContext);
+```
+
+## Persistence Rules:
+- **Self-Contained Commit:** Call `await _dbContext.SaveChangesAsync().ConfigureAwait(false)` immediately after adding the entity to ensure change state tracking is flushed to SQL Server before returning.
 
 ## Ignore Exception Handler since it is included in LogTrace Attribute
 
-## Reference Interface Signatures:
+## Reference Exceptions:
+- Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Exceptions//DomainEntityNotFoundException.cs")`.
 
-**DomainDbContext**:
-```csharp
-public virtual DbSet<T_BUSINESS_CONTEXT> T_BUSINESS_CONTEXTs { get; set; }
-```
+## Reference Database Context:
+- Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Context//DomainDbContext.cs")`.
+
 ## Reference Database Entities:
-```csharp
-public partial class T_BUSINESS_CONTEXT
-{
-    public Guid ID { get; set; }
+- Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Entities//T_BUSINESS_CONTEXT.cs")`.
 
-    public string? NAME { get; set; }
-
-    public DateTime CREATED_UTC { get; set; }
-
-    public Guid? T_PROJECT_ID { get; set; }
-}
-```
-
-## Reference Domain Entities:
-```mermaid
-classDiagram
-namespace nsContext["Domain.Context"] {
-    class Context {
-        <<AggregateRoot>>
-        + Id: Guid
-        + Name: String
-        + CreatedOnUtc: Datetime
-    }
-}
-```
-
+## Reference Domain Models:
+- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Context//Entities//Context.cs")`.
+- Execute `read_code_file("5-Support//Activator.DomainDrivenDesigner.Support.Core//Marks//EntityBase.cs")`.
 
 ## Output
 Only output full source code of **ContextRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.

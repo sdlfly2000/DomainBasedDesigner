@@ -19,7 +19,20 @@ graph TB
         return2["`Return CreateContextAppResponse with **ContextId**`"]
     end
 ```
+
+```mermaid method:"UpdateContext"
+graph TB
+    subgraph UpdateContext
+        direction TB
+        start2(("Start")) --> 
+        |request: UpdateContextAppRequest| existingContext["Load existing **Context** domain model by request.ContextId"] -->
+        updateContext["Update **Context** domain model with Name from request"] -->
+        return2["`Return UpdateContextAppResponse`"]
+    end
+```
+
 ---
+
 
 ```mermaid
 classDiagram
