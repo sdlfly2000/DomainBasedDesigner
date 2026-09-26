@@ -28,7 +28,9 @@ File: **2-Application/Activator.DomainDrivenDesigner.Application/Services/Contex
 - Decorate **ContextAppService** class with [ServiceLocate(typeof(ContextAppService))]
 - Decorate each method below with [LogTrace(typeof(*response))].
 
-5. Public async method signature: `Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)`
+5. Ignore Try and Exception Handler.
+
+6. Public async method signature: `Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)`
 
    Method **RetrieveContexts** logic: 
    Execute `read_action_md_file("UML//Application//ContextAppService.md","RetrieveContexts")`.
@@ -38,10 +40,13 @@ File: **2-Application/Activator.DomainDrivenDesigner.Application/Services/Contex
    Method **CreateContext** logic:
    Execute `read_action_md_file("UML//Application//ContextAppService.md","CreateContext")`.
 
-## Ignore Exception Handler since it is included in LogTrace Attribute
+6. Public async method signature: `Task<UpdateContextAppResponse> UpdateContext(UpdateContextAppRequest request)`
+             
+   Method **UpdateContext** logic:
+   Execute `read_action_md_file("UML//Application//ContextAppService.md","UpdateContext")`.
 
 ## Reference Repositories:
-- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Context//IConetxtRepository.cs")`.
+- Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Context//IContextRepository.cs")`.
 
 ## Reference Domain Models:
 - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//Context//Entities//Context.cs")`.
@@ -50,11 +55,13 @@ File: **2-Application/Activator.DomainDrivenDesigner.Application/Services/Contex
 ## Reference AppRequests:
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//RetrieveContextAppRequest.cs")`.
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//CreateContextAppRequest.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//UpdateContextAppRequest.cs")`.
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//AppRequest.cs")`.
 
 ## Reference AppResponses:
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//RetrieveContextAppResponse.cs")`.
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//CreateContextAppResponse.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//UpdateContextAppResponse.cs")`.
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//AppResponse.cs")`.
 
 ## Output

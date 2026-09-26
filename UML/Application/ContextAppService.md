@@ -5,7 +5,7 @@ graph TB
     subgraph RetrieveContexts
         direction TB
         start(("Start")) -->
-        |request: RetrieveContextAppRequest| loadAllContextInProject["`Load All **Context**s domain model by request.ProjectId`"] -->
+        |request: RetrieveContextAppRequest| RetrieveContexts["`Load All **Context**s domain model by request.ProjectId`"] -->
         return["`Return RetrieveContextAppResponse with loaded **Context**s`"]
     end
 ```
@@ -15,7 +15,7 @@ graph TB
     subgraph CreateContext
         direction TB
         start2(("Start")) --> 
-        |request: CreateContextAppRequest| newContext["New a **Context** domain model with Name and ProjectId from request"] -->
+        |request: CreateContextAppRequest| CreateContext["`New a **Context** domain model with Name and ProjectId from request`"] -->
         return2["`Return CreateContextAppResponse with **ContextId**`"]
     end
 ```
@@ -25,8 +25,7 @@ graph TB
     subgraph UpdateContext
         direction TB
         start2(("Start")) --> 
-        |request: UpdateContextAppRequest| existingContext["Load existing **Context** domain model by request.ContextId"] -->
-        updateContext["Update **Context** domain model with Name from request"] -->
+        |request: UpdateContextAppRequest| updateContext["`Update **Context** domain model with Name from request`"] -->
         return2["`Return UpdateContextAppResponse`"]
     end
 ```
@@ -63,11 +62,23 @@ classDiagram
         + Contexts: List~Context~
     }
 
+    class UpdateContextAppRequest {
+        + ContextId: Guid,
+        + Name: string
+    }
+
+    class UpdateContextAppResponse {
+        + ContextId: Guid
+    }
+
     %% Relationship
     AppRequest <|-- RetrieveContextAppRequest
     AppResponse <|-- RetrieveContextAppResponse
 
     AppRequest <|-- CreateContextAppRequest
     AppResponse <|-- CreateContextAppResponse
+
+    AppRequest <|-- UpdateContextAppRequest
+    AppResponse <|-- UpdateContextAppResponse
 
 ```

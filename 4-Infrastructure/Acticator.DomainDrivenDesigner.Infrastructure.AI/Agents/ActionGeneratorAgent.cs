@@ -96,7 +96,7 @@ public class ActionGeneratorAgent
     [Description("Reads the content of an action in markdown file and returns it wrapped in a code block.")]
     private string read_action_md_file(string relativePath, string method)
     {
-        var fileContent = ReadFileContent(relativePath);
+        var fileContent = ReadFileContent(relativePath, method);
 
         var actionDocument = Markdown.Parse(fileContent);
 
@@ -138,7 +138,7 @@ public class ActionGeneratorAgent
         return content.ToString();
     }
 
-    private string ReadFileContent(string relativePath)
+    private string ReadFileContent(string relativePath, string? method = null)
     {
         string fullPath = Path.GetFullPath(Path.Combine(_projectBaseDirectory, relativePath));
         if (!fullPath.StartsWith(_projectBaseDirectory, StringComparison.OrdinalIgnoreCase))
@@ -153,7 +153,7 @@ public class ActionGeneratorAgent
             return string.Empty;
         }
 
-        _logger.Information($"{nameof(ReadFileContent)}: Reading file at path '{relativePath}'.");
+        _logger.Information($"{nameof(ReadFileContent)}: Reading file at path '{relativePath}' {method ?? ""}.");
         return File.ReadAllText(fullPath);
     }
 }
