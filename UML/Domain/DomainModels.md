@@ -62,7 +62,7 @@ Project "1" ..> "0..n" Context
 Requirement "1" ..> BusinessModel : 0..*
 Requirement "1" ..> BusinessAction : 0..*
 
-BusinessModel "0..n" ..> Context : 1
+BusinessModel "0..n" ..> "1" Context
 BusinessAction "0..n" ..> "1" Context
 
 ```
