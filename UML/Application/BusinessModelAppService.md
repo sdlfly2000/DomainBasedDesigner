@@ -16,7 +16,7 @@ graph TB
         direction TB
         start(("Start")) -->
 
-        |: UpsertBusinessModelsAppRequest| newRetrieveBusinessModelByIdAppRequest["`New a RetrieveBusinessModelByIdAppRequest with request.ID and request.Model.ID`"] -->
+        |request: UpsertBusinessModelsAppRequest| newRetrieveBusinessModelByIdAppRequest["`New a RetrieveBusinessModelByIdAppRequest with request.ID and request.Model.ID`"] -->
         
         %% Invoke method RetrieveBusinessModelById in this service%%
         RetrieveBusinessModelById["`Retrieve **BusinessModel** with created RetrieveBusinessModelByIdAppRequest`"] -->
