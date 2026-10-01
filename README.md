@@ -11,3 +11,7 @@
 
 - Display Business Actions with flow chart
 
+## Create Windows Service
+```bash
+New-Service -Name "MyService" -BinaryPathName "C:\Path\To\App.exe"
+```

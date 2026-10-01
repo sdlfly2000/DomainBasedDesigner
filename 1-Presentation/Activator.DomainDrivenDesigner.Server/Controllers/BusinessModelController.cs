@@ -11,11 +11,10 @@ namespace Activator.DomainDrivenDesigner.Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [EnableCors("AllowDDDClientPolicy")]
-public class BusinessModelController(RequirementAppService requirementAppService, IRequestContext requestContext) : ControllerBase
+public class BusinessModelController(BusinessModelAppService businessModelAppService, IRequestContext requestContext) : ControllerBase
 {
     private readonly IRequestContext _requestContext = requestContext;
-
-    private readonly RequirementAppService  _requirementAppService = requirementAppService;
+    private readonly BusinessModelAppService _businessModelAppService = businessModelAppService;
 
     [HttpPost("upsert/{requirementId}")]
     public async Task<ActionResult<bool>> UpsertBusinessModel(Guid requirementId, [FromBody] UpsertBusinessModelModel model)
@@ -35,7 +34,7 @@ public class BusinessModelController(RequirementAppService requirementAppService
             ContextId = Guid.Parse(model.contextId)
         };
 
-        var response = await _requirementAppService.UpsertProjectBusinessModels(
+        var response = await _businessModelAppService.UpsertProjectBusinessModels(
             new UpsertBusinessModelsAppRequest(requestId, requirementId, businessModel))
             .ConfigureAwait(false);
 
@@ -52,10 +51,10 @@ public class BusinessModelController(RequirementAppService requirementAppService
 
         var requestId = Guid.Parse(_requestContext.TraceId);
 
-        var response = await _requirementAppService.RetrieveBusinessModelByName(
+        var response = await _businessModelAppService.RetrieveBusinessModelByName(
             new RetrieveBusinessModelsByNameAppRequest(requestId, requirementId, modelName))
             .ConfigureAwait(false);
 
-        return response.Success ? Ok(response.BusinessModel) : BadRequest(response);
+        return response.Success ? Ok(response.BusinessModel) : BadRequest(response.ErrorMessage);
     }
 }

@@ -133,7 +133,7 @@ export class RequirementDetailComponent implements AfterViewInit {
                 },
                 error: (error) => {
                     if (error instanceof HttpErrorResponse) {
-                        this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
+                        this.statusMessageService.StatusMessage = new StatusMessageModel(error.error + "\n" + error.message, EnumInfoSeverity.Error);
                     }
                 },
                 complete: () => this.cdr.detectChanges()

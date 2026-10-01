@@ -34,9 +34,11 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
             subgraph main [Load BusinessModel By Id]
                 direction TB
                 start(("Start")) -->
-                |Argument: 
-                - businessModelId: Guid| LoadByIdFromDb["`Eagerly load **T_BUSINESS_MODEL** including **CONTEXT** from DomainDbContext. Note only single T_BUSINESS_MODEL via businessModelId, or throw **DomainEntityNotFoundException**`"] -->
+                |Argument: businessModelId: Guid| LoadByIdFromDb["`Eagerly load **T_BUSINESS_MODEL** including **CONTEXT** from DomainDbContext. Note only single T_BUSINESS_MODEL via businessModelId, or throw **DomainEntityNotFoundException**`"] -->
+                
+                %% BusinessModel.ContentMermaid = T_BUSINESS_MODEL.RAW_DESCRIPTION
                 MapToBusniessModelDoaminModel["`Map loaded **T_BUSINESS_MODEL** database entity into **BusinessModel** domain model`"] -->
+
                 return["`Return mapped **BusinessModel**`"]
             end
     ```
@@ -51,8 +53,10 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
                 start(("Start")) -->
                 |Argument: 
                 - requirementId: Guid| LoadByRequirementIdFromDb["`Load **T_BUSINESS_MODEL** DomainDbContext by requirementId, including **T_BUSINESS_CONTEXT**`"] -->
-                DomainEntityNotFoundException -->
+
+                %% BusinessModel.ContentMermaid = T_BUSINESS_MODEL.RAW_DESCRIPTION
                 MapToBusniessModelDoaminModel["`Map loaded **T_BUSINESS_MODEL** database entity to **BusinessModel** domain model`"] -->
+
                 return["`Return mapped **BusinessModel** domain model`"]
             end
     ```

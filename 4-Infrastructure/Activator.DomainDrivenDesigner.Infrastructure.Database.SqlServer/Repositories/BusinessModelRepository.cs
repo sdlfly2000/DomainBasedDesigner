@@ -20,39 +20,23 @@ public class BusinessModelRepository : IBusinessModelRepository
 
     public async Task<BusinessModel> LoadBusinessModelById(Guid businessModelId)
     {
-        var rowBusinessModel = await LoadByIdFromDb(businessModelId).ConfigureAwait(false);
+        var rowBusinessModel = await _dbContext.T_BUSINESS_MODELs
+            .Include(bm => bm.CONTEXT)
+            .FirstOrDefaultAsync(bm => bm.ID == businessModelId, default);
+
+        DomainEntityNotFoundException.ThrowIfNull(businessModelId, rowBusinessModel);
+
         return MapToBusniessModelDoaminModel(rowBusinessModel);
     }
 
     public async Task<List<BusinessModel>> LoadBusinessModelsByRequirementId(Guid requirementId)
     {
-        var rowsBusinessModel = await LoadByRequirementIdFromDb(requirementId).ConfigureAwait(false);
-        if (!rowsBusinessModel.Any())
-        {
-            throw new DomainEntityNotFoundException($"No Business Models found for Requirement ID({requirementId}).");
-        }
-
-        return rowsBusinessModel.Select(MapToBusniessModelDoaminModel).ToList();
-    }
-
-    private async Task<T_BUSINESS_MODEL> LoadByIdFromDb(Guid businessModelId)
-    {
-        var rowBusinessModel = await _dbContext.T_BUSINESS_MODELs
-            .Include(bm => bm.CONTEXT)
-            .FirstOrDefaultAsync(bm => bm.ID == businessModelId, default).ConfigureAwait(false);
-
-        DomainEntityNotFoundException.ThrowIfNull(businessModelId, rowBusinessModel);
-        return rowBusinessModel;
-    }
-
-    private async Task<List<T_BUSINESS_MODEL>> LoadByRequirementIdFromDb(Guid requirementId)
-    {
         var rowsBusinessModel = await _dbContext.T_BUSINESS_MODELs
             .Include(bm => bm.CONTEXT)
             .Where(bm => bm.REQUIREMENT_ID == requirementId)
-            .ToListAsync(default).ConfigureAwait(false);
+            .ToListAsync(default);
 
-        return rowsBusinessModel;
+        return rowsBusinessModel.Select(MapToBusniessModelDoaminModel).ToList();
     }
 
     private BusinessModel MapToBusniessModelDoaminModel(T_BUSINESS_MODEL rowBusinessModel)
@@ -60,6 +44,7 @@ public class BusinessModelRepository : IBusinessModelRepository
         return new BusinessModel(rowBusinessModel.ID)
         {
             Name = rowBusinessModel.NAME,
+            ContentMermaid = rowBusinessModel.RAW_DESCRIPTION,
             ContextId = rowBusinessModel.CONTEXT_ID
         };
     }
