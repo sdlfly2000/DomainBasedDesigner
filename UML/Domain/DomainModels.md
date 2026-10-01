@@ -11,6 +11,7 @@ namespace nsProject["Domain.Project"] {
         + CreatedOnUtc: Datetime
         + Requirements: List~Requirement~
         + ContextIds: List~Guid~
+        + BaseDirectory: String?
     }
 
     class Requirement {

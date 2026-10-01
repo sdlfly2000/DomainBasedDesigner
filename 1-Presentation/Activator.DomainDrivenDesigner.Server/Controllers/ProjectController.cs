@@ -34,7 +34,7 @@ public class ProjectController(ProjectAppService projectAppService, IRequestCont
         var requestId = Guid.Parse(_requestContext.TraceId);
 
         var response = await _projectAppService.Create(
-            new CreateProjectAppRequest(requestId, request.name, request.description))
+            new CreateProjectAppRequest(requestId, request.name, request.description, request.baseDirectory))
             .ConfigureAwait(false);
 
         return response.Success ? Ok() : BadRequest(response.ErrorMessage);

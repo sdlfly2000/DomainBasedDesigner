@@ -56,7 +56,8 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Persi
                 ID = project.ID,
                 NAME = project.Name,
                 DESCRIPTION = project.Description,
-                CREATED_UTC = project.CreatedOnUtc
+                CREATED_UTC = project.CreatedOnUtc,
+                BASE_DIRECTORY = project.BaseDirectory
             };
 
             return newProject;

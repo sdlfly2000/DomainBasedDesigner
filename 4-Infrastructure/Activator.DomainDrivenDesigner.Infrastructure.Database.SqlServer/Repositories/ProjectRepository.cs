@@ -58,29 +58,29 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repos
 
         private Project MapToProjectDomainModel(T_PROJECT rowProject)
         {
-            var project = new Project(rowProject.ID, rowProject.NAME)
+            var project = new Project(
+                ID: rowProject.ID,
+                ProjectName: rowProject.NAME
+            )
             {
                 Description = rowProject.DESCRIPTION,
-                CreatedOnUtc = rowProject.CREATED_UTC
+                BaseDirectory = rowProject.BASE_DIRECTORY,
+                CreatedOnUtc = rowProject.CREATED_UTC,
+                Requirements = rowProject.T_REQUIREMENTs.Select(MapToRequirementDomainModel).ToList()
             };
-
-            foreach (var requirementRow in rowProject.T_REQUIREMENTs)
-            {
-                project.Requirements.Add(MapToRequirementDomainModel(requirementRow));
-            }
 
             return project;
         }
 
         private Requirement MapToRequirementDomainModel(T_REQUIREMENT rowRequirment)
         {
-            var requirement = new Requirement(rowRequirment.ID)
+            var requirement = new Requirement(
+                ID: rowRequirment.ID
+            )
             {
                 Description = rowRequirment.DESCRIPTION,
                 CreatedOnUtc = rowRequirment.CREATE_UTC
             };
-
-            // Do NOT load nested T_BUSINESS_ACTION nor T_BUSINESS_MODEL in T_REQUIREMENT
 
             return requirement;
         }

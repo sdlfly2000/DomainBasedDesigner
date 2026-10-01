@@ -40,7 +40,7 @@ public class ActionGeneratorAgentTest
     public async Task Convert_ShouldReturnConvertedClasses_WhenValidInstructionIsProvided()
     {
         // Arrange
-        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Repository", "BusinessModelRepository.md");
+        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Repository", "ProjectRepository.md");
         var instruction = await File.ReadAllTextAsync(aiInstruction);
 
         // Action
