@@ -26,6 +26,7 @@
   </Folder>
   <Folder Name="/AI/" />
   <Folder Name="/AI/Actions/">
+    <File Path="AI/Actions/BusinessModelAppService.md" />
     <File Path="AI/Actions/ContextAppService.md" />
     <File Path="AI/Actions/ProjectAppService.md" />
   </Folder>
@@ -40,6 +41,7 @@
   </Folder>
   <Folder Name="/UML/" />
   <Folder Name="/UML/Application/">
+    <File Path="UML/Application/BusinessModelAppService.md" />
     <File Path="UML/Application/ContextAppService.md" />
     <File Path="UML/Application/ProjectAppService.md" />
   </Folder>

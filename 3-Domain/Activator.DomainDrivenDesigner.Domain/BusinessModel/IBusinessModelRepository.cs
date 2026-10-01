@@ -2,7 +2,7 @@
 
 public interface IBusinessModelRepository
 {
-    Task<Entities.BusinessModel> RetrieveBusinessModelById(Guid businessModelId);
+    Task<Entities.BusinessModel> LoadBusinessModelById(Guid businessModelId);
 
-    Task<List<BusinessModel.Entities.BusinessModel>> RetrieveBusinessModelsByRequirementId(Guid RequirementId);
+    Task<List<BusinessModel.Entities.BusinessModel>> LoadBusinessModelsByRequirementId(Guid RequirementId);
 }

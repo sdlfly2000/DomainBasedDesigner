@@ -52,6 +52,9 @@ public class ActionGeneratorAgent
     public async Task<string> Create(string input, CancellationToken token)
     {
         var parsedInput = FindAndReplaceReference(input);
+
+        _logger.Debug($"Parsed input: {Environment.NewLine}{parsedInput}");
+
         var response = await _aiAgent
             .RunAsync(
             $"Please create following instruction to generate C# classes in C# syntax, {parsedInput}",
@@ -111,7 +114,11 @@ public class ActionGeneratorAgent
             return string.Empty;
         }
 
-        var mermaidFencedCodeBlockContent = string.Join(Environment.NewLine, mermaidFencedCodeBlock.Lines.Lines.Select(l => l.ToString()));
+        var mermaidFencedCodeBlockContent = string.Join(
+                                                Environment.NewLine, 
+                                                mermaidFencedCodeBlock.Lines.Lines
+                                                .Where(l => !string.IsNullOrWhiteSpace(l.ToString()))
+                                                .Select(l => l.ToString()));
 
         var content = new StringBuilder();
         content.Append("```mermaid")

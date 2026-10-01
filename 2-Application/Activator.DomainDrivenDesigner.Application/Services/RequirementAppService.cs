@@ -86,34 +86,4 @@ public class RequirementAppService(
 
         return new RetrieveRequirementResponse(requestId, requirement, true, string.Empty);
     }
-
-    [LogTrace(returnType: typeof(UpsertBusinessModelsAppResponse))]
-    public async Task<UpsertBusinessModelsAppResponse> UpsertProjectBusinessModels(UpsertBusinessModelsAppRequest request)
-    {
-        if (request.Model.ID != Guid.Empty)
-        {
-            var businessModels = await _businessModelRepository.RetrieveBusinessModelById(request.Model.ID).ConfigureAwait(false);
-
-            if (businessModels != null)
-            {
-                return await _businessModelPersistor.UpdateBusinessModel(request.Model).ConfigureAwait(false) != Guid.Empty
-                        ? new UpsertBusinessModelsAppResponse(request.Id, true, null)
-                        : new UpsertBusinessModelsAppResponse(request.Id, false, "Failed to update business model");
-            }
-        }
-
-        _ = await _businessModelPersistor.CreateBusinessModel(request.Model, request.RequirementId).ConfigureAwait(false);
-
-        return new UpsertBusinessModelsAppResponse(request.Id, true, null);
-    }
-
-    [LogTrace(returnType: typeof(RetrieveBusinessModelByNameAppResponse))]
-    public async Task<RetrieveBusinessModelByNameAppResponse> RetrieveBusinessModelByName(RetrieveBusinessModelsByNameAppRequest request)
-    {
-        var models = await _businessModelRepository.RetrieveBusinessModelsByRequirementId(request.RequirementId).ConfigureAwait(false);
-
-        var model = models.SingleOrDefault(m => m.Name == request.ModelName);
-
-        return new RetrieveBusinessModelByNameAppResponse(request.Id, model, true, string.Empty);
-    }
 }

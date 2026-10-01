@@ -1,5 +1,5 @@
 ## Generate complete C# code 
-File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Repositories/BusinessModelRepository.cs**
+File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer/Repositories/BusinessModelRepository.cs**
 
 ## Format:
 - **Formatting Style:** Strictly use Allman style (opening braces `{` must always be placed on a new line for classes, methods, and control blocks).
@@ -26,12 +26,12 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
 4. Place Attributes
 - Put Attribute [ServiceLocate(typeof(IBusinessModelRepository))] to **BusinessModelRepository** class.
 
-5. Public async method signature: `Task<BusinessModel> RetrieveBusinessModelById(Guid businessModelId)`
+5. Public async method signature: `Task<BusinessModel> LoadBusinessModelById(Guid businessModelId)`
 
-    Method **RetrieveBusinessModelById** logic: 
+    Method **LoadBusinessModelById** logic: 
     ```mermaid
         graph TB
-            subgraph main [Retrieve BusinessModel ByI d]
+            subgraph main [Load BusinessModel By Id]
                 direction TB
                 start(("Start")) -->
                 |Argument: 
@@ -41,12 +41,12 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
             end
     ```
 
-5. Public async method signature: `Task<List<BusinessModel>> RetrieveBusinessModelsByRequirementId(Guid requirementId)`
+5. Public async method signature: `Task<List<BusinessModel>> LoadBusinessModelsByRequirementId(Guid requirementId)`
 
-    Method **RetrieveBusinessModelByRequirementId** logic: 
+    Method **LoadBusinessModelsByRequirementId** logic: 
     ```mermaid
         graph TB
-            subgraph main [Retrieve BusinessModel By RequirementId]
+            subgraph main [Load BusinessModel By RequirementId]
                 direction TB
                 start(("Start")) -->
                 |Argument: 

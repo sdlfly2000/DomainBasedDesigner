@@ -5,7 +5,7 @@ graph TB
     subgraph RetrieveContexts
         direction TB
         start(("Start")) -->
-        |request: RetrieveContextAppRequest| RetrieveContexts["`Load All **Context**s domain model by request.ProjectId`"] -->
+        |request: RetrieveContextAppRequest| retrieveContexts["`Load All **Context**s domain model by request.ProjectId`"] -->
         return["`Return RetrieveContextAppResponse with loaded **Context**s`"]
     end
 ```
@@ -15,7 +15,7 @@ graph TB
     subgraph CreateContext
         direction TB
         start2(("Start")) --> 
-        |request: CreateContextAppRequest| CreateContext["`New a **Context** domain model with Name and ProjectId from request`"] -->
+        |request: CreateContextAppRequest| createContext["`New a **Context** domain model with Name and ProjectId from request`"] -->
         return2["`Return CreateContextAppResponse with **ContextId**`"]
     end
 ```

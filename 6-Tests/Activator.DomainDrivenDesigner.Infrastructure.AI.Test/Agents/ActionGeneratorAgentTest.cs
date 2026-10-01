@@ -4,6 +4,8 @@ using Activator.DomainDrivenDesigner.Support.Core.Configurations;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Serilog;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Test.Agents;
 
@@ -38,7 +40,7 @@ public class ActionGeneratorAgentTest
     public async Task Convert_ShouldReturnConvertedClasses_WhenValidInstructionIsProvided()
     {
         // Arrange
-        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Actions", "ContextAppService.md");
+        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Actions", "BusinessModelAppService.md");
         var instruction = await File.ReadAllTextAsync(aiInstruction);
 
         // Action
