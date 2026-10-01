@@ -17,8 +17,6 @@ public partial class T_BUSINESS_ACTION
 
     public Guid? REQUIREMENT_ID { get; set; }
 
-    public Guid? PARENT_BUSINESS_ACTION_ID { get; set; }
-
     public virtual T_BUSINESS_CONTEXT? CONTEXT { get; set; }
 
     public virtual T_REQUIREMENT? REQUIREMENT { get; set; }

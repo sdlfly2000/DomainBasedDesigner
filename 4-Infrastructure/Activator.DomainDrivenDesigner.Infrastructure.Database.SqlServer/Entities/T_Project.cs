@@ -13,6 +13,8 @@ public partial class T_PROJECT
 
     public DateTime CREATED_UTC { get; set; }
 
+    public string? BASE_DIRECTORY { get; set; }
+
     public virtual ICollection<T_BUSINESS_CONTEXT> T_BUSINESS_CONTEXTs { get; set; } = new List<T_BUSINESS_CONTEXT>();
 
     public virtual ICollection<T_REQUIREMENT> T_REQUIREMENTs { get; set; } = new List<T_REQUIREMENT>();

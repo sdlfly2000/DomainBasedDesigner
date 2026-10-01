@@ -3,6 +3,7 @@ Create table dbo.T_PROJECT
     ID              UNIQUEIDENTIFIER not null,
     NAME            NVARCHAR(100) not null,
     DESCRIPTION     NVARCHAR(255),
+    BASE_DIRECTORY  NVARCHAR(MAX),
     CREATED_UTC     DATETIME2 not null
 );
 
