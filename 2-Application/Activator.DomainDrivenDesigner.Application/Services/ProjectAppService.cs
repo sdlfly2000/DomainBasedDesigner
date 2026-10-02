@@ -32,9 +32,8 @@ public class ProjectAppService
 
         return new CreateProjectAppResponse(
             request.Id,
-            null,
-            true
-        );
+            true,
+            null);
     }
 
     [LogTrace(typeof(RetrieveFullProjectAppResponse))]
@@ -44,9 +43,9 @@ public class ProjectAppService
 
         return new RetrieveFullProjectAppResponse(
             request.Id,
-            projects,
             true,
-            null
+            null,
+            projects
         );
     }
 }

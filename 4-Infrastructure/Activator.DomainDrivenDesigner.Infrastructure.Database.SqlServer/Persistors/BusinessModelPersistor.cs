@@ -40,9 +40,10 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer.Persi
             DomainEntityNotFoundException.ThrowIfNull(model.ID, businessModelEntity);
 
             businessModelEntity.NAME = model.Name;
-            businessModelEntity.REQUIREMENT_ID = model.ContextId;
             businessModelEntity.RAW_DESCRIPTION = model.ContentMermaid;
+            businessModelEntity.CONTEXT_ID = model.ContextId;
 
+            _dbContext.T_BUSINESS_MODELs.Update(businessModelEntity);
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
             return businessModelEntity.ID;

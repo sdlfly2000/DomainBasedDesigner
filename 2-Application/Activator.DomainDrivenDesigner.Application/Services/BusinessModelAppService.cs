@@ -30,9 +30,9 @@ public class BusinessModelAppService
         var businessModel = await _businessModelRepository.LoadBusinessModelById(request.ModelId).ConfigureAwait(false);
         return new RetrieveBusinessModelByIdAppResponse(
             request.Id,
-            businessModel,
+            businessModel != null,
             null,
-            businessModel != null);
+            businessModel);
     }
 
     [LogTrace(typeof(UpsertBusinessModelsAppResponse))]
@@ -64,8 +64,8 @@ public class BusinessModelAppService
 
         return new RetrieveBusinessModelByNameAppResponse(
             request.Id,
-            filteredBusinessModel,
+            filteredBusinessModel != null,
             null,
-            filteredBusinessModel != null);
+            filteredBusinessModel);
     }
 }

@@ -1,4 +1,4 @@
 namespace Activator.DomainDrivenDesigner.Application.AppResponses;
 
 public record UpsertBusinessModelsAppResponse(Guid RequestId, bool Success, string? ErrorMessage) 
-    : AppResponse(RequestId, ErrorMessage, Success);
+    : AppResponse(RequestId, Success, ErrorMessage);

@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdeaActivator.Common.Core" Version="1.1.28" />
-    <PackageReference Include="IdeaActivator.Common.Core.AOP" Version="1.0.11" />
+    <PackageReference Include="IdeaActivator.Common.Core.AOP" Version="1.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
       <PrivateAssets>all</PrivateAssets>

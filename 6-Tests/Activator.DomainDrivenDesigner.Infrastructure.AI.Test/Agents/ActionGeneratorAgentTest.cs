@@ -41,7 +41,7 @@ public class ActionGeneratorAgentTest
     public async Task Convert_ShouldReturnConvertedClasses_WhenValidInstructionIsProvided()
     {
         // Arrange
-        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Actions", "BusinessModelAppService.md");
+        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Persistors", "BusinessModelPersistor.md");
         var instruction = await File.ReadAllTextAsync(aiInstruction);
 
         // Action

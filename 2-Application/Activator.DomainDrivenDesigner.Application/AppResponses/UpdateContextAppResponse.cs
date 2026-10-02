@@ -1,4 +1,4 @@
 ﻿namespace Activator.DomainDrivenDesigner.Application.AppResponses;
 
-public record UpdateContextAppResponse(Guid RequestId, Guid? ContextId, string? ErrorMessage, bool Success)
-    : AppResponse(RequestId, ErrorMessage, Success);
+public record UpdateContextAppResponse(Guid RequestId, bool Success, string? ErrorMessage, Guid? ContextId)
+    : AppResponse(RequestId, Success, ErrorMessage);

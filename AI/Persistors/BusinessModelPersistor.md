@@ -54,7 +54,9 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
                 - businessModel: BusinessModel | loadBusinessModelDatabaseEntityById["`Load **T_BUSINESS_MODEL** database entity by **BusinessModel**.ID`"] -->
                 DomainEntityNotFoundException -->
                 
+                %% T_BUSINESS_MODEL.CONTEXT_ID = BusinessModel.ContextId %%
                 PersistToBusinessModelDatabaseEntity["`Persist **BusinessModel** domain model passed in to loaded **T_BUSINESS_MODEL** database entity`"] -->
+
                 UpdateToBusinessModelDatabaseEntity["`Update **T_BUSINESS_MODEL** in DomainDbContext`"] -->
                 return["`Return the Id of **BusinessModel** domain objects`"]
             end

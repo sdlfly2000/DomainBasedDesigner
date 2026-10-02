@@ -35,8 +35,8 @@ public class RequirementAppService(
         var requirements = await _projectRepository.RetrieveRequirementByProjectId(request.ProjectId).ConfigureAwait(false);
 
         return requirements != null
-            ? new RetrieveRequirementByProjectAppResponse(request.RequestId, requirements, null, true)
-            : new RetrieveRequirementByProjectAppResponse(request.RequestId, null, "Failed to retrieve requirements", false);
+            ? new RetrieveRequirementByProjectAppResponse(request.RequestId, true, null, requirements)
+            : new RetrieveRequirementByProjectAppResponse(request.RequestId, false, "Failed to retrieve requirements", null);
     }
 
 
@@ -51,11 +51,11 @@ public class RequirementAppService(
         return semanticAnalysisResponse != null
             ? new AnalyzeRequirementsResponse(
                 request.RequestId,
+                true,
+                null,
                 businessModels,
-                mermaidResponse.Text,
-                true, 
-                null)
-            : new AnalyzeRequirementsResponse(request.RequestId, Array.Empty<BusinessModel>(), string.Empty, false, "Failed to analyze requirement");
+                mermaidResponse.Text)
+            : new AnalyzeRequirementsResponse(request.RequestId, false, "Failed to analyze requirement", Array.Empty<BusinessModel>(), string.Empty);
     }
 
     [LogTrace(returnType: typeof(SaveRequirementResponse))]
@@ -84,6 +84,6 @@ public class RequirementAppService(
     {   
         var requirement = await _projectRepository.RetrieveRequirementById(requirementId).ConfigureAwait(false);
 
-        return new RetrieveRequirementResponse(requestId, requirement, string.Empty, true);
+        return new RetrieveRequirementResponse(requestId, true, string.Empty, requirement);
     }
 }

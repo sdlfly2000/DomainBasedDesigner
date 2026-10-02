@@ -4,4 +4,4 @@ public record SaveRequirementResponse(
     Guid RequestId,
     bool Success, 
     string? ErrorMessage)
-    : AppResponse(RequestId, ErrorMessage, Success);
+    : AppResponse(RequestId, Success, ErrorMessage);

@@ -30,14 +30,14 @@
     <File Path="AI/Actions/ContextAppService.md" />
     <File Path="AI/Actions/ProjectAppService.md" />
   </Folder>
-  <Folder Name="/AI/Persistor/">
-    <File Path="AI/Persistor/BusinessModelPersistor.md" />
-    <File Path="AI/Persistor/ProjectPersistor.md" />
+  <Folder Name="/AI/Persistors/">
+    <File Path="AI/Persistors/BusinessModelPersistor.md" />
+    <File Path="AI/Persistors/ProjectPersistor.md" />
   </Folder>
-  <Folder Name="/AI/Repository/">
-    <File Path="AI/Repository/BusinessModelRepository.md" />
-    <File Path="AI/Repository/ContextRepository.md" />
-    <File Path="AI/Repository/ProjectRepository.md" />
+  <Folder Name="/AI/Repositories/">
+    <File Path="AI/Repositories/BusinessModelRepository.md" />
+    <File Path="AI/Repositories/ContextRepository.md" />
+    <File Path="AI/Repositories/ProjectRepository.md" />
   </Folder>
   <Folder Name="/UML/" />
   <Folder Name="/UML/Application/">

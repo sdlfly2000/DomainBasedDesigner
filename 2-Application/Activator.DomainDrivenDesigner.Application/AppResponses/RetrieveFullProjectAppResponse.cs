@@ -2,5 +2,5 @@
 
 namespace Activator.DomainDrivenDesigner.Application.AppResponses;
 
-public record RetrieveFullProjectAppResponse(Guid RequestId, List<Project>? Projects, bool Success, string? ErrorMessage) 
-    : AppResponse(RequestId, ErrorMessage, Success);
+public record RetrieveFullProjectAppResponse(Guid RequestId, bool Success, string? ErrorMessage, List<Project>? Projects) 
+    : AppResponse(RequestId, Success, ErrorMessage);

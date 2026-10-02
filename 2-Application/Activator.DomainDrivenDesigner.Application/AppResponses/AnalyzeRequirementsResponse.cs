@@ -4,8 +4,8 @@ namespace Activator.DomainDrivenDesigner.Application.AppResponses;
 
 public record AnalyzeRequirementsResponse(
     Guid RequestId,
-    BusinessModel[] BusinessModels,
-    string raw,
     bool Success, 
-    string? ErrorMessage)
-    : AppResponse(RequestId, ErrorMessage, Success);
+    string? ErrorMessage,
+    BusinessModel[] BusinessModels,
+    string raw)
+    : AppResponse(RequestId, Success, ErrorMessage);
