@@ -31,19 +31,19 @@ public class BusinessModelAppService
         return new RetrieveBusinessModelByIdAppResponse(
             request.Id,
             businessModel,
-            businessModel != null,
-            businessModel == null ? "Business model not found" : null);
+            null,
+            businessModel != null);
     }
 
     [LogTrace(typeof(UpsertBusinessModelsAppResponse))]
     public async Task<UpsertBusinessModelsAppResponse> UpsertProjectBusinessModels(UpsertBusinessModelsAppRequest request)
     {
         var newRetrieveBusinessModelByIdAppRequest = new RetrieveBusinessModelByIdAppRequest(request.Id, request.Model.ID);
-        var businessModel = await RetrieveBusinessModelById(newRetrieveBusinessModelByIdAppRequest).ConfigureAwait(false);
+        var businessModelResponse = await RetrieveBusinessModelById(newRetrieveBusinessModelByIdAppRequest).ConfigureAwait(false);
 
-        if (businessModel.Success && businessModel.BusinessModel != null)
+        if (businessModelResponse.Success)
         {
-            await _businessModelPersistor.UpdateBusinessModel(businessModel.BusinessModel).ConfigureAwait(false);
+            await _businessModelPersistor.UpdateBusinessModel(request.Model).ConfigureAwait(false);
         }
         else
         {
@@ -65,7 +65,7 @@ public class BusinessModelAppService
         return new RetrieveBusinessModelByNameAppResponse(
             request.Id,
             filteredBusinessModel,
-            filteredBusinessModel != null,
-            filteredBusinessModel == null ? "Business model not found" : null);
+            null,
+            filteredBusinessModel != null);
     }
 }

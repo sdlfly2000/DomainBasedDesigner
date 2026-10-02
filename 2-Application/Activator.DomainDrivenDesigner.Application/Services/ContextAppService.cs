@@ -23,7 +23,7 @@ public class ContextAppService
     public async Task<RetrieveContextAppResponse> RetrieveContexts(RetrieveContextAppRequest request)
     {
         var contexts = await _contextRepository.RetrieveContexts(request.ProjectId).ConfigureAwait(false);
-        return new RetrieveContextAppResponse(request.Id, contexts, true, null);
+        return new RetrieveContextAppResponse(request.Id, contexts, null, true);
     }
 
     [LogTrace(typeof(CreateContextAppResponse))]
@@ -38,6 +38,6 @@ public class ContextAppService
     {
         var context = new Context(request.ContextId) { Name = request.Name };
         await _contextRepository.UpdateContext(context).ConfigureAwait(false);
-        return new UpdateContextAppResponse(request.Id, request.ContextId, true, null);
+        return new UpdateContextAppResponse(request.Id, request.ContextId, null, true);
     }
 }

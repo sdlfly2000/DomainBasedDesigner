@@ -2,5 +2,5 @@
 
 namespace Activator.DomainDrivenDesigner.Application.AppResponses;
 
-public record RetrieveRequirementResponse(Guid RequestId, Requirement? Requirement, bool Success, string? ErrorMessage) 
-    : AppResponse(RequestId, Success, ErrorMessage);
+public record RetrieveRequirementResponse(Guid RequestId, Requirement? Requirement, string? ErrorMessage, bool Success) 
+    : AppResponse(RequestId, ErrorMessage, Success);

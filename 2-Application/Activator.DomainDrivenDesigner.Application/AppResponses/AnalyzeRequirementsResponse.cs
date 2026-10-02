@@ -8,4 +8,4 @@ public record AnalyzeRequirementsResponse(
     string raw,
     bool Success, 
     string? ErrorMessage)
-    : AppResponse(RequestId, Success, ErrorMessage);
+    : AppResponse(RequestId, ErrorMessage, Success);

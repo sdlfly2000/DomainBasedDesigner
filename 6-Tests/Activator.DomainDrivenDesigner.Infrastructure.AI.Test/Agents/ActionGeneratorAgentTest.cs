@@ -19,7 +19,8 @@ public class ActionGeneratorAgentTest
     public void Setup()
     {
         _logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
+            //.MinimumLevel.Debug()
+            .MinimumLevel.Information()
             .WriteTo.Console()
             .CreateLogger();
 
@@ -40,7 +41,7 @@ public class ActionGeneratorAgentTest
     public async Task Convert_ShouldReturnConvertedClasses_WhenValidInstructionIsProvided()
     {
         // Arrange
-        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Repository", "ProjectRepository.md");
+        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Actions", "BusinessModelAppService.md");
         var instruction = await File.ReadAllTextAsync(aiInstruction);
 
         // Action

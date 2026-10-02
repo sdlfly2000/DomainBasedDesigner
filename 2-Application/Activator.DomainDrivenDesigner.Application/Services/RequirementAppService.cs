@@ -35,8 +35,8 @@ public class RequirementAppService(
         var requirements = await _projectRepository.RetrieveRequirementByProjectId(request.ProjectId).ConfigureAwait(false);
 
         return requirements != null
-            ? new RetrieveRequirementByProjectAppResponse(request.RequestId, requirements, true, null)
-            : new RetrieveRequirementByProjectAppResponse(request.RequestId, null, false, "Failed to retrieve requirements");
+            ? new RetrieveRequirementByProjectAppResponse(request.RequestId, requirements, null, true)
+            : new RetrieveRequirementByProjectAppResponse(request.RequestId, null, "Failed to retrieve requirements", false);
     }
 
 
@@ -84,6 +84,6 @@ public class RequirementAppService(
     {   
         var requirement = await _projectRepository.RetrieveRequirementById(requirementId).ConfigureAwait(false);
 
-        return new RetrieveRequirementResponse(requestId, requirement, true, string.Empty);
+        return new RetrieveRequirementResponse(requestId, requirement, string.Empty, true);
     }
 }
