@@ -19,8 +19,8 @@ public class ActionGeneratorAgentTest
     public void Setup()
     {
         _logger = new LoggerConfiguration()
-            //.MinimumLevel.Debug()
-            .MinimumLevel.Information()
+            .MinimumLevel.Debug()
+            //.MinimumLevel.Information()
             .WriteTo.Console()
             .CreateLogger();
 

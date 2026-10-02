@@ -18,17 +18,17 @@ graph TB
 
         |request: UpsertBusinessModelsAppRequest| newRetrieveBusinessModelByIdAppRequest["`New a RetrieveBusinessModelByIdAppRequest with request.ID and request.Model.ID`"] -->
         
-        %% Invoke method RetrieveBusinessModelById in this service%%
+        %% Invoke method RetrieveBusinessModelById in this service %%
         RetrieveBusinessModelById["`Retrieve **BusinessModel** with created RetrieveBusinessModelByIdAppRequest`"] -->
 
-        Success{"`If RetrieveBusinessModelByIdAppResponse.Success?`"} -->
+        Success{"`If returned RetrieveBusinessModelByIdAppResponse.Success?`"} -->
 
-        %% Invoke method UpdateBusinessModel in Persistor%%
-        |yes| UpdateBusinessModel["`Update the existing **BusinessModel** with the one from request`"] --> 
+        %% Invoke method UpdateBusinessModel in Persistor to update UpsertBusinessModelsAppRequest.Model, not Model from response %%
+        |yes| UpdateBusinessModel["`Update **BusinessModel** with the one from request`"] --> 
         
         return["`Return UpsertBusinessModelsAppResponse`"]
 
-        %% Invoke method CreateBusinessModel in Persistor%%
+        %% Invoke method CreateBusinessModel in Persistor %%
         Success --> |no| CreateBusinessModel["`Create a new **BusinessModel** with the one from request`"] -->
 
         return
