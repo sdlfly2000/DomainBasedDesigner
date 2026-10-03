@@ -31,7 +31,7 @@ public class BusinessModelAppService
         return new RetrieveBusinessModelByIdAppResponse(
             request.Id,
             businessModel != null,
-            null,
+            businessModel != null ? string.Empty : "Business model not found",
             businessModel);
     }
 
@@ -65,7 +65,7 @@ public class BusinessModelAppService
         return new RetrieveBusinessModelByNameAppResponse(
             request.Id,
             filteredBusinessModel != null,
-            null,
+            filteredBusinessModel != null ? string.Empty : "Business model not found",
             filteredBusinessModel);
     }
 }
