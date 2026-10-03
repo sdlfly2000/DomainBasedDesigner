@@ -40,6 +40,7 @@
                                             pTextarea
                                             name="modelrawmermaid"
                                             [(ngModel)]="ModelMermaidRawsTab[i]"
+                                            (keydown.tab)="OnTabPress($event)"
                                             placeholder="AI Raw Output"
                                             (ngModelChange)="OnAnalyzedResultChange($event)"
                                             fluid>

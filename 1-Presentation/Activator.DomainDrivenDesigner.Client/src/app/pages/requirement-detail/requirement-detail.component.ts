@@ -38,6 +38,7 @@ export class RequirementDetailComponent implements AfterViewInit {
     FullContexts: Context[] = [];
     CurrentContextName: string = ''
     CurrentModelName: string = '';
+    CurrentTabIndex: number = 0;
     CurrentBusinessModel: BusinessModel = {
         id: '',
         name: '',
@@ -110,6 +111,7 @@ export class RequirementDetailComponent implements AfterViewInit {
     async OnModelTabClick(model: string | number | undefined) {
         this.CurrentModelName = model as string;
         let index: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === model);
+        this.CurrentTabIndex = index;
         if (this.ModelMermaidRawsTab[index] == undefined || this.ModelMermaidRawsTab[index] == '') {
             this.requirementDetailService.RetrieveBusinessModel(this.CurrentModelName, this.RequirementId).subscribe({
                 next: async (model) => {
@@ -168,6 +170,15 @@ export class RequirementDetailComponent implements AfterViewInit {
             },
             complete: () => this.cdr.detectChanges()
         });
+    }
+
+    OnTabPress(event: Event): void {
+        event.preventDefault();
+        const textarea = event.target as HTMLTextAreaElement;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        textarea.setRangeText('\t', start, end, 'end');
+        this.ModelMermaidRawsTab[this.CurrentTabIndex] = textarea.value;
     }
 
     SaveModel() {
