@@ -5,20 +5,28 @@ classDiagram
 namespace nsProject["Domain.Project"] {
     class Project {
         <<AggregateRoot>>
-        + Id: Guid
+        %% inherited
+        + ID: Guid
+        %% inherited
+        + CreatedOnUtc: Datetime
+
         + Name: String
         + Description: String?
-        + CreatedOnUtc: Datetime
         + Requirements: List~Requirement~
         + ContextIds: List~Guid~
         + BaseDirectory: String?
+
+        + Create(ProjectName:string, ProjectDescription:string, BaseDirectory: string = null) : Project
     }
 
     class Requirement {
         <<Entity>>
-        + Id: Guid
-        + Description: String
+        %% inherited
+        + ID: Guid
+        %% inherited
         + CreatedOnUtc: Datetime
+
+        + Description: String
         + BusinessActionIds: List~Guid~
         + BusinessModelIds: List~Guid~
     }
@@ -27,11 +35,14 @@ namespace nsProject["Domain.Project"] {
 namespace nsBusinessAction["Domain.BusinessAction"] {
     class BusinessAction {
         <<AggregateRoot>>
-        + Id: Guid
+        %% inherited
+        + ID: Guid
+        %% inherited
+        + CreatedOnUtc: Datetime
+        
         + Name: String?
         + ContextId: Guid
         + ContentMermaid: String?
-        + CreatedOnUtc: Datetime
     }
 }
 
@@ -39,7 +50,7 @@ namespace nsBusinessModel["Domain.BusinessModel"] {
     class BusinessModel {
         <<AggregateRoot>>
         %% inherited
-        + Id: Guid
+        + ID: Guid
         %% inherited
         + CreatedOnUtc: Datetime 
         
@@ -52,9 +63,12 @@ namespace nsBusinessModel["Domain.BusinessModel"] {
 namespace nsContext["Domain.Context"] {
     class Context {
         <<AggregateRoot>>
-        + Id: Guid
-        + Name: String
+        %% inherited
+        + ID: Guid
+        %% inherited
         + CreatedOnUtc: Datetime
+
+        + Name: String
     }
 }
 
