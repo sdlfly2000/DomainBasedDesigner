@@ -1,12 +1,9 @@
 ﻿using Activator.DomainDrivenDesigner.Infrastructure.AI.Client;
-using Markdig;
-using Markdig.Syntax;
+using Activator.DomainDrivenDesigner.Infrastructure.AI.Helper;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using OllamaSharp;
 using Serilog;
-using System.ComponentModel;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
@@ -14,8 +11,8 @@ namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Agents;
 public class CodeGeneratorAgent
 {
     private string ReferenceArgumentPattern = @"(?<tool>\w+)\(""(?<path>[^""]+)""\)";
-    private string ActionArgumentPattern    = @"(?<tool>\w+)\(""(?<path>[^""]+)"",""(?<method>[^""]+)""\)";
-    private string ModelArgumentPattern    = @"(?<tool>\w+)\(""(?<path>[^""]+)"",""(?<namespace>[^""]+)"",""(?<model>[^""]+)""\)";
+    private string ActionArgumentPattern = @"(?<tool>\w+)\(""(?<path>[^""]+)"",""(?<method>[^""]+)""\)";
+    private string ModelArgumentPattern = @"(?<tool>\w+)\(""(?<path>[^""]+)"",""(?<namespace>[^""]+)"",""(?<model>[^""]+)""\)";
     private string _projectBaseDirectory;
     private readonly ILogger _logger;
 
@@ -37,6 +34,7 @@ public class CodeGeneratorAgent
     private readonly string _model;
     private readonly AIAgent _aiAgent;
     private readonly AIAgentClientFactory _aiAgentClientFactory;
+    private readonly FileProcessHelper _fileProcessHelper;
 
     public CodeGeneratorAgent(ILogger logger, AIAgentClientFactory agentFactory, string projectBaseDirectory, string model = "qwen2.5-coder:7b-instruct", bool applyQwenToolFix = false)
     {
@@ -44,9 +42,11 @@ public class CodeGeneratorAgent
         _model = model;
         _aiAgentClientFactory = agentFactory;
         _logger = logger;
-        _aiAgent = applyQwenToolFix 
-                    ? agentFactory.Get(ToolCallInstructions, model, applyQwenToolFix, [AIFunctionFactory.Create(this.read_code_file, "read_code_file")])
+        _fileProcessHelper = new FileProcessHelper(_logger, _projectBaseDirectory);
+        _aiAgent = applyQwenToolFix
+                    ? agentFactory.Get(ToolCallInstructions, model, applyQwenToolFix, [AIFunctionFactory.Create(_fileProcessHelper.read_code_file, "read_code_file")])
                     : agentFactory.Get(Instructions, model, applyQwenToolFix);
+
     }
 
     public async Task<string> Create(string input, CancellationToken token)
@@ -79,7 +79,7 @@ public class CodeGeneratorAgent
             if (matchReference.Success && matchReference.Groups["tool"].Value == "read_code_file")
             {
                 var argument = matchReference.Groups["path"].Value;
-                var fileContent = read_code_file(argument);
+                var fileContent = _fileProcessHelper.read_code_file(argument);
                 lines[i] = fileContent;
             }
 
@@ -89,7 +89,7 @@ public class CodeGeneratorAgent
                 var argument = matchAction.Groups["path"].Value;
                 var method = matchAction.Groups["method"].Value;
 
-                var fileContent = read_action_md_file(argument, method);
+                var fileContent = _fileProcessHelper.read_action_md_file(argument, method);
                 lines[i] = fileContent;
             }
 
@@ -100,152 +100,10 @@ public class CodeGeneratorAgent
                 var ns = matchModel.Groups["namespace"].Value;
                 var model = matchModel.Groups["model"].Value;
 
-                var fileContent = read_model_md_file(argument, ns, model);
+                var fileContent = _fileProcessHelper.read_model_md_file(argument, ns, model);
                 lines[i] = fileContent;
             }
         }
-        return string.Join(Environment.NewLine, lines);
-    }
-
-    [Description("Reads the content of an model in markdown file and returns it wrapped in a code block.")]
-    private string read_model_md_file(string relativePath, string ns, string model)
-    {
-        var fileContent = ReadFileContent(relativePath, string.Concat(ns, "->", model));
-
-        var pipeline = new MarkdownPipelineBuilder().UseDiagrams().Build();
-
-        var modelDocument = Markdown.Parse(fileContent, pipeline);
-
-        // Find the mermaid code block
-        var mermaidFencedCodeBlock = modelDocument.Descendants<FencedCodeBlock>()
-                                                  .SingleOrDefault(b =>
-                                                    b.Info != null && b.Info.Equals("mermaid"));
-
-        if (mermaidFencedCodeBlock == null)
-        {
-            _logger.Warning($"{nameof(read_model_md_file)}: Warning: No single mermaid code block(s) found for model '{ns}->{model}' in {relativePath}.");
-            return string.Empty;
-        }
-
-        var findNamespace = false;
-        var findModel = false;
-        var modelLines = new List<string>();
-
-        foreach (var line in mermaidFencedCodeBlock.Lines.Lines)
-        {
-            var currentLine = line.ToString();
-
-            // Find namespace in mermaid code block
-            if (currentLine.Contains("namespace") &&
-                currentLine.Contains(ns))
-            {
-                findNamespace = true;
-            }
-
-            if (findNamespace)
-            {
-                // Find model in namespace
-                if (currentLine.Contains($"class {model}"))
-                {
-                    findModel = true;
-                }
-            }
-
-            if(findNamespace && findModel)
-            {
-                modelLines.Add(currentLine);
-            }
-
-            if (currentLine.Trim().Equals("}"))
-            {
-                if(findModel == true)
-                {
-                    findModel = false;
-                }
-                else
-                {
-                    findNamespace = false;
-                }
-            }
-        }
-
-        var modelContent = string.Join(Environment.NewLine, modelLines);
-
-        var content = new StringBuilder();
-        content.Append("```mermaid")
-               .Append(Environment.NewLine)
-               .Append(modelContent)
-               .Append(Environment.NewLine)
-               .Append("```");
-
-        return content.ToString();
-    }
-
-    [Description("Reads the content of an action in markdown file and returns it wrapped in a code block.")]
-    private string read_action_md_file(string relativePath, string method)
-    {
-        var fileContent = ReadFileContent(relativePath, method);
-
-        var actionDocument = Markdown.Parse(fileContent);
-
-        var mermaidFencedCodeBlock = actionDocument.Descendants<FencedCodeBlock>()
-                                             .SingleOrDefault(b =>
-                                                    b.Info != null && b.Info.Equals("mermaid") &&
-                                                    b.Arguments != null && b.Arguments.Contains(method));
-                                
-        if (mermaidFencedCodeBlock == null)
-        {
-            _logger.Warning($"{nameof(read_action_md_file)}: Warning: No single mermaid code block(s) found for method '{method}' in {relativePath}.");
-            return string.Empty;
-        }
-
-        var mermaidFencedCodeBlockContent = string.Join(
-                                                Environment.NewLine, 
-                                                mermaidFencedCodeBlock.Lines.Lines
-                                                .Where(l => !string.IsNullOrWhiteSpace(l.ToString()))
-                                                .Select(l => l.ToString()));
-
-        var content = new StringBuilder();
-        content.Append("```mermaid")
-               .Append(Environment.NewLine)
-               .Append(mermaidFencedCodeBlockContent)
-               .Append(Environment.NewLine)
-               .Append("```");
-
-        return content.ToString();
-    }
-
-    [Description("Reads the content of a C# reference code file and returns it wrapped in a code block.")]
-    private string read_code_file(string relativePath)
-    {
-        var fileContent = ReadFileContent(relativePath);
-
-        var content = new StringBuilder();
-        content.Append("```csharp")
-               .Append(Environment.NewLine)
-               .Append(fileContent)
-               .Append(Environment.NewLine)
-               .Append("```");
-
-        return content.ToString();
-    }
-
-    private string ReadFileContent(string relativePath, string? target = null)
-    {
-        string fullPath = Path.GetFullPath(Path.Combine(_projectBaseDirectory, relativePath));
-        if (!fullPath.StartsWith(_projectBaseDirectory, StringComparison.OrdinalIgnoreCase))
-        {
-            _logger.Warning($"{nameof(ReadFileContent)}: Warning: Access denied. Cannot read files outside the workspace root. {relativePath}");
-            return string.Empty;
-        }
-
-        if (!File.Exists(fullPath))
-        {
-            _logger.Warning($"{nameof(ReadFileContent)}: Warning: File not found at path '{relativePath}'.");
-            return string.Empty;
-        }
-
-        _logger.Information($"{nameof(ReadFileContent)}: Reading file at path '{relativePath}' {target ?? ""}.");
-        return File.ReadAllText(fullPath);
+        return string.Join(Environment.NewLine, lines); 
     }
 }

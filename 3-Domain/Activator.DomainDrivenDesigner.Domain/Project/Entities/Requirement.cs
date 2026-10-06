@@ -4,9 +4,8 @@ namespace Activator.DomainDrivenDesigner.Domain.Project.Entities;
 
 public class Requirement(Guid ID) : EntityBase(ID)
 {
-    public string? Description { get; set; }
+    public List<Guid> BusinessActionIds { get; } = new List<Guid>();
+    public List<Guid> BusinessModelIds { get; } = new List<Guid>();
 
-    public List<BusinessModel.Entities.BusinessModel> BusinessModels { get; set; } = [];
-
-    public List<BusinessAction.Entities.BusinessAction> BusinessActions { get; set; } = [];
+    public string Description { get; set; }
 }

@@ -27,7 +27,11 @@ namespace nsProject["Domain.Project"] {
         + CreatedOnUtc: Datetime
 
         + Description: String
+
+        %% initialized by new List
         + BusinessActionIds: List~Guid~
+
+        %% initialized by new List
         + BusinessModelIds: List~Guid~
     }
 }
