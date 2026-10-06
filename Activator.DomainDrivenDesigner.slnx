@@ -30,6 +30,9 @@
     <File Path="AI/Actions/ContextAppService.md" />
     <File Path="AI/Actions/ProjectAppService.md" />
   </Folder>
+  <Folder Name="/AI/Models/">
+    <File Path="AI/Models/BusinessModel.md" />
+  </Folder>
   <Folder Name="/AI/Persistors/">
     <File Path="AI/Persistors/BusinessModelPersistor.md" />
     <File Path="AI/Persistors/ProjectPersistor.md" />

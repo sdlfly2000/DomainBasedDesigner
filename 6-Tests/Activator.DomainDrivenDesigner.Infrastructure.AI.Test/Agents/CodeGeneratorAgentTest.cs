@@ -4,14 +4,12 @@ using Activator.DomainDrivenDesigner.Support.Core.Configurations;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Serilog;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Activator.DomainDrivenDesigner.Infrastructure.AI.Test.Agents;
 
-public class ActionGeneratorAgentTest
+public class CodeGeneratorAgentTest
 {
-    private ActionGeneratorAgent _actionGeneratorAgent;
+    private CodeGeneratorAgent _actionGeneratorAgent;
     private string _projectBaseDirectory;
     private ILogger _logger;
 
@@ -34,14 +32,14 @@ public class ActionGeneratorAgentTest
         _projectBaseDirectory = "C:\\Users\\25982\\Documents\\Projects\\DomainBasedDesigner";
 
         //_actionGeneratorAgent = new ActionGeneratorAgent(_logger, aIAgentClientFactory, "ornith:9b", false);
-        _actionGeneratorAgent = new ActionGeneratorAgent(_logger, aIAgentClientFactory, _projectBaseDirectory, applyQwenToolFix: false);
+        _actionGeneratorAgent = new CodeGeneratorAgent(_logger, aIAgentClientFactory, _projectBaseDirectory, applyQwenToolFix: false);
     }
 
     [Test]
     public async Task Convert_ShouldReturnConvertedClasses_WhenValidInstructionIsProvided()
     {
         // Arrange
-        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Persistors", "BusinessModelPersistor.md");
+        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Models", "BusinessModel.md");
         var instruction = await File.ReadAllTextAsync(aiInstruction);
 
         // Action

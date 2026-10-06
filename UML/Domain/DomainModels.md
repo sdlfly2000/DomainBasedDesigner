@@ -38,11 +38,14 @@ namespace nsBusinessAction["Domain.BusinessAction"] {
 namespace nsBusinessModel["Domain.BusinessModel"] {
     class BusinessModel {
         <<AggregateRoot>>
+        %% inherited
         + Id: Guid
+        %% inherited
+        + CreatedOnUtc: Datetime 
+        
         + Name: String?
         + ContentMermaid: String?
         + ContextId: Guid
-        + CreatedOnUtc: Datetime
     }
 }
 
