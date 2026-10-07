@@ -98,6 +98,7 @@ export class RequirementDetailComponent implements AfterViewInit {
     }
 
     async OnAnalyzedResult(analyzedResult: AnalyzeRequirementsResponseModel) {
+        this.ModelMermaidRawsTab = [];
         this.AnalyzedResult = analyzedResult;
         this.graphDefinition = this.applyMermaidClassDefinition(analyzedResult.raw);
         await this.renderDiagram();
