@@ -25,13 +25,14 @@
                         @for (model of AnalyzedResult.businessModels; track model.name) {
                         <p-tab [value]="model.name">{{ model.name }}</p-tab>
                         }
+                        <add-model-manually style="display: flex;" (ModelNameOutput) ="OnAddModelManually($event)"></add-model-manually>
                     </p-tablist>
                     <p-tabpanels>
                         @for (model of AnalyzedResult.businessModels; track model.name; let i = $index) {
                         <p-tabpanel [value]="model.name">
                             <div class="flex justify-start items-center gap-4">
-                                <label pLabel for="context">Context</label>
-                                <p-select [options]="FullContexts" [(ngModel)]="ContextIdTab[i]" placeholder="Select/Create a Conext" [editable]="true" optionLabel="name" optionValue="id" class="requirement-detail-context-select" />
+                                <label for="context_{{i}}">Context</label>
+                                <p-select inputId="context_{{i}}" [options]="FullContexts" [(ngModel)]="ContextIdTab[i]" placeholder="Select/Create a Conext" [editable]="true" optionLabel="name" optionValue="id" class="requirement-detail-context-select" />
                                 <button pButton (click)="OnCreateContext()">Create</button>
                             </div>
                             <div class="flex flex-wrap items-stretch gap-4 requirement-detail-modelrawmermaid">

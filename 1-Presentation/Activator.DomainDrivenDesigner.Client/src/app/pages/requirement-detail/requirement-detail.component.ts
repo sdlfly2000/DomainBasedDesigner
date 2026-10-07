@@ -15,14 +15,16 @@ import { RequirementDetailService } from './requirement-detail.service';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { Context, CreateContextRequest } from './model/requirement-detail';
+import { AddModelManuallyComponent } from './add-model-manually/add-model.component';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-requirement-detail',
   templateUrl: './requirement-detail.component.html',
   styleUrls: ['./requirement-detail.component.css'],
   imports: [
-      FormsModule, ButtonModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, SelectModule,
-      RequirementDetailCommandAnalyzeComponent, RequirementDetailCommandSaveComponent
+      FormsModule, ButtonModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, SelectModule, FloatLabelModule,
+      RequirementDetailCommandAnalyzeComponent, RequirementDetailCommandSaveComponent, AddModelManuallyComponent
   ]
 })
 export class RequirementDetailComponent implements AfterViewInit {
@@ -180,6 +182,18 @@ export class RequirementDetailComponent implements AfterViewInit {
         const end = textarea.selectionEnd;
         textarea.setRangeText('\t', start, end, 'end');
         this.ModelMermaidRawsTab[this.CurrentTabIndex] = textarea.value;
+    }
+
+    OnAddModelManually(addedModelName: string): void {
+        let newModel: BusinessModel = {
+            name: addedModelName,
+            id: undefined,
+            contentMermaid: undefined,
+            contextId: undefined,
+            contextName: undefined,
+            createdOnUtc: undefined
+        }
+        this.AnalyzedResult.businessModels.push(newModel);
     }
 
     SaveModel() {

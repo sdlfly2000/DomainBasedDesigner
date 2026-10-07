@@ -1,0 +1,19 @@
+<button pButton
+        icon="pi pi-plus"
+        class="p-button-text"
+        (click)="visible = true"
+        aria-label="Add new tab">
+</button>
+
+<p-dialog [(visible)]="visible" [modal]="true" header="Model Name" [style]="{ width: '24rem' }">
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1.5">
+            <label pLabel for="model-name">Model Name</label>
+            <input pInputText id="model-name" [(ngModel)]="ModelName" />
+        </div>
+    </div>
+    <ng-template #footer>
+        <button type="button" pButton severity="secondary" variant="outlined" (click)="visible = false">Cancel</button>
+        <button type="button" pButton (click)="OnOk()">OK</button>
+    </ng-template>
+</p-dialog>
