@@ -33,6 +33,7 @@
   <Folder Name="/AI/Models/">
     <File Path="AI/Models/BusinessAction.md" />
     <File Path="AI/Models/BusinessModel.md" />
+    <File Path="AI/Models/Context.md" />
     <File Path="AI/Models/Project.md" />
     <File Path="AI/Models/Requirement.md" />
   </Folder>
