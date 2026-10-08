@@ -26,7 +26,7 @@ public class BusinessModelController(BusinessModelAppService businessModelAppSer
 
         var requestId = Guid.Parse(_requestContext.TraceId);
 
-        var modelId = string.IsNullOrEmpty(model.id) ? Guid.Empty : Guid.Parse(model.id);
+        var modelId = string.IsNullOrEmpty(model.id) ? Guid.NewGuid() : Guid.Parse(model.id);
         BusinessModel businessModel = new BusinessModel(modelId)
         { 
             Name = model.name,
