@@ -16,6 +16,30 @@ export interface BusinessModel {
     createdOnUtc: Date | undefined
 }
 
+export class BusinessModelInstance implements BusinessModel {
+    id: string | undefined;
+    name: string | undefined;
+    contentMermaid: string | undefined;
+    contextId: string | undefined;
+    contextName: string | undefined;
+    createdOnUtc: Date | undefined;
+
+    constructor(id?: string, name?: string, contentMermaid?: string, contextId?: string, contextName?: string, createdOnUtc?: Date) {
+        this.id = id;
+        this.name = name;
+        this.contentMermaid = contentMermaid;
+        this.contextId = contextId;
+        this.contextName = contextName;
+        this.createdOnUtc = createdOnUtc;
+    }
+
+    public static NotNullValidate(model: BusinessModel): boolean {
+        return model.contextId !== undefined &&
+               model.contextName !== undefined &&
+               model.name !== undefined;
+    }
+}
+
 // Save Requirement Request and Response Models
 export interface SaveRequirementRequestModel {
     projectId: string | undefined

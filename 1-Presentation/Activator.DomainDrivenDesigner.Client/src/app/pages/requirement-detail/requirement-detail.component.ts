@@ -8,7 +8,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToolbarModule } from 'primeng/toolbar';
 import { QueryStringService } from '../../../services/shared.QueryString.service';
 import { EnumInfoSeverity, StatusMessageModel, StatusMessageService } from '../../../services/statusmessage.service';
-import { AnalyzeRequirementsResponseModel, BusinessModel } from '../requirement-detail-cmd/model/requirement-detail-cmd';
+import { AnalyzeRequirementsResponseModel, BusinessModel, BusinessModelInstance } from '../requirement-detail-cmd/model/requirement-detail-cmd';
 import { RequirementDetailCommandAnalyzeComponent } from '../requirement-detail-cmd/requirement-detail-cmd-analyze/requirement-detail-cmd-analyze.component';
 import { RequirementDetailCommandSaveComponent } from '../requirement-detail-cmd/requirement-detail-cmd-save/requirement-detail-cmd-save.component';
 import { RequirementDetailService } from './requirement-detail.service';
@@ -203,6 +203,12 @@ export class RequirementDetailComponent implements AfterViewInit {
         this.CurrentBusinessModel.name = this.CurrentModelName;
         this.CurrentBusinessModel.contextId = this.ContextIdTab[tabIndex];
         this.CurrentBusinessModel.contextName = this.FullContexts.find(c => c.id == this.ContextIdTab[tabIndex])?.name
+
+        if (!BusinessModelInstance.NotNullValidate(this.CurrentBusinessModel)) {
+            this.statusMessageService.StatusMessage = new StatusMessageModel("Invalid business model data - Please fill in all required fields", EnumInfoSeverity.Error);
+            return;
+        }
+
         this.requirementDetailService.UpsertBusinessModel(this.CurrentBusinessModel, this.RequirementId).subscribe({
             next: (success) => {
                 if (success) {
