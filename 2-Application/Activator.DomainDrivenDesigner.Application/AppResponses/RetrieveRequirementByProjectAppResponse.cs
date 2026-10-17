@@ -3,4 +3,10 @@
 namespace Activator.DomainDrivenDesigner.Application.AppResponses;
 
 public record RetrieveRequirementByProjectAppResponse(Guid RequestId, bool Success, string? ErrorMessage, List<Requirement>? Requirements) 
-    : AppResponse(RequestId, Success, ErrorMessage);
+    : AppResponse(RequestId, Success, ErrorMessage)
+{
+    public RetrieveRequirementByProjectAppResponse(Guid RequestId, bool Success, string? ErrorMessage) : this(RequestId, Success, ErrorMessage, null)
+    {
+        
+    }
+};
