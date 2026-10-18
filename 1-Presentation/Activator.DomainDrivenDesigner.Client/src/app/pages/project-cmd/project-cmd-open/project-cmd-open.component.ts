@@ -1,12 +1,7 @@
 import { Component, input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { InputTextModule } from 'primeng/inputtext';
-import { TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { ContextService } from '../../../../services/shared.Context.service';
 import { ProjectModel } from '../../project/model/project';
 
 @Component({
@@ -22,7 +17,8 @@ export class ProjectCommandOpenComponent implements OnChanges{
     disabledCommand: boolean = true;
 
     constructor(
-        private router: Router) {
+        private router: Router,
+        private contextService: ContextService) {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -30,6 +26,10 @@ export class ProjectCommandOpenComponent implements OnChanges{
     }
 
     NavigateRequirement() {
+
+        this.contextService.ProjectId = this.selectedProjects()?.[0].id;
+        this.contextService.ProjectName = this.selectedProjects()?.[0].name;
+
         this.router.navigate(["app/requirement"], {
             queryParams: {
                 project: this.selectedProjects()?.[0].id,
