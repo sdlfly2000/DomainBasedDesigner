@@ -45,6 +45,16 @@ graph TB
         return["`Return RetrieveBusinessModelByNameAppResponse`"]
     end
 ```
+
+```mermaid method:"RetrieveBusinessModelByProject"
+graph TB
+    subgraph RetrieveBusinessModelByProject
+        direction TB
+        start(("Start")) --> 
+        |request: RetrieveBusinessModelsByProjectAppRequest| RetrieveBusinessModelsByProjectId["`Retrieve **BusinessModel**s by ProjectId`"] -->
+        return["`Return RetrieveBusinessModelByProjectAppResponse`"]
+    end
+```
 ---
 
 ```mermaid
@@ -73,6 +83,10 @@ classDiagram
         + ModelId: Guid
     }
 
+    class RetrieveBusinessModelsByProjectAppRequest {
+        + ProjectId: Guid
+    }
+
     class UpsertBusinessModelsAppResponse {
 
     }
@@ -81,19 +95,23 @@ classDiagram
         + BusinessModel: BusinessModel?
     }
 
-    class RetrieveBusinessModelByIdAppResponse {
+    class RetrieveBusinessModelByProjectAppResponse {
         + BusinessModel: BusinessModel?
     }
 
-    
+    class RetrieveBusinessModelByIdAppResponse {
+        + BusinessModel: BusinessModel?
+    }    
 
     %% Relationship
     AppRequest <|-- UpsertBusinessModelsAppRequest
     AppRequest <|-- RetrieveBusinessModelsByNameAppRequest
     AppRequest <|-- RetrieveBusinessModelByIdAppRequest
+    AppRequest <|-- RetrieveBusinessModelByProjectAppRequest
 
     AppResponse <|-- UpsertBusinessModelsAppResponse
     AppResponse <|-- RetrieveBusinessModelByNameAppResponse
     AppResponse <|-- RetrieveBusinessModelByIdAppResponse
+    AppResponse <|-- RetrieveBusinessModelByProjectAppResponse
 
 ```

@@ -12,7 +12,7 @@ export class QueryStringService {
 
   }
 
-  public Get(key: string): string | null {
+  public Get(key: string): string | undefined {
 
     let valueInternal = this.GetValueSpaInternal(key);
     let valueExternal = this.GetValueSpaExternal(key);
@@ -21,7 +21,7 @@ export class QueryStringService {
       ? valueInternal
       : valueExternal != null
         ? valueExternal
-        : null;
+        : undefined;
   }
 
   private GetValueSpaInternal(key: string): string | null {

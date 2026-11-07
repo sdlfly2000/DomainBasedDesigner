@@ -10,8 +10,8 @@ import { ButtonModule } from 'primeng/button';
   imports: [ButtonModule]
 })
 export class RequirementCommandNewComponent {
-    ProjectId = input<string>();
-    ProjectName = input<string>();
+    ProjectId = input<string | null>();
+    ProjectName = input<string | null>();
 
     disabledCommand = false;
 

@@ -5,4 +5,6 @@ public interface IBusinessModelRepository
     Task<Entities.BusinessModel> LoadBusinessModelById(Guid businessModelId);
 
     Task<List<BusinessModel.Entities.BusinessModel>> LoadBusinessModelsByRequirementId(Guid RequirementId);
+
+    Task<List<BusinessModel.Entities.BusinessModel>> LoadBusinessModelsByProjectId(Guid ProjectId);
 }

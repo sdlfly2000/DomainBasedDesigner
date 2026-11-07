@@ -1,0 +1,36 @@
+<div class="business-model-detail-container">
+    <H1>{{ ProjectName }} -> {{ title }}</H1>
+    <p-divider />
+    <p-toolbar>
+        <ng-template #start>
+        </ng-template>
+    </p-toolbar>
+    <div class="flex">
+        <div class="flex-1">
+            <div class="business-model-detail-description">
+                <textarea rows="5"
+                            cols="30"
+                            pTextarea
+                            name="requirementnewdescription"
+                            [(ngModel)]="RequirementDescription"
+                            placeholder="Requirement Description"
+                            fluid></textarea>
+            </div>
+
+            <p-divider />
+            <div class="business-model-detail-analyzed">
+                <textarea rows="10"
+                            cols="30"
+                            pTextarea
+                            name="requirementanalyzed"
+                            [(ngModel)]="AnalyzedResult.raw"
+                            placeholder="AI Raw Output"
+                            (ngModelChange)="OnAnalyzedResultChange($event)"
+                            fluid></textarea>
+            </div>
+        </div>
+        <div class="flex-1">
+            <div #mermaidContainer class="mermaid-target"></div>
+        </div>
+    </div>
+</div>

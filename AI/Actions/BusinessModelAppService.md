@@ -44,6 +44,11 @@ Target File: **2-Application/Activator.DomainDrivenDesigner.Application/Services
     Method **RetrieveBusinessModelByName** logic: 
     Execute `read_action_md_file("UML//Application//BusinessModelAppService.md","RetrieveBusinessModelByName")`.
 
+5. Public async method signature: `Task<RetrieveBusinessModelByProjectAppResponse> RetrieveBusinessModelByProject(RetrieveBusinessModelsByProjectAppRequest request)`
+
+    Method **RetrieveBusinessModelByProject** logic: 
+    Execute `read_action_md_file("UML//Application//BusinessModelAppService.md","RetrieveBusinessModelByProject")`.
+
 ## Context Boundaries:
 - **Ignore Exception Handling:** Omit manual try-catch wrappers since exceptions are decoupled via the infrastructure `LogTrace` attribute tier.
 - **Asynchronous Execution:** Every data tier interaction must map via explicit asynchronous operations utilizing `ConfigureAwait(false)`.
@@ -65,6 +70,11 @@ Target File: **2-Application/Activator.DomainDrivenDesigner.Application/Services
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//RetrieveBusinessModelByNameAppResponse.cs")`.
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//RetrieveBusinessModelByIdAppRequest.cs")`.
 - Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//RetrieveBusinessModelByIdAppResponse.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppRequests//RetrieveBusinessModelsByProjectAppRequest.cs")`.
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//AppResponses//RetrieveBusinessModelByProjectAppResponse.cs")`.
+
+## Reference BusinessModelAppService.cs
+- Execute `read_code_file("2-Application//Activator.DomainDrivenDesigner.Application//Services//BusinessModelAppService.cs")`.
 
 ## Output
 Only output full source code of **BusinessModelAppService.cs** in C# format, no other text. Use async/await correctly and Use ConfigureAwait(false) for each async call.

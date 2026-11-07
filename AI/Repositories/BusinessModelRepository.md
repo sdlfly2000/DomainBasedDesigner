@@ -61,6 +61,24 @@ File: **4-Infrastructure/Activator.DomainDrivenDesigner.Infrastructure.Database.
             end
     ```
 
+5. Public async method signature: `Task<List<BusinessModel>> LoadBusinessModelsByProjectId(Guid projectId)`
+
+    Method **LoadBusinessModelsByProjectId** logic: 
+    ```mermaid
+        graph TB
+            subgraph main [Load BusinessModel By ProjectId]
+                direction TB
+                start(("Start")) -->
+                |Argument: 
+                - projectId: Guid| LoadByProjectIdFromDb["`Load **T_BUSINESS_MODEL** DomainDbContext by projectId, including **T_BUSINESS_CONTEXT**`"] -->
+
+                %% BusinessModel.ContentMermaid = T_BUSINESS_MODEL.RAW_DESCRIPTION
+                MapToBusniessModelDoaminModel["`Map loaded **T_BUSINESS_MODEL** database entity to **BusinessModel** domain model`"] -->
+
+                return["`Return mapped **BusinessModel** domain model`"]
+            end
+    ```
+
 ## Private Method:
 ```csharp
 private BusinessModel MapToBusniessModelDoaminModel(T_BUSINESS_MODEL rowBusinessModel);
@@ -84,6 +102,9 @@ private BusinessModel MapToBusniessModelDoaminModel(T_BUSINESS_MODEL rowBusiness
 ## Reference Domain Models:
 - Execute `read_code_file("3-Domain//Activator.DomainDrivenDesigner.Domain//BusinessModel//Entities//BusinessModel.cs")`.
 - Execute `read_code_file("5-Support//Activator.DomainDrivenDesigner.Support.Core//Marks//EntityBase.cs")`.
+
+## Reference BusinessModelRepository.cs
+- Execute `read_code_file("4-Infrastructure//Activator.DomainDrivenDesigner.Infrastructure.Database.SqlServer//Repositories//BusinessModelRepository.cs")`.
 
 ## Output
 Only output full source code of **BusinessModelRepository.cs** in C# format, no other text. Use async/await correctly and Use *ConfigureAwait(false)* for each async call.

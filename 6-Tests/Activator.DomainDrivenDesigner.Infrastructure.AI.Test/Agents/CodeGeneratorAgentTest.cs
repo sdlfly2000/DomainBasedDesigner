@@ -31,7 +31,7 @@ public class CodeGeneratorAgentTest
 
         _projectBaseDirectory = "C:\\Users\\25982\\Documents\\Projects\\DomainBasedDesigner";
 
-        //_actionGeneratorAgent = new ActionGeneratorAgent(_logger, aIAgentClientFactory, "ornith:9b", false);
+        //_actionGeneratorAgent = new CodeGeneratorAgent(_logger, aIAgentClientFactory,_projectBaseDirectory, "ornith:9b", false);
         _actionGeneratorAgent = new CodeGeneratorAgent(_logger, aIAgentClientFactory, _projectBaseDirectory, applyQwenToolFix: false);
     }
 
@@ -39,7 +39,7 @@ public class CodeGeneratorAgentTest
     public async Task Convert_ShouldReturnConvertedClasses_WhenValidInstructionIsProvided()
     {
         // Arrange
-        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Models", "Context.md");
+        var aiInstruction = Path.Combine(_projectBaseDirectory, "AI", "Actions", "BusinessModelAppService.md");
         var instruction = await File.ReadAllTextAsync(aiInstruction);
 
         // Action

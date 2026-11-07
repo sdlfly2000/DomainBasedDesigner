@@ -56,16 +56,28 @@ public class BusinessModelAppService
             null);
     }
 
-    [LogTrace(typeof(RetrieveBusinessModelByNameAppResponse))]
-    public async Task<RetrieveBusinessModelByNameAppResponse> RetrieveBusinessModelByName(RetrieveBusinessModelsByNameAppRequest request)
+    [LogTrace(typeof(RetrieveBusinessModelsByNameAppResponse))]
+    public async Task<RetrieveBusinessModelsByNameAppResponse> RetrieveBusinessModelByName(RetrieveBusinessModelsByNameAppRequest request)
     {
         var businessModels = await _businessModelRepository.LoadBusinessModelsByRequirementId(request.RequirementId).ConfigureAwait(false);
         var filteredBusinessModel = businessModels.FirstOrDefault(b => b.Name == request.ModelName);
 
-        return new RetrieveBusinessModelByNameAppResponse(
+        return new RetrieveBusinessModelsByNameAppResponse(
             request.Id,
             filteredBusinessModel != null,
             filteredBusinessModel != null ? string.Empty : "Business model not found",
             filteredBusinessModel);
+    }
+
+    [LogTrace(typeof(RetrieveBusinessModelsByProjectAppResponse))]
+    public async Task<RetrieveBusinessModelsByProjectAppResponse> RetrieveBusinessModelsByProject(RetrieveBusinessModelsByProjectAppRequest request)
+    {
+        var businessModels = await _businessModelRepository.LoadBusinessModelsByProjectId(request.ProjectId).ConfigureAwait(false);
+
+        return new RetrieveBusinessModelsByProjectAppResponse(
+            request.Id,
+            true,
+            null,
+            businessModels);
     }
 }

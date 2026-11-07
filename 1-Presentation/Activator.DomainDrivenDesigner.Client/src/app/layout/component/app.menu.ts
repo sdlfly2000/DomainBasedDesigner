@@ -28,7 +28,8 @@ export class AppMenu {
                 label: 'Management',
                 items: [
                     { label: 'Projects', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/project'] },
-                    { label: 'Claims', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/claim'] }
+                    { label: 'Requirements', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/requirement'] },
+                    { label: 'Models', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/business-model'] }
                 ]
             },
         ];
