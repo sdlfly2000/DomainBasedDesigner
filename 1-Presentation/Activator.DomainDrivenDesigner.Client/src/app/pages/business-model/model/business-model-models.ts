@@ -6,7 +6,7 @@ export interface BusinessModelModel {
     createdOnUtc: Date;
 }
 
-export const createDefaultBusinessModel = (): BusinessModelModel => ({
+export const CreateDefaultBusinessModel = (): BusinessModelModel => ({
     id: "",
     name: "",
     contentMermaid: "",

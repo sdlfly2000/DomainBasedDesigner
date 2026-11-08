@@ -7,27 +7,18 @@
     </p-toolbar>
     <div class="flex">
         <div class="flex-1">
+            @if(BusinessModel()){
             <div class="business-model-detail-description">
-                <textarea rows="5"
-                            cols="30"
-                            pTextarea
-                            name="requirementnewdescription"
-                            [(ngModel)]="RequirementDescription"
-                            placeholder="Requirement Description"
-                            fluid></textarea>
+                <textarea rows="30"
+                          cols="30"
+                          pTextarea
+                          name="businessmodeldescription"
+                          [(ngModel)]="BusinessModel().contentMermaid"
+                          placeholder="Business Model Description"
+                          fluid>
+                    </textarea>
             </div>
-
-            <p-divider />
-            <div class="business-model-detail-analyzed">
-                <textarea rows="10"
-                            cols="30"
-                            pTextarea
-                            name="requirementanalyzed"
-                            [(ngModel)]="AnalyzedResult.raw"
-                            placeholder="AI Raw Output"
-                            (ngModelChange)="OnAnalyzedResultChange($event)"
-                            fluid></textarea>
-            </div>
+            }
         </div>
         <div class="flex-1">
             <div #mermaidContainer class="mermaid-target"></div>

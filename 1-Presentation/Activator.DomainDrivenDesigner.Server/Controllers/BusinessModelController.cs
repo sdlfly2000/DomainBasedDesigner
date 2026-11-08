@@ -74,4 +74,21 @@ public class BusinessModelController(BusinessModelAppService businessModelAppSer
 
         return response.Success ? Ok(response.BusinessModels) : BadRequest(response.ErrorMessage);
     }
+
+    [HttpGet("retrieve/id/{businessModelId}")]
+    public async Task<ActionResult> RetrieveBusinessModelsById(Guid businessModelId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var requestId = Guid.Parse(_requestContext.TraceId);
+
+        var response = await _businessModelAppService.RetrieveBusinessModelById(
+            new RetrieveBusinessModelByIdAppRequest(requestId, businessModelId))
+            .ConfigureAwait(false);
+
+        return response.Success ? Ok(response.BusinessModel) : BadRequest(response.ErrorMessage);
+    }
 }

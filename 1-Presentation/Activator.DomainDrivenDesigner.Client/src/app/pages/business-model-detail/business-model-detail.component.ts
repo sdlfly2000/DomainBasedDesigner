@@ -1,4 +1,5 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, signal, ViewChild, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import mermaid from 'mermaid';
 import { ButtonModule } from 'primeng/button';
@@ -8,42 +9,25 @@ import { SelectModule } from 'primeng/select';
 import { TabsModule } from 'primeng/tabs';
 import { TextareaModule } from 'primeng/textarea';
 import { ToolbarModule } from 'primeng/toolbar';
+import { ContextService } from '../../../services/shared.Context.service';
 import { QueryStringService } from '../../../services/shared.QueryString.service';
 import { EnumInfoSeverity, StatusMessageModel, StatusMessageService } from '../../../services/statusmessage.service';
-import { AnalyzeRequirementsResponseModel, BusinessModel, BusinessModelInstance } from '../requirement-detail-cmd/model/requirement-detail-cmd';
-import { RequirementDetailCommandAnalyzeComponent } from '../requirement-detail-cmd/requirement-detail-cmd-analyze/requirement-detail-cmd-analyze.component';
-import { RequirementDetailCommandSaveComponent } from '../requirement-detail-cmd/requirement-detail-cmd-save/requirement-detail-cmd-save.component';
+import { BusinessModelModel, CreateDefaultBusinessModel } from '../business-model/model/business-model-models';
+import { BusinessModelDetailService } from './business-model-detail.service';
 
 @Component({
-  selector: 'app-requirement-detail',
-  templateUrl: './requirement-detail.component.html',
-  styleUrls: ['./requirement-detail.component.css'],
-  imports: [
-      FormsModule, ButtonModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, SelectModule, FloatLabelModule,
-      RequirementDetailCommandAnalyzeComponent, RequirementDetailCommandSaveComponent
+    selector: 'app-business-model-detail',
+    templateUrl: './business-model-detail.component.html',
+    styleUrls: ['./business-model-detail.component.css'],
+    imports: [
+      FormsModule, ButtonModule, DividerModule, TextareaModule, ToolbarModule, TabsModule, SelectModule, FloatLabelModule 
   ]
 })
 export class BusinessModelDetailComponent implements AfterViewInit {
     title = 'Business Model Detail';
-    ProjectId : string = '';
-    ProjectName: string = '';
-    RequirementId: string = '';
-    RequirementDescription: string = '';
-    AnalyzedResult: AnalyzeRequirementsResponseModel = { businessModels: [], raw: '' };
-    ModelIdList: (string | undefined)[] = [];
-    ModelMermaidRawsTab: string[] = [];
-    ContextIdTab: (string | undefined)[] = [];
-    CurrentContextName: string = ''
-    CurrentModelName: string = '';
-    CurrentTabIndex: number = 0;
-    CurrentBusinessModel: BusinessModel = {
-        id: '',
-        name: '',
-        contentMermaid: '',
-        contextId: '',
-        contextName: '',
-        createdOnUtc: undefined
-    };
+    ProjectId : string | undefined;
+    ProjectName: string | undefined;
+    BusinessModel: WritableSignal<BusinessModelModel> = signal<BusinessModelModel>(CreateDefaultBusinessModel())
 
     private graphDefinition: string = '';
     
@@ -51,53 +35,38 @@ export class BusinessModelDetailComponent implements AfterViewInit {
 
     constructor(
         private queryStringService: QueryStringService,
+        private contextService: ContextService,
         private statusMessageService: StatusMessageService,
+        private businessModelDetailService: BusinessModelDetailService,
         private cdr: ChangeDetectorRef) {
     }
-    ngAfterViewInit(): void {
 
+    ngAfterViewInit(): void {
+        this.businessModelDetailService.GetBusinessModelsById(this.BusinessModel().id).subscribe({
+            next: async (businessModel) => {
+                this.BusinessModel.set(businessModel);
+                this.graphDefinition = this.applyMermaidClassDefinition(this.BusinessModel().contentMermaid);
+                await this.renderDiagram();
+            },
+            error: (error) => {
+                if (error instanceof HttpErrorResponse) {
+                    this.statusMessageService.StatusMessage = new StatusMessageModel(error.message, EnumInfoSeverity.Error);
+                }
+            },
+            complete: () => this.cdr.detectChanges()
+        });
     }
 
     ngOnInit(): void {
-        this.ProjectId = this.queryStringService.Get('project') ?? "";
-        this.ProjectName = this.queryStringService.Get("projectName") ?? "";
-        this.RequirementId = this.queryStringService.Get("requirementId") ?? "";
+        this.ProjectId = this.contextService.ProjectId;
+        this.ProjectName = this.contextService.ProjectName;
+
+        this.BusinessModel().id = this.queryStringService.Get("businessModelId") ?? '';
 
         mermaid.initialize({
             startOnLoad: false,          // Stops automatic selector scanning
             suppressErrorRendering: true // Stops DOM injection of "dmermaid-XXXX" elements
         });
-    }
-
-    async OnAnalyzedResult(analyzedResult: AnalyzeRequirementsResponseModel) {
-        this.ModelMermaidRawsTab = [];
-        this.AnalyzedResult = analyzedResult;
-        this.graphDefinition = this.applyMermaidClassDefinition(analyzedResult.raw);
-        await this.renderDiagram();
-    }
-
-    async OnAnalyzedResultChange(changedValue: string) {
-        this.graphDefinition = this.applyMermaidClassDefinition(changedValue);
-        await this.renderDiagram();
-    }
-       
-
-    OnCreateContext() {
-        let tabIndex: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === this.CurrentModelName);
-        this.CurrentContextName = this.ContextIdTab[tabIndex] ?? "";
-    }
-
-    SaveModel() {
-        let tabIndex: number = this.AnalyzedResult.businessModels.findIndex(m => m.name === this.CurrentModelName);
-        this.CurrentBusinessModel.id = this.ModelIdList[tabIndex];
-        this.CurrentBusinessModel.contentMermaid = this.ModelMermaidRawsTab[tabIndex]
-        this.CurrentBusinessModel.name = this.CurrentModelName;
-        this.CurrentBusinessModel.contextId = this.ContextIdTab[tabIndex];
-
-        if (!BusinessModelInstance.NotNullValidate(this.CurrentBusinessModel)) {
-            this.statusMessageService.StatusMessage = new StatusMessageModel("Invalid business model data - Please fill in all required fields", EnumInfoSeverity.Error);
-            return;
-        }
     }
 
     private async renderDiagram() {

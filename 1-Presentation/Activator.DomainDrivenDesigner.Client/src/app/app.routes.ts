@@ -7,6 +7,7 @@ import { ProjectComponent } from './pages/project/project.component';
 import { RequirementComponent } from './pages/requirement/requirement.component';
 import { RequirementDetailComponent } from './pages/requirement-detail/requirement-detail.component';
 import { BusinessModelComponent } from './pages/business-model/business-model.component';
+import { BusinessModelDetailComponent } from './pages/business-model-detail/business-model-detail.component';
 
 export const routes: Routes = [
   { path: "", component: LandingComponent },
@@ -18,7 +19,7 @@ export const routes: Routes = [
       { path: 'requirement', component: RequirementComponent },
       { path: 'requirement-detail', component: RequirementDetailComponent },
       { path: 'business-model', component: BusinessModelComponent },
-      { path: 'business-model-detail', component: BusinessModelComponent },
+      { path: 'business-model-detail', component: BusinessModelDetailComponent },
       { path: 'list', component: UserListComponent, canActivate: [UserListGuard]}
     ]
   },
